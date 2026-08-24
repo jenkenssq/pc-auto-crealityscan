@@ -24,6 +24,10 @@ build/
 # 运行时输出
 output/
 
+# 运行时生成的临时用例与任务队列
+cases/_generated/
+tasks/_queue.json
+
 # 工具内的构建产物、独立可执行文件与样本数据（固件工具另有自己的 .gitignore）
 工具/**/build/
 工具/**/dist/
