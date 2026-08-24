@@ -1,0 +1,53 @@
+{
+  "id": "crealityscan.preview_scan",
+  "name": "预览扫描",
+  "version": "1.0.0",
+  "description": "点击预览扫描按钮，并通过 CrealityScan 日志中出现预览成功关键字来判定该步骤成功结束。",
+  "params_schema": {
+    "timeout_sec": {
+      "type": "number",
+      "default": 60,
+      "description": "点击预览后，等待预览成功日志关键字出现的总超时（秒）。"
+    },
+    "wait_log_file_timeout_sec": {
+      "type": "number",
+      "default": 15,
+      "description": "点击预览后，等待 scan_log 日志文件就绪的超时（秒）。"
+    },
+    "poll_interval_sec": {
+      "type": "number",
+      "default": 0.5,
+      "description": "轮询日志内容的时间间隔（秒）。"
+    },
+    "after_click_sleep_sec": {
+      "type": "number",
+      "default": 0.3,
+      "description": "点击预览按钮后，开始读取日志前的短暂等待（秒）。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "点击预览前将鼠标移动到该 X 坐标，避免 hover 态影响模板匹配。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "点击预览前将鼠标移动到该 Y 坐标，避免 hover 态影响模板匹配。"
+    },
+    "mouse_safe_move_duration_sec": {
+      "type": "number",
+      "default": 0.35,
+      "description": "鼠标移动到安全位置的平滑移动时长（秒）。"
+    },
+    "mouse_safe_move_steps": {
+      "type": "number",
+      "default": 12,
+      "description": "鼠标平滑移动的插值步数。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.35,
+      "description": "鼠标移到安全位置后额外等待 UI 恢复的时间（秒）。"
+    }
+  }
+}

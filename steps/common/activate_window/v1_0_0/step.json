@@ -1,0 +1,17 @@
+{
+  "id": "common.activate_window",
+  "name": "激活/置顶窗口",
+  "version": "1.0.0",
+  "description": "将指定窗口（默认 CrealityScan）激活并置顶，提升后续纯图像识别步骤的稳定性。",
+  "params_schema": {
+    "window_title_contains": {
+      "type": "string",
+      "description": "窗口标题包含关键字（不填则使用用例 app.window_title_contains）。"
+    },
+    "fullscreen": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否最大化窗口（硬坐标点击场景建议开启）。"
+    }
+  }
+}

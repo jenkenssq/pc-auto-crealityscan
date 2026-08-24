@@ -1,0 +1,23 @@
+# 设备配置
+devices:
+  # 默认设备
+  default:
+    name: "默认设备"
+    connection_type: "usb"  # usb 或 wifi
+    # WiFi连接时需要配置IP
+    ip: ""
+    port: ""
+
+  # 可以添加多个设备配置
+  # device_1:
+  #   name: "测试设备1"
+  #   connection_type: "wifi"
+  #   ip: "192.168.1.100"
+  #   port: "8080"
+
+# 固件配置
+firmware:
+  # 固件文件存放目录
+  directory: "resources/firmware"
+  # 默认固件文件名（可选）
+  default_file: ""

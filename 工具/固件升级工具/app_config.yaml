@@ -1,0 +1,71 @@
+# CrealityScan应用配置
+app:
+  name: "CrealityScan"
+  # 应用可执行文件路径（请根据实际安装路径修改）
+  exe_path: "D:\\CrealityScan\\CrealityScan.exe"
+  # 应用启动超时时间（秒）
+  launch_timeout: 30
+  # 窗口标题（用于识别应用窗口）
+  window_title: "CrealityScan"
+  # 日志目录路径（LogManager会自动检测最新的时间戳子目录）
+  log_dir: "C:\\Users\\zengx\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+
+# 图像识别配置
+image_recognition:
+  # 识别阈值（0-1，越高越严格）
+  threshold: 0.85
+  # 识别超时时间（秒）
+  timeout: 10
+  # 点击后等待时间（秒）
+  click_delay: 1
+
+# 操作超时配置
+timeouts:
+  # 开流超时时间（秒）
+  stream_start: 30
+  # 固件升级超时时间（秒）
+  firmware_upgrade: 300
+  # Sermoon S1/X1 系列固件升级超时时间（秒）
+  sermon_upgrade: 360
+  # Sermoon X1 WiFi 设备固件升级超时时间（秒）
+  x1wifi_reconnect: 90
+  # Sermoon S1 WiFi 设备固件升级超时时间（秒）
+  s1wifi_reconnect: 120
+  # Raptor系列WiFi设备固件升级超时时间（秒）
+  raptorwifi_reconnect: 30
+  # Otter系列WiFi设备固件升级超时时间（秒）
+  otterwifi_reconnect: 30
+  # Ferret系列WiFi设备固件升级超时时间（秒）
+  ferretwifi_reconnect: 30
+  # Creality Pika WiFi设备固件升级超时时间（秒）
+  pikawifi_reconnect: 150
+  # 设备重连超时时间（秒）
+  device_reconnect: 60
+  # 帧数监控超时时间（秒）
+  frame_count_wait: 120
+
+# 各设备分阶段时间阈值（秒）- 可根据不同电脑性能调整
+upgrade_stages:
+  # Sermoon S1 时间配置
+  sermons1:
+    log_check_end: 70      # 日志检测截止时间（0-log_check_end 秒检测日志失败）
+    ui_check_end: 85       # UI气泡检测截止时间（log_check_end-ui_check_end 秒检测UI）
+    fallback_time: 85      # 兜底方案触发时间
+    log_stable_wait: 10    # UI检测后等待日志稳定的时间
+  # Sermoon X1 时间配置
+  sermonx1:
+    log_check_end: 90
+    ui_check_end: 105
+    fallback_time: 105
+    log_stable_wait: 10
+  # Creality Pika 时间配置
+  pika:
+    log_check_end: 60
+    ui_check_end: 190
+    fallback_time: 190
+    log_stable_wait: 10
+
+# 扫描配置
+scan:
+  # 完成扫描前需要达到的目标帧数
+  target_frames: 100

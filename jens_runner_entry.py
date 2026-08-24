@@ -1,0 +1,398 @@
+from __future__ import annotations
+
+import re
+import shutil
+import os
+from datetime import datetime
+from pathlib import Path
+from typing import Optional
+
+from airtest.core.api import auto_setup  # type: ignore
+from airtest.core.api import connect_device  # type: ignore
+
+from engine.defaults import DEFAULT_KEYWORDS
+from engine.executor import execute_case
+from engine.io import dump_json, load_json
+from engine.logs import copy_logs, extract_device_info, extract_sdk_fps_sessions, scan_keywords
+from engine.report_html import render_report_html
+from engine.scan_fps_xlsx import write_scan_fps_workbook
+from jens_runtime import get_app_root, get_resource_root
+
+
+_LIGHTWEIGHT_KEYWORD_MAX_MATCHES = 30
+_LIGHTWEIGHT_LOG_TAIL_BYTES = 256 * 1024
+
+
+def _safe_dir_name(name: str) -> str:
+    name = name.strip() or "case"
+    name = re.sub(r'[<>:"/\\\\|?*]+', "_", name)
+    return name
+
+
+def _safe_file_name_part(text: str, default: str) -> str:
+    value = (text or "").strip()
+    value = re.sub(r'[<>:"/\\\\|?*]+', "_", value)
+    value = re.sub(r"\s+", "_", value)
+    value = value.strip("._ ")
+    return value or default
+
+
+def _install_airtest_image_naming_patch() -> None:
+    import airtest.core.api as airtest_api  # type: ignore
+    import airtest.core.cv as airtest_cv  # type: ignore
+    from airtest.aircv import aircv  # type: ignore
+    from airtest.core.cv import G, ST  # type: ignore
+
+    counter = {"value": 0}
+
+    def _next_image_name(ext: str = ".jpg") -> str:
+        counter["value"] += 1
+        step_index = _safe_file_name_part(str(os.environ.get("JENS_CURRENT_STEP_INDEX") or ""), "step000")
+        step_name = _safe_file_name_part(
+            str(os.environ.get("JENS_CURRENT_STEP_NAME_SAFE") or os.environ.get("JENS_CURRENT_STEP_NAME") or ""),
+            "unknown_step",
+        )
+        attempt = _safe_file_name_part(str(os.environ.get("JENS_CURRENT_STEP_ATTEMPT") or ""), "1")
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        return f"{step_index}_{step_name}_attempt{attempt}_{stamp}_{counter['value']:03d}{ext}"
+
+    def _patched_try_log_screen(screen=None, quality=None, max_size=None, depth=None):
+        if not ST.LOG_DIR or not ST.SAVE_IMAGE:
+            return None
+        if not quality:
+            quality = ST.SNAPSHOT_QUALITY
+        if not max_size:
+            max_size = ST.IMAGE_MAXSIZE
+        if screen is None:
+            screen = G.DEVICE.snapshot(quality=quality)
+        if screen is None:
+            return None
+
+        filename = _next_image_name(".jpg")
+        Path(ST.LOG_DIR).mkdir(parents=True, exist_ok=True)
+        filepath = os.path.join(ST.LOG_DIR, filename)
+        aircv.imwrite(filepath, screen, quality, max_size=max_size)
+        return {"screen": filename, "resolution": aircv.get_resolution(screen)}
+
+    airtest_cv.try_log_screen = _patched_try_log_screen
+    airtest_api.try_log_screen = _patched_try_log_screen
+
+
+def _status_text(all_passed: bool) -> str:
+    return "passed" if all_passed else "failed"
+
+
+def _failed_step_name(step_results: list[dict]) -> str:
+    for item in step_results:
+        if str(item.get("status") or "").lower() != "failed":
+            continue
+        return str(item.get("name") or item.get("id") or "").strip()
+    return ""
+
+
+def _device_info_from_env() -> dict[str, str]:
+    info = {
+        "camera_name": str(os.environ.get("JENS_DEVICE_CAMERA_NAME") or "").strip(),
+        "camera_serial_number": str(os.environ.get("JENS_DEVICE_CAMERA_SN") or "").strip(),
+        "camera_connection_type": str(os.environ.get("JENS_DEVICE_CONNECTION_TYPE") or "").strip(),
+        "camera_firmware_version": str(os.environ.get("JENS_DEVICE_FIRMWARE_VERSION") or "").strip(),
+    }
+    return {key: value for key, value in info.items() if value}
+
+
+def _write_summary_json(
+    run_dir: Path,
+    case_name: str,
+    started_at: str,
+    finished_at: str,
+    all_passed: bool,
+    step_results: list[dict],
+    keyword_hits: dict[str, list[str]],
+    device_info: dict[str, str],
+    report_path: Path,
+    has_airtest_ocr_debug: bool,
+    scan_fps_xlsx_path: str = "",
+    scan_fps_xlsx_error: str = "",
+    ) -> None:
+    retained_items = (
+        (
+            ["report.html", "result.json", "summary.json", "airtest/ocr_fps_*"]
+            if has_airtest_ocr_debug
+            else ["report.html", "result.json", "summary.json"]
+        )
+        if all_passed
+        else ["report.html", "result.json", "summary.json", "airtest/", "logs/", "screenshots/"]
+    )
+    if scan_fps_xlsx_path:
+        retained_items.append("scan_fps_summary.xlsx")
+    dump_json(
+        str(run_dir / "summary.json"),
+        {
+            "case_name": case_name,
+            "status": _status_text(all_passed),
+            "artifact_mode": ("lightweight" if all_passed else "debug"),
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "step_counts": {
+                "total": len(step_results),
+                "passed": sum(1 for item in step_results if item.get("status") == "passed"),
+                "failed": sum(1 for item in step_results if item.get("status") == "failed"),
+            },
+            "failed_step_name": _failed_step_name(step_results),
+            "keyword_hit_counts": {key: len(lines) for key, lines in keyword_hits.items()},
+            "device_info": device_info,
+            "report_path": str(report_path),
+            "result_path": str(run_dir / "result.json"),
+            "scan_fps_xlsx_path": scan_fps_xlsx_path,
+            "scan_fps_xlsx_error": scan_fps_xlsx_error,
+            "retained_items": retained_items,
+        },
+    )
+
+
+def _attach_sdk_fps_stats(step_results: list[dict], case: dict) -> None:
+    app = case.get("app", {}) if isinstance(case.get("app"), dict) else {}
+    logs_root = str(app.get("log_dir") or "").strip()
+    scan_steps: list[tuple[dict, datetime, Optional[datetime]]] = []
+
+    for item in step_results:
+        if str(item.get("id") or "") != "crealityscan.scan_until_frames_then_stop":
+            continue
+        extra = item.get("extra") if isinstance(item.get("extra"), dict) else {}
+        extra = dict(extra)
+        for key in (
+            "avg_fps",
+            "peak_fps",
+            "min_fps",
+            "fps_seconds_count",
+            "sdk_fps_sessions_count",
+            "sdk_fps_session_start_at",
+            "sdk_fps_session_stop_at",
+        ):
+            extra.pop(key, None)
+        item["extra"] = extra
+        if str(item.get("status") or "") != "passed":
+            continue
+
+        start_text = str(extra.get("scan_started_log_at") or "").strip()
+        if not start_text:
+            continue
+        try:
+            scan_started_at = datetime.fromisoformat(start_text)
+        except ValueError:
+            continue
+
+        stop_text = str(extra.get("stop_click_log_at") or "").strip()
+        try:
+            stop_clicked_at = datetime.fromisoformat(stop_text) if stop_text else None
+        except ValueError:
+            stop_clicked_at = None
+        scan_steps.append((item, scan_started_at, stop_clicked_at))
+
+        if not logs_root:
+            log_file = str(extra.get("log_file") or "").strip()
+            if log_file:
+                logs_root = str(Path(log_file).parent)
+
+    if not logs_root or not scan_steps:
+        return
+
+    sdk_sessions = extract_sdk_fps_sessions(logs_root, year_hint=scan_steps[0][1].year)
+    if not sdk_sessions:
+        return
+
+    parsed_sessions: list[tuple[int, datetime, datetime, dict]] = []
+    for index, session in enumerate(sdk_sessions):
+        try:
+            session_started_at = datetime.fromisoformat(str(session.get("start_at") or ""))
+            session_stopped_at = datetime.fromisoformat(str(session.get("stop_at") or ""))
+        except ValueError:
+            continue
+        parsed_sessions.append((index, session_started_at, session_stopped_at, session))
+
+    used_session_indexes: set[int] = set()
+    tolerance_sec = 5.0
+    for item, scan_started_at, stop_clicked_at in scan_steps:
+        scan_end = stop_clicked_at or scan_started_at
+        candidates = [
+            session
+            for session in parsed_sessions
+            if session[0] not in used_session_indexes
+            and session[1].timestamp() <= scan_started_at.timestamp() + tolerance_sec
+            and session[2].timestamp() >= scan_end.timestamp() - tolerance_sec
+        ]
+        if not candidates:
+            continue
+
+        matched = min(candidates, key=lambda session: abs((scan_started_at - session[1]).total_seconds()))
+        session_index, session_started_at, session_stopped_at, sdk_stats = matched
+        used_session_indexes.add(session_index)
+
+        extra = item.get("extra") if isinstance(item.get("extra"), dict) else {}
+        extra = dict(extra)
+        extra["avg_fps"] = sdk_stats.get("avg_fps")
+        extra["peak_fps"] = sdk_stats.get("peak_fps")
+        extra["min_fps"] = sdk_stats.get("min_fps")
+        extra["fps_seconds_count"] = sdk_stats.get("samples")
+        extra["sdk_fps_sessions_count"] = 1
+        extra["sdk_fps_session_start_at"] = session_started_at.isoformat(timespec="microseconds")
+        extra["sdk_fps_session_stop_at"] = session_stopped_at.isoformat(timespec="microseconds")
+        item["extra"] = extra
+
+
+def _cleanup_lightweight_artifacts(run_dir: Path) -> bool:
+    airtest_dir = run_dir / "airtest"
+    kept_airtest_debug = False
+    if airtest_dir.is_dir():
+        keep_files = {p.resolve() for p in airtest_dir.glob("ocr_fps_*") if p.is_file()}
+        if keep_files:
+            kept_airtest_debug = True
+            for p in sorted(airtest_dir.rglob("*"), reverse=True):
+                try:
+                    if p.is_file():
+                        if p.resolve() in keep_files:
+                            continue
+                        p.unlink()
+                    elif p.is_dir():
+                        p.rmdir()
+                except Exception:
+                    continue
+            # 如果目录被清空则删除；否则保留用于 OCR 调试
+            try:
+                if not any(airtest_dir.iterdir()):
+                    airtest_dir.rmdir()
+                    kept_airtest_debug = False
+            except Exception:
+                pass
+        else:
+            shutil.rmtree(airtest_dir, ignore_errors=True)
+    elif airtest_dir.exists():
+        try:
+            airtest_dir.unlink()
+        except Exception:
+            pass
+
+    for name in ("logs", "screenshots"):
+        path = run_dir / name
+        if path.is_dir():
+            shutil.rmtree(path, ignore_errors=True)
+        elif path.exists():
+            try:
+                path.unlink()
+            except Exception:
+                pass
+    return kept_airtest_debug
+
+
+def run_case(case_path: Optional[str] = None) -> int:
+    app_root = get_app_root()
+    resource_root = get_resource_root()
+    resolved_case_path = str(case_path or (resource_root / "cases" / "example_case.json"))
+    case = load_json(resolved_case_path)
+
+    case_name = str(case.get("name") or case.get("case_id") or "case")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_dir = app_root / "artifacts" / f"{_safe_dir_name(case_name)}_{ts}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    _install_airtest_image_naming_patch()
+    auto_setup(str(resource_root / "jens_runner.air" / "main.py"), logdir=str(run_dir / "airtest"))
+
+    app = case.get("app", {}) if isinstance(case.get("app"), dict) else {}
+    device_uri = str(app.get("device_uri") or "Windows:///")
+    connect_device(device_uri)
+
+    started_at = datetime.now().isoformat(timespec="seconds")
+    step_results, all_passed = execute_case(case, str(run_dir))
+    _attach_sdk_fps_stats(step_results, case)
+    finished_at = datetime.now().isoformat(timespec="seconds")
+
+    creality_logs_dir = str(app.get("log_dir") or "")
+    keywords = case.get("keywords")
+    if not isinstance(keywords, list) or not all(isinstance(x, str) for x in keywords):
+        keywords = DEFAULT_KEYWORDS
+    device_info = _device_info_from_env()
+    if not device_info and creality_logs_dir:
+        device_info = extract_device_info(creality_logs_dir, max_bytes_per_file=_LIGHTWEIGHT_LOG_TAIL_BYTES)
+    scan_fps_xlsx_path = ""
+    scan_fps_xlsx_error = ""
+    try:
+        scan_fps_xlsx_path = write_scan_fps_workbook(case, step_results, run_dir, device_info=device_info) or ""
+        if scan_fps_xlsx_path:
+            print(f"[JENS] scan_fps_xlsx={scan_fps_xlsx_path}")
+    except (ImportError, OSError, ValueError, RuntimeError) as exc:
+        scan_fps_xlsx_error = str(exc)
+        print(f"[JENS] scan_fps_xlsx_failed error={scan_fps_xlsx_error}")
+    keyword_hits = (
+        scan_keywords(
+            creality_logs_dir,
+            keywords=list(keywords),
+            max_matches=_LIGHTWEIGHT_KEYWORD_MAX_MATCHES,
+            max_bytes_per_file=_LIGHTWEIGHT_LOG_TAIL_BYTES,
+        )
+        if creality_logs_dir
+        else {}
+    )
+
+    dump_json(
+        str(run_dir / "result.json"),
+        {
+            "case": case,
+            "step_results": step_results,
+            "all_passed": all_passed,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "device_info": device_info,
+            "scan_fps_xlsx_path": scan_fps_xlsx_path,
+            "scan_fps_xlsx_error": scan_fps_xlsx_error,
+        },
+    )
+
+    task_steps = case.get("steps") if isinstance(case.get("steps"), list) else []
+    total_mode_count = sum(
+        1
+        for step in task_steps
+        if str(step.get("id") or "").startswith("crealityscan.configure_scan_params_")
+    )
+
+    report_path = run_dir / "report.html"
+    report_path.write_text(
+        render_report_html(
+            case_name=case_name,
+            started_at=started_at,
+            finished_at=finished_at,
+            step_results=step_results,
+            keyword_hits=keyword_hits,
+            device_info=device_info,
+            total_mode_count=total_mode_count,
+        ),
+        encoding="utf-8",
+    )
+    has_airtest_ocr_debug = any((run_dir / "airtest").glob("ocr_fps_*"))
+
+    if all_passed:
+        kept_airtest_ocr_debug = _cleanup_lightweight_artifacts(run_dir)
+        has_airtest_ocr_debug = bool(kept_airtest_ocr_debug)
+    elif creality_logs_dir:
+        copied_logs_dir = run_dir / "logs" / "crealityscan"
+        copy_logs(creality_logs_dir, str(copied_logs_dir))
+
+    _write_summary_json(
+        run_dir=run_dir,
+        case_name=case_name,
+        started_at=started_at,
+        finished_at=finished_at,
+        all_passed=all_passed,
+        step_results=step_results,
+        keyword_hits=keyword_hits,
+        device_info=device_info,
+        report_path=report_path,
+        has_airtest_ocr_debug=has_airtest_ocr_debug,
+        scan_fps_xlsx_path=scan_fps_xlsx_path,
+        scan_fps_xlsx_error=scan_fps_xlsx_error,
+    )
+
+    print(f"[JENS] run_dir={run_dir}")
+    print(f"[JENS] report={report_path}")
+    print(f"[JENS] status={'PASSED' if all_passed else 'FAILED'}")
+    return 0 if all_passed else 1

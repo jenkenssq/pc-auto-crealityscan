@@ -1,0 +1,32 @@
+{
+  "case_id": "raptor_scan_params_example",
+  "name": "Raptor：扫描参数 preset 示例",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\86177\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+  },
+  "keywords": [
+    "Traceback",
+    "Exception",
+    "ERROR",
+    "失败",
+    "崩溃"
+  ],
+  "steps": [
+    {
+      "id": "common.activate_window",
+      "version": "1.0.0",
+      "name": "激活/置顶 CrealityScan",
+      "params": {},
+      "on_fail": { "action": "abort" }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_raptor",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-中物体-几何",
+      "params": { "preset": "散斑-点云-中物体-几何" },
+      "on_fail": { "action": "abort" }
+    }
+  ]
+}

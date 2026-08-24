@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 测试和日志
+logs/
+screenshots/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 临时文件
+*.tmp
+*.bak
+*.backup
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 项目特定
+resources/firmware/*.zip
+resources/firmware/*.bin
+resources/images/scan.rar
+
+# 本地配置（会通过 .example 共享）
+config/app_config.yaml
+config/device_config.yaml
+config/test_config.yaml
+settings.json
+
+# Claude 工作区
+.claude/worktrees/
+
+# 构建产物
+dist/
+dist1/
+*.spec
+
+# 本地脚本
+start.py
+test_firmware_only.py
+build_exe.py
+examples.py
+
+# 测试报告
+test_reports/

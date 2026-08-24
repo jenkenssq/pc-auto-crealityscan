@@ -1,0 +1,8 @@
+{
+  "id": "crealityscan.line_laser_parallel_point_distance_0_1",
+  "name": "线激光-平行线-点距0.1",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：切换线激光/平行线并设置点距 0.1。",
+  "params_schema": {}
+}
+

@@ -1,0 +1,13 @@
+{
+  "id": "common.sleep",
+  "name": "等待",
+  "version": "1.0.0",
+  "description": "等待指定秒数，用于在两个步骤之间给 UI 留出加载时间。",
+  "params_schema": {
+    "seconds": {
+      "type": "number",
+      "default": 1.0,
+      "description": "等待时长（秒）。"
+    }
+  }
+}

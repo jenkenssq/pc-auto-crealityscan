@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jens · 创建任务交互设计稿</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #eaf0f8;
+      --surface: #ffffff;
+      --surface-soft: #f6f9fd;
+      --surface-blue: #edf4ff;
+      --ink: #18283d;
+      --muted: #65758b;
+      --line: #d5dfec;
+      --line-strong: #becbdb;
+      --blue: #2e6fd8;
+      --blue-deep: #2358aa;
+      --blue-soft: #dce9ff;
+      --green: #167553;
+      --green-soft: #e6f5ef;
+      --amber: #9a5e12;
+      --amber-soft: #fff4db;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .24);
+    }
+    * { box-sizing: border-box; }
+    ::selection { color: #fff; background: var(--blue); }
+    body {
+      min-width: 1024px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font: 14px/1.5 "Microsoft YaHei UI", "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid rgba(46, 111, 216, .28);
+      outline-offset: 2px;
+    }
+    .app-shell { min-height: 100vh; padding: 18px; }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 56px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .toolbar button {
+      padding: 9px 14px;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+    }
+    .toolbar .active { color: #fff; background: var(--blue); }
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.4fr .9fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .ghost-panel {
+      min-height: 420px;
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+    .ghost-title { width: 160px; height: 18px; background: #dce5f0; border-radius: 5px; }
+    .ghost-line { height: 12px; margin-top: 18px; background: #e7edf5; border-radius: 4px; }
+    .ghost-line.short { width: 62%; }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: rgba(19, 31, 48, .58);
+    }
+    .wizard {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      width: min(1220px, calc(100vw - 56px));
+      height: min(820px, calc(100vh - 56px));
+      overflow: hidden;
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .wizard-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 72px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .wizard-head h1 { margin: 0; font-size: 20px; line-height: 1.25; }
+    .wizard-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      color: var(--muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .icon-button svg { width: 18px; height: 18px; }
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 0 22px;
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--line);
+    }
+    .step-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 62px;
+      padding: 10px 8px;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+    .step-button:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      width: min(100px, 24%);
+      height: 1px;
+      background: var(--line);
+    }
+    .step-number {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .step-button.active { color: var(--blue-deep); }
+    .step-button.active .step-number { color: #fff; background: var(--blue); border-color: var(--blue); }
+    .step-button.done .step-number { color: var(--green); background: var(--green-soft); border-color: #b8dfd1; }
+    .step-copy strong { display: block; color: currentColor; font-size: 13px; }
+    .step-copy span { display: block; margin-top: 1px; font-size: 11px; }
+    .wizard-main { min-height: 0; overflow: hidden; }
+    .page { display: none; height: 100%; min-height: 0; }
+    .page.active { display: grid; animation: page-in 180ms cubic-bezier(.2,.8,.2,1); }
+    @keyframes page-in { from { opacity: .4; transform: translateX(8px); } }
+    .page-modules { grid-template-columns: minmax(0, 1fr) 300px; }
+    .content-pane { min-width: 0; padding: 26px 28px; overflow: auto; }
+    .side-note {
+      padding: 26px 24px;
+      background: var(--surface-soft);
+      border-left: 1px solid var(--line);
+      overflow: auto;
+    }
+    .section-title { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+    .section-desc { max-width: 68ch; margin: 7px 0 22px; color: var(--muted); }
+    .module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .module-button {
+      min-width: 0;
+      min-height: 104px;
+      padding: 15px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+    }
+    .module-button:hover { background: #fbfdff; border-color: #9db8df; }
+    .module-button.selected { background: var(--surface-blue); border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
+    .module-name-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .module-name { font-size: 16px; font-weight: 750; }
+    .mode-count { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .module-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 16px; }
+    .tag {
+      padding: 3px 7px;
+      color: #48617e;
+      background: #f0f4f9;
+      border-radius: 5px;
+      font-size: 10px;
+    }
+    .module-button.selected .tag { background: #fff; }
+    .info-list { margin: 20px 0 0; padding: 0; list-style: none; }
+    .info-list li { position: relative; margin-top: 14px; padding-left: 18px; color: var(--muted); font-size: 12px; }
+    .info-list li::before { content: ""; position: absolute; top: 7px; left: 1px; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; }
+    .aside-heading { margin: 0; font-size: 14px; }
+    .aside-selected { margin: 8px 0 0; font-size: 24px; font-weight: 750; }
+    .aside-help { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .page-modes { grid-template-columns: 220px minmax(0, 1fr) 276px; }
+    .filter-pane { padding: 22px 16px; background: var(--surface-soft); border-right: 1px solid var(--line); overflow: auto; }
+    .filter-label { display: block; margin: 0 8px 9px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .filter-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 4px;
+      padding: 9px 10px;
+      color: #42566f;
+      background: transparent;
+      border: 0;
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .filter-button.active { color: var(--blue-deep); background: var(--blue-soft); font-weight: 700; }
+    .filter-button span:last-child { font-size: 11px; font-variant-numeric: tabular-nums; }
+    .mode-pane { min-width: 0; padding: 22px; overflow: auto; }
+    .mode-toolbar { display: flex; align-items: center; gap: 10px; }
+    .search-wrap { position: relative; flex: 1; }
+    .search-wrap svg { position: absolute; top: 50%; left: 12px; width: 17px; height: 17px; color: var(--muted); transform: translateY(-50%); }
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px 8px 38px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    .text-button {
+      height: 40px;
+      padding: 8px 12px;
+      color: var(--blue-deep);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mode-results { margin: 18px 0 0; padding: 0; list-style: none; }
+    .mode-item { border-bottom: 1px solid #e4eaf2; }
+    .mode-item.hidden { display: none; }
+    .mode-label {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: center;
+      min-height: 54px;
+      padding: 8px 4px;
+      cursor: pointer;
+    }
+    .mode-label:hover .mode-title { color: var(--blue-deep); }
+    .mode-check { width: 17px; height: 17px; accent-color: var(--blue); }
+    .mode-title { min-width: 0; overflow-wrap: anywhere; font-size: 13px; font-weight: 600; }
+    .mode-badges { display: flex; gap: 5px; }
+    .mode-kind { padding: 2px 6px; color: var(--muted); background: #eff3f8; border-radius: 5px; font-size: 10px; white-space: nowrap; }
+    .mode-kind.special { color: var(--amber); background: var(--amber-soft); }
+    .selected-pane { padding: 22px 18px; background: #fbfcfe; border-left: 1px solid var(--line); overflow: auto; }
+    .selection-number { color: var(--blue-deep); font-size: 30px; font-weight: 760; font-variant-numeric: tabular-nums; }
+    .selection-number small { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .selected-list { margin: 16px 0 0; padding: 0; list-style: none; }
+    .selected-list li { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 9px 0; border-bottom: 1px solid #e2e8f0; font-size: 11px; }
+    .selected-list button { padding: 0; color: var(--muted); background: transparent; border: 0; cursor: pointer; }
+    .empty-selection { margin-top: 20px; padding: 24px 12px; color: var(--muted); background: var(--surface-soft); border-radius: 10px; text-align: center; font-size: 12px; }
+    .page-output { grid-template-columns: minmax(0, 1fr) 390px; }
+    .choice-group { margin-top: 22px; }
+    .group-label { display: block; margin-bottom: 9px; color: #435974; font-size: 12px; font-weight: 700; }
+    .task-kind-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .choice-card {
+      position: relative;
+      min-height: 116px;
+      padding: 17px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .choice-card.selected { background: var(--surface-blue); border-color: var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
+    .choice-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 15px; font-weight: 750; }
+    .choice-radio { width: 17px; height: 17px; border: 1px solid var(--line-strong); border-radius: 50%; }
+    .choice-card.selected .choice-radio { border: 5px solid var(--blue); background: #fff; }
+    .choice-desc { margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .choice-steps { margin-top: 10px; color: #3b5678; font-size: 11px; }
+    .segmented { display: inline-flex; padding: 3px; background: #edf2f8; border-radius: 10px; }
+    .setting-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .segment { min-width: 88px; padding: 8px 14px; background: transparent; border: 0; border-radius: 8px; cursor: pointer; }
+    .segment.selected { color: var(--blue-deep); background: #fff; box-shadow: 0 2px 7px rgba(0, 0, 0, .11); font-weight: 700; }
+    .frame-setting { display: flex; align-items: center; gap: 14px; }
+    .number-stepper {
+      display: grid;
+      grid-template-columns: 38px 96px 38px;
+      height: 40px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    .number-button {
+      padding: 0;
+      color: var(--blue-deep);
+      background: var(--surface-soft);
+      border: 0;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .number-button:first-child { border-right: 1px solid var(--line); }
+    .number-button:last-child { border-left: 1px solid var(--line); }
+    .number-button:hover { background: var(--blue-soft); }
+    .frame-input {
+      width: 100%;
+      min-width: 0;
+      padding: 6px 8px;
+      color: var(--ink);
+      background: #fff;
+      border: 0;
+      outline: 0;
+      text-align: center;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+      appearance: textfield;
+    }
+    .frame-input::-webkit-inner-spin-button { appearance: none; }
+    .number-stepper.invalid { border-color: #c94343; box-shadow: 0 0 0 2px rgba(201, 67, 67, .12); }
+    .frame-unit { color: var(--ink); font-size: 12px; font-weight: 650; }
+    .field-help { margin: 7px 0 0; color: var(--muted); font-size: 11px; }
+    .field-error { display: none; margin: 6px 0 0; color: #a73333; font-size: 11px; }
+    .field-error.visible { display: block; }
+    .rule-callout { margin-top: 22px; padding: 14px 15px; color: #785018; background: var(--amber-soft); border-radius: 11px; }
+    .rule-callout strong { display: block; margin-bottom: 4px; font-size: 12px; }
+    .rule-callout p { margin: 0; font-size: 11px; }
+    .summary-pane { padding: 26px 24px; background: #f7faff; border-left: 1px solid var(--line); overflow: auto; }
+    .summary-head { display: flex; justify-content: space-between; gap: 18px; }
+    .summary-head h2 { margin: 0; font-size: 16px; }
+    .summary-head span { color: var(--blue-deep); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .summary-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 16px; overflow: hidden; background: var(--line); border-radius: 10px; }
+    .summary-meta div { padding: 11px; background: #fff; }
+    .summary-meta small { display: block; color: var(--muted); font-size: 10px; }
+    .summary-meta strong { display: block; margin-top: 3px; font-size: 13px; }
+    .flow-list { margin: 20px 0 0; padding: 0; list-style: none; }
+    .flow-item { position: relative; min-height: 48px; padding: 0 0 14px 28px; }
+    .flow-item:not(:last-child)::before { content: ""; position: absolute; top: 17px; bottom: -1px; left: 7px; width: 1px; background: #c7d6e8; }
+    .flow-dot { position: absolute; top: 5px; left: 2px; width: 11px; height: 11px; background: #fff; border: 3px solid var(--blue); border-radius: 50%; }
+    .flow-title { font-size: 12px; font-weight: 700; }
+    .flow-desc { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .auto-tag { margin-left: 6px; padding: 2px 5px; color: var(--amber); background: var(--amber-soft); border-radius: 4px; font-size: 9px; font-weight: 700; }
+    .wizard-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 70px;
+      padding: 13px 22px;
+      background: #fbfcfe;
+      border-top: 1px solid var(--line);
+    }
+    .foot-summary { color: var(--muted); font-size: 12px; }
+    .foot-summary strong { color: var(--ink); }
+    .foot-actions { display: flex; gap: 9px; }
+    .button { min-width: 88px; min-height: 40px; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-weight: 650; }
+    .button.secondary { color: var(--ink); background: #fff; border: 1px solid var(--line); }
+    .button.primary { color: #fff; background: var(--blue); border: 1px solid var(--blue); }
+    .button.primary:hover { background: var(--blue-deep); }
+    .button:disabled { color: #8795a8; background: #dfe6ef; border-color: #dfe6ef; cursor: not-allowed; }
+    .toast {
+      position: fixed;
+      right: 34px;
+      bottom: 30px;
+      padding: 13px 17px;
+      color: #fff;
+      background: #1e3a31;
+      border-radius: 10px;
+      box-shadow: 0 14px 34px rgba(15, 36, 29, .28);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-height: 740px) {
+      .wizard { height: calc(100vh - 32px); }
+      .overlay { padding: 16px; }
+      .wizard-head { min-height: 62px; padding-block: 11px; }
+      .step-button { min-height: 54px; }
+      .wizard-foot { min-height: 60px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    THESIS: 用一条始终可审阅的任务生成跑道替代连续的原生小弹窗，拒绝“选完才知道生成了什么”。
+    OWN-WORLD: 延续 Jens 的冷蓝灰桌面界面，白色操作面、细边界、钴蓝选中态和琥珀自动规则提示。
+    STORY: 用户选择模组，多选真实扫描模式，选择开流或后处理，并在生成前确认自动补齐的步骤。
+    FIRST VIEWPORT: 三段进度位于顶部，主选择区占据左中区域，任务摘要固定在右侧，主操作始终位于右下。
+    FORM: 水平任务跑道，候选 6，seed 760403ca。
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <div class="app-shell" aria-hidden="true">
+    <div class="toolbar"><button class="active">新建任务</button><button>任务库</button><button>编辑任务</button><button>导入 .air</button><button>刷新设备</button></div>
+    <div class="workspace"><div class="ghost-panel"><div class="ghost-title"></div><div class="ghost-line"></div><div class="ghost-line short"></div></div><div class="ghost-panel"><div class="ghost-title"></div><div class="ghost-line short"></div></div></div>
+  </div>
+
+  <div class="overlay">
+    <section class="wizard" role="dialog" aria-modal="true" aria-labelledby="wizard-title">
+      <header class="wizard-head">
+        <div><h1 id="wizard-title">创建测试任务</h1><p>从任务库规则生成标准化扫描任务，生成后仍可进入编辑器调整。</p></div>
+        <button class="icon-button" type="button" aria-label="关闭设计稿" title="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </header>
+
+      <nav class="stepper" aria-label="创建任务进度">
+        <button class="step-button active" type="button" data-step-nav="1"><span class="step-number">1</span><span class="step-copy"><strong>选择模组</strong><span id="step-module-copy">确定扫描设备</span></span></button>
+        <button class="step-button" type="button" data-step-nav="2"><span class="step-number">2</span><span class="step-copy"><strong>选择扫描模式</strong><span id="step-mode-copy">支持多选</span></span></button>
+        <button class="step-button" type="button" data-step-nav="3"><span class="step-number">3</span><span class="step-copy"><strong>生成方式</strong><span id="step-output-copy">开流或后处理</span></span></button>
+      </nav>
+
+      <main class="wizard-main">
+        <section class="page page-modules active" data-page="1">
+          <div class="content-pane">
+            <h2 class="section-title">这次要测试哪个模组？</h2>
+            <p class="section-desc">选择后将读取该模组已有的扫描参数预设。连接方式会在最后一步按模组自动显示。</p>
+            <div class="module-grid" id="module-grid"></div>
+          </div>
+          <aside class="side-note">
+            <h3 class="aside-heading">当前选择</h3>
+            <div class="aside-selected" id="aside-module">尚未选择</div>
+            <p class="aside-help" id="aside-module-help">选择一个模组后继续。你可以随时返回修改，已选模式将被清空。</p>
+            <ul class="info-list">
+              <li>扫描模式来自各模组的 preset 配置。</li>
+              <li>选择多个模式会按当前顺序生成连续任务块。</li>
+              <li>框架点、Pika 等特殊流程由系统自动补齐。</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section class="page page-modes" data-page="2">
+          <aside class="filter-pane">
+            <span class="filter-label">模式分类</span>
+            <button class="filter-button active" type="button" data-filter="全部"><span>全部模式</span><span id="filter-all-count">0</span></button>
+            <button class="filter-button" type="button" data-filter="线激光"><span>线激光</span><span></span></button>
+            <button class="filter-button" type="button" data-filter="散斑"><span>散斑</span><span></span></button>
+            <button class="filter-button" type="button" data-filter="框架点"><span>框架点</span><span></span></button>
+            <button class="filter-button" type="button" data-filter="人像"><span>人脸 / 人体</span><span></span></button>
+          </aside>
+          <div class="mode-pane">
+            <h2 class="section-title"><span id="mode-module-name">Pika</span> 的扫描模式</h2>
+            <p class="section-desc">可多选。系统按列表顺序生成任务，每个模式结束后自动创建下一次扫描。</p>
+            <div class="mode-toolbar">
+              <label class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="mode-search" class="search-input" type="search" placeholder="搜索模式，例如：无标记点、纹理、框架点"></label>
+              <button class="text-button" id="select-visible" type="button">全选当前结果</button>
+              <button class="text-button" id="clear-selected" type="button">清空</button>
+            </div>
+            <ul class="mode-results" id="mode-results"></ul>
+          </div>
+          <aside class="selected-pane">
+            <span class="filter-label">已选模式</span>
+            <div class="selection-number"><span id="selected-count">0</span> <small>个</small></div>
+            <div id="selected-content"></div>
+          </aside>
+        </section>
+
+        <section class="page page-output" data-page="3">
+          <div class="content-pane">
+            <h2 class="section-title">最后确认任务生成方式</h2>
+            <p class="section-desc">系统会基于已选模式生成标准步骤。自动步骤会在右侧摘要中明确标记。</p>
+            <div class="choice-group">
+              <span class="group-label">任务类型</span>
+              <div class="task-kind-grid">
+                <button class="choice-card selected" type="button" data-kind="开流"><span class="choice-title">开流测试<span class="choice-radio"></span></span><span class="choice-desc">验证扫描模式能正常开流并达到目标帧数。</span><span class="choice-steps">配置参数 → 扫描 → 完成</span></button>
+                <button class="choice-card" type="button" data-kind="后处理"><span class="choice-title">后处理测试<span class="choice-radio"></span></span><span class="choice-desc">扫描完成后继续验证融合、封装和贴图流程。</span><span class="choice-steps">开流步骤 + 融合 → 封装 → 贴图</span></button>
+              </div>
+            </div>
+            <div class="choice-group" id="connection-group">
+              <span class="group-label">连接方式</span>
+              <div class="segmented"><button class="segment selected" type="button" data-connection="USB">USB</button><button class="segment" type="button" data-connection="Wi-Fi">Wi-Fi</button></div>
+              <p class="field-help">仅用于筛选该连接方式对应的 preset，不会生成连接设备步骤。</p>
+            </div>
+            <div class="choice-group">
+              <label class="group-label" for="target-frames">目标帧数</label>
+              <div class="frame-setting">
+                <div class="number-stepper" id="frame-stepper">
+                  <button class="number-button" id="decrease-frames" type="button" aria-label="目标帧数减少 50">−</button>
+                  <input class="frame-input" id="target-frames" type="number" min="1" max="100000" step="1" value="200" inputmode="numeric" aria-describedby="frame-help frame-error">
+                  <button class="number-button" id="increase-frames" type="button" aria-label="目标帧数增加 50">＋</button>
+                </div>
+                <span class="frame-unit">帧</span>
+              </div>
+              <p class="field-help" id="frame-help">统一应用于本任务的全部扫描模式，默认 200 帧。</p>
+              <p class="field-error" id="frame-error" role="alert">请输入 1–100000 之间的整数。</p>
+            </div>
+            <div class="choice-group">
+              <span class="group-label">模式顺序</span>
+              <div class="setting-row">
+                <div class="segmented"><button class="segment selected" type="button" data-order="preset">按 preset 顺序</button><button class="segment" type="button" data-order="random">随机打乱</button></div>
+                <button class="text-button" id="reshuffle-order" type="button" hidden>重新打乱</button>
+              </div>
+              <p class="field-help" id="order-help">默认按 preset 中的顺序执行；随机后会将本次顺序固化到任务中，运行时不再变化。</p>
+            </div>
+            <div class="rule-callout" id="special-rule"><strong>Pika 稳定性规则已启用</strong><p>系统将在新建项目、切换扫描、配置参数和部分后处理节点之间自动插入 1–3 秒等待，无需手工添加。</p></div>
+          </div>
+          <aside class="summary-pane">
+            <div class="summary-head"><h2>任务生成摘要</h2><span id="summary-status">可生成</span></div>
+            <div class="summary-meta">
+              <div><small>模组</small><strong id="summary-module">Pika</strong></div>
+              <div><small>模式</small><strong><span id="summary-modes">0</span> 个</strong></div>
+              <div><small>目标帧数</small><strong><span id="summary-frames">200</span> 帧</strong></div>
+              <div><small>预计步骤</small><strong><span id="summary-steps">0</span> 步</strong></div>
+            </div>
+            <ol class="flow-list" id="flow-list"></ol>
+          </aside>
+        </section>
+      </main>
+
+      <footer class="wizard-foot">
+        <div class="foot-summary" id="foot-summary">请选择一个扫描模组</div>
+        <div class="foot-actions"><button class="button secondary" id="back-button" type="button">取消</button><button class="button primary" id="next-button" type="button" disabled>下一步：选择模式</button></div>
+      </footer>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status">设计稿演示：任务已生成并打开编辑器</div>
+
+  <script>
+    const moduleData = {
+      "Pika": {
+        tags: ["USB / Wi-Fi", "特殊等待", "200 帧"], connection: true,
+        modes: ["线激光-点云-有标志点-标准", "线激光-点云-有标志点-均衡", "线激光-点云-有标志点-快速", "线激光-点云-无标志点", "线激光-框架点-开启贴图", "线激光-框架点-不贴图-标准", "线激光-框架点-不贴图-均衡", "线激光-框架点-不贴图-快速", "散斑-点云-大物体-几何", "散斑-点云-大物体-纹理", "散斑-点云-中物体-几何", "散斑-点云-中物体-纹理", "散斑-点云-小物体-几何", "散斑-点云-小物体-纹理", "散斑-点云-人脸-几何", "散斑-点云-人脸-纹理", "散斑-点云-人体-几何", "散斑-点云-人体-纹理", "wifi-线激光-点云", "wifi-框架点-开启贴图"]
+      },
+      "P1": { tags: ["USB / Wi-Fi", "线激光", "100 帧"], connection: true, modes: ["线激光-点云-交叉线", "线激光-点云-平行线", "线激光-点云-单线", "线激光-框架点-开启贴图-usb", "线激光-框架点-关闭贴图-usb", "线激光-标记点-框架点-开启贴图-wifi", "线激光-标记点-框架点-关闭贴图-wifi", "线激光-无标记点", "散斑-小物体-几何", "散斑-小物体-纹理", "散斑-中物体-几何", "散斑-中物体-纹理", "散斑-大物体-几何-标准", "散斑-大物体-几何-广角", "散斑-大物体-纹理-标准", "散斑-大物体-纹理-广角", "散斑-人脸-几何-标准", "散斑-人脸-纹理-标准", "散斑-人体-几何", "散斑-人体-纹理"] },
+      "P1S": { tags: ["线激光", "散斑", "100 帧"], modes: ["线激光-点云-交叉线", "线激光-点云-平行线", "线激光-点云-单线", "线激光-框架点-开启贴图", "线激光-框架点-关闭贴图", "线激光-无标记点", "散斑-小物体-几何-快速", "散斑-小物体-纹理-快速", "散斑-中物体-几何-快速", "散斑-中物体-纹理-高精度", "散斑-大物体-几何", "散斑-大物体-纹理", "散斑-人脸-几何-快速", "散斑-人脸-纹理-高精度", "散斑-人体-几何", "散斑-人体-纹理"] },
+      "S1": { tags: ["USB / Wi-Fi", "框架点", "100–200 帧"], connection: true, modes: ["线激光-点云-交叉线", "线激光-点云-平行线", "线激光-点云-单线", "线激光-框架点-开启贴图-usb", "线激光-框架点-关闭贴图-usb", "线激光-标记点-框架点-开启贴图-wifi", "线激光-标记点-框架点-关闭贴图-wifi", "线激光-无标记点", "散斑-点云-大物体-几何-标准", "散斑-点云-大物体-纹理-广角", "散斑-点云-中物体-几何", "散斑-点云-中物体-标志点", "散斑-点云-小物体-几何", "散斑-点云-人脸-几何", "散斑-点云-人脸-纹理", "散斑-点云-人体-几何", "散斑-点云-人体-纹理", "散斑框架点-大物体", "散斑框架点-中物体", "散斑框架点-小物体"] },
+      "Raptor": { tags: ["200 帧", "线激光", "框架点"], modes: ["线激光-点云-交叉线", "线激光-点云-平行线", "线激光-点云-单线", "线激光-无标记点", "线激光-框架点-开启贴图", "线激光-框架点-关闭贴图", "散斑-点云-大物体-几何", "散斑-点云-大物体-纹理", "散斑-点云-大物体-标志点", "散斑-点云-中物体-几何", "散斑-点云-中物体-纹理", "散斑-点云-中物体-标志点", "散斑-点云-小物体-几何", "散斑-点云-小物体-纹理", "散斑-点云-小物体-标志点", "散斑-点云-人脸-几何", "散斑-点云-人脸-纹理", "散斑-点云-人体-几何", "散斑-点云-人体-纹理", "散斑-框架点-大物体", "散斑-框架点-中物体", "散斑-框架点-小物体"] },
+      "X1": { tags: ["200 帧", "线激光", "框架点"], modes: ["线激光-点云-交叉线", "线激光-点云-平行线", "线激光-点云-单线", "线激光-框架点-开启贴图", "线激光-框架点-关闭贴图", "线激光-无标记点", "散斑-点云-大物体-几何", "散斑-点云-大物体-纹理", "散斑-点云-大物体-标志点", "散斑-点云-中物体-几何", "散斑-点云-中物体-纹理", "散斑-点云-中物体-标志点", "散斑-点云-小物体-几何", "散斑-点云-小物体-纹理", "散斑-点云-小物体-标志点", "散斑-点云-人脸-几何", "散斑-点云-人体-纹理", "散斑-框架点-大物体", "散斑-框架点-中物体", "散斑-框架点-小物体"] },
+      "Otter": { tags: ["26 个模式", "框架点", "100 帧"], modes: ["小物体-几何-快速", "小物体-几何-高精度", "小物体-纹理-快速", "小物体-标志点", "中物体-几何-快速", "中物体-几何-高精度", "中物体-纹理-快速", "中物体-标志点", "大物体-几何-快速", "大物体-纹理-高精度", "大物体-标志点", "人脸-几何-快速", "人脸-纹理-高精度", "人体-几何-快速", "人体-纹理-高精度", "框架点-小物体", "框架点-中物体", "框架点-大物体"] },
+      "Otter Lite": { tags: ["轻量模组", "框架点", "100 帧"], modes: ["中物体-几何", "中物体-纹理", "大物体-几何-快速", "大物体-几何-高精度", "大物体-纹理-快速", "大物体-纹理-高精度", "大物体-标志点", "人脸-几何", "人脸-纹理", "人体-几何-快速", "人体-纹理-高精度", "框架点-小物体", "框架点-中物体", "框架点-大物体"] },
+      "Ferret": { tags: ["23 个模式", "散斑", "100 帧"], modes: ["中物体-几何-快速", "中物体-几何-高精度", "中物体-纹理-快速", "中物体-纹理-高精度", "中物体-标志点-快速", "小物体-几何", "小物体-纹理", "小物体-标志点", "大物体-几何-快速", "大物体-几何-高精度", "大物体-纹理-快速", "大物体-标志点-快速", "人脸-几何-快速", "人脸-几何-高精度", "人脸-纹理-快速", "人体-几何-快速", "人体-几何-高精度", "人体-纹理-快速"] }
+    };
+
+    const state = { step: 1, module: "", selected: new Set(), filter: "全部", query: "", kind: "开流", connection: "USB", targetFrames: 200, framesValid: true, randomize: false, randomOrder: [] };
+    const moduleGrid = document.getElementById("module-grid");
+    const modeResults = document.getElementById("mode-results");
+
+    function classify(name) {
+      if (name.includes("人脸") || name.includes("人体")) return "人像";
+      if (name.includes("框架点")) return "框架点";
+      if (name.includes("线激光") || name.startsWith("wifi-")) return "线激光";
+      if (name.includes("散斑")) return "散斑";
+      return "散斑";
+    }
+
+    function renderModules() {
+      moduleGrid.innerHTML = Object.entries(moduleData).map(([name, data]) => `
+        <button class="module-button ${state.module === name ? "selected" : ""}" type="button" data-module="${name}" aria-pressed="${state.module === name}">
+          <span class="module-name-row"><span class="module-name">${name}</span><span class="mode-count">${data.modes.length} 个模式</span></span>
+          <span class="module-tags">${data.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</span>
+        </button>`).join("");
+      moduleGrid.querySelectorAll("[data-module]").forEach(button => button.addEventListener("click", () => {
+        if (state.module !== button.dataset.module) {
+          state.selected.clear();
+          state.randomOrder = [];
+        }
+        state.module = button.dataset.module;
+        renderModules();
+        refreshAll();
+      }));
+    }
+
+    function visibleModes() {
+      if (!state.module) return [];
+      return moduleData[state.module].modes.filter(name => {
+        const matchesFilter = state.filter === "全部" || classify(name) === state.filter || (state.filter === "线激光" && name.startsWith("wifi-"));
+        return matchesFilter && name.toLowerCase().includes(state.query.toLowerCase());
+      });
+    }
+
+    function presetSelectedModes() {
+      if (!state.module) return [];
+      return moduleData[state.module].modes.filter(name => state.selected.has(name));
+    }
+
+    function orderedSelectedModes() {
+      const presetOrder = presetSelectedModes();
+      if (!state.randomize) return presetOrder;
+      const selected = new Set(presetOrder);
+      state.randomOrder = state.randomOrder.filter(name => selected.has(name));
+      presetOrder.forEach(name => {
+        if (!state.randomOrder.includes(name)) state.randomOrder.push(name);
+      });
+      return state.randomOrder;
+    }
+
+    function reshuffleSelectedModes() {
+      const previous = orderedSelectedModes();
+      const shuffled = [...previous];
+      for (let index = shuffled.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+      }
+      if (shuffled.length > 1 && shuffled.every((name, index) => name === previous[index])) {
+        shuffled.push(shuffled.shift());
+      }
+      state.randomOrder = shuffled;
+    }
+
+    function renderModes() {
+      const modes = state.module ? moduleData[state.module].modes : [];
+      document.getElementById("mode-module-name").textContent = state.module || "当前模组";
+      document.getElementById("filter-all-count").textContent = modes.length;
+      document.querySelectorAll(".filter-button").forEach(button => {
+        const category = button.dataset.filter;
+        button.classList.toggle("active", category === state.filter);
+        if (category !== "全部") button.lastElementChild.textContent = modes.filter(name => classify(name) === category).length;
+      });
+      const visible = visibleModes();
+      modeResults.innerHTML = visible.length ? visible.map(name => {
+        const category = classify(name);
+        const special = state.module === "Pika" || category === "框架点";
+        return `<li class="mode-item"><label class="mode-label"><input class="mode-check" type="checkbox" data-mode="${name}" ${state.selected.has(name) ? "checked" : ""}><span class="mode-title">${name}</span><span class="mode-badges"><span class="mode-kind">${category}</span>${special ? `<span class="mode-kind special">自动规则</span>` : ""}</span></label></li>`;
+      }).join("") : `<li class="empty-selection">没有匹配的扫描模式，请调整搜索或分类。</li>`;
+      modeResults.querySelectorAll("[data-mode]").forEach(input => input.addEventListener("change", () => {
+        input.checked ? state.selected.add(input.dataset.mode) : state.selected.delete(input.dataset.mode);
+        refreshAll(false);
+      }));
+      renderSelected();
+    }
+
+    function renderSelected() {
+      document.getElementById("selected-count").textContent = state.selected.size;
+      const container = document.getElementById("selected-content");
+      if (!state.selected.size) {
+        container.innerHTML = `<div class="empty-selection">尚未选择模式<br>可从左侧列表多选</div>`;
+        return;
+      }
+      container.innerHTML = `<ul class="selected-list">${orderedSelectedModes().map((name, index) => `<li><span>${state.randomize ? `${index + 1}. ` : ""}${name}</span><button type="button" data-remove="${name}" aria-label="移除 ${name}">×</button></li>`).join("")}</ul>`;
+      container.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => {
+        state.selected.delete(button.dataset.remove);
+        refreshAll();
+      }));
+    }
+
+    function estimateSteps() {
+      if (!state.selected.size) return 0;
+      let perMode = state.kind === "后处理" ? 7 : 4;
+      let total = 2 + state.selected.size * perMode - 1;
+      const framePointCount = [...state.selected].filter(name => name.includes("框架点")).length;
+      total += framePointCount * 3;
+      if (state.module === "Pika") total += state.selected.size * 3 + 2;
+      return total;
+    }
+
+    function renderSummary() {
+      const isPika = state.module === "Pika";
+      const supportsConnection = Boolean(state.module && moduleData[state.module].connection);
+      document.getElementById("connection-group").style.display = supportsConnection ? "block" : "none";
+      document.getElementById("special-rule").style.display = isPika ? "block" : "none";
+      document.getElementById("summary-module").textContent = state.module || "-";
+      document.getElementById("summary-modes").textContent = state.selected.size;
+      document.getElementById("summary-frames").textContent = state.framesValid ? state.targetFrames : "-";
+      document.getElementById("summary-steps").textContent = estimateSteps();
+      document.getElementById("summary-status").textContent = state.framesValid ? "可生成" : "请检查帧数";
+      document.getElementById("reshuffle-order").hidden = !state.randomize;
+      const connectionText = supportsConnection ? ` · ${state.connection}` : "";
+      const orderText = state.randomize ? "随机顺序（已固化）" : "preset 顺序";
+      const flow = [
+        ["准备运行环境", `激活窗口并新建项目${isPika ? "，随后等待 1 秒" : ""}`, isPika],
+        ["逐个执行已选模式", `${state.selected.size || 0} 个模式 · ${orderText} · 配置参数 → 扫描至 ${state.framesValid ? state.targetFrames : "-"} 帧 → 完成`, false],
+        ...(isPika ? [["插入稳定性等待", "在配置参数、创建扫描等关键节点自动等待 1–3 秒", true]] : []),
+        ...([...state.selected].some(name => name.includes("框架点")) ? [["执行框架点流程", "等待 5 秒并暂停 → 切点云 → 继续扫描", true]] : []),
+        ...(state.kind === "后处理" ? [["执行后处理", "融合 → 封装 → 按模式规则执行贴图", true]] : []),
+        ["任务成功收尾", `返回首页 · ${state.kind}${connectionText}`, true]
+      ];
+      document.getElementById("flow-list").innerHTML = flow.map(([title, desc, auto]) => `<li class="flow-item"><span class="flow-dot"></span><div class="flow-title">${title}${auto ? `<span class="auto-tag">自动</span>` : ""}</div><div class="flow-desc">${desc}</div></li>`).join("");
+    }
+
+    function showStep(step) {
+      if (step === 2 && !state.module) return;
+      if (step === 3 && !state.selected.size) return;
+      state.step = step;
+      document.querySelectorAll(".page").forEach(page => page.classList.toggle("active", Number(page.dataset.page) === step));
+      document.querySelectorAll(".step-button").forEach(button => {
+        const buttonStep = Number(button.dataset.stepNav);
+        button.classList.toggle("active", buttonStep === step);
+        button.classList.toggle("done", buttonStep < step);
+      });
+      refreshFooter();
+    }
+
+    function refreshFooter() {
+      const back = document.getElementById("back-button");
+      const next = document.getElementById("next-button");
+      if (state.step === 1) {
+        back.textContent = "取消";
+        next.textContent = "下一步：选择模式";
+        next.disabled = !state.module;
+      } else if (state.step === 2) {
+        back.textContent = "上一步";
+        next.textContent = "下一步：生成方式";
+        next.disabled = !state.selected.size;
+      } else {
+        back.textContent = "上一步";
+        next.textContent = "生成任务并打开编辑器";
+        next.disabled = !state.selected.size || !state.framesValid;
+      }
+      const foot = document.getElementById("foot-summary");
+      if (!state.module) foot.innerHTML = "请选择一个扫描模组";
+      else if (!state.selected.size) foot.innerHTML = `已选 <strong>${state.module}</strong> · 请选择一个或多个扫描模式`;
+      else foot.innerHTML = `<strong>${state.module}</strong> · 已选 <strong>${state.selected.size}</strong> 个模式 · <strong>${state.framesValid ? state.targetFrames : "-"}</strong> 帧 · ${state.randomize ? "随机顺序已固化" : "preset 顺序"} · ${state.kind}${moduleData[state.module].connection ? ` · ${state.connection}` : ""}`;
+    }
+
+    function refreshAll(renderModeList = true) {
+      document.getElementById("aside-module").textContent = state.module || "尚未选择";
+      document.getElementById("aside-module-help").textContent = state.module ? `${moduleData[state.module].modes.length} 个扫描模式可供选择。` : "选择一个模组后继续。你可以随时返回修改，已选模式将被清空。";
+      document.getElementById("step-module-copy").textContent = state.module || "确定扫描设备";
+      document.getElementById("step-mode-copy").textContent = state.selected.size ? `已选 ${state.selected.size} 个` : "支持多选";
+      document.getElementById("step-output-copy").textContent = `${state.kind}${state.module && moduleData[state.module].connection ? ` · ${state.connection}` : ""}`;
+      if (renderModeList) renderModes(); else renderSelected();
+      renderSummary();
+      refreshFooter();
+    }
+
+    document.querySelectorAll("[data-step-nav]").forEach(button => button.addEventListener("click", () => showStep(Number(button.dataset.stepNav))));
+    document.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => { state.filter = button.dataset.filter; renderModes(); }));
+    document.querySelectorAll("[data-kind]").forEach(button => button.addEventListener("click", () => {
+      state.kind = button.dataset.kind;
+      document.querySelectorAll("[data-kind]").forEach(item => item.classList.toggle("selected", item === button));
+      refreshAll(false);
+    }));
+    document.querySelectorAll("[data-connection]").forEach(button => button.addEventListener("click", () => {
+      state.connection = button.dataset.connection;
+      document.querySelectorAll("[data-connection]").forEach(item => item.classList.toggle("selected", item === button));
+      refreshAll(false);
+    }));
+    document.querySelectorAll("[data-order]").forEach(button => button.addEventListener("click", () => {
+      state.randomize = button.dataset.order === "random";
+      document.querySelectorAll("[data-order]").forEach(item => item.classList.toggle("selected", item === button));
+      if (state.randomize) reshuffleSelectedModes();
+      else state.randomOrder = [];
+      refreshAll(false);
+    }));
+    document.getElementById("reshuffle-order").addEventListener("click", () => {
+      reshuffleSelectedModes();
+      refreshAll(false);
+    });
+    function updateTargetFrames(rawValue) {
+      const parsed = Number(rawValue);
+      state.framesValid = Number.isInteger(parsed) && parsed >= 1 && parsed <= 100000;
+      if (state.framesValid) state.targetFrames = parsed;
+      document.getElementById("frame-stepper").classList.toggle("invalid", !state.framesValid);
+      document.getElementById("frame-error").classList.toggle("visible", !state.framesValid);
+      document.getElementById("target-frames").setAttribute("aria-invalid", String(!state.framesValid));
+      refreshAll(false);
+    }
+    document.getElementById("target-frames").addEventListener("input", event => updateTargetFrames(event.target.value));
+    document.getElementById("target-frames").addEventListener("blur", event => {
+      if (!state.framesValid) {
+        event.target.value = 200;
+        updateTargetFrames(200);
+      }
+    });
+    document.getElementById("decrease-frames").addEventListener("click", () => {
+      const value = Math.max(1, (state.framesValid ? state.targetFrames : 200) - 50);
+      document.getElementById("target-frames").value = value;
+      updateTargetFrames(value);
+    });
+    document.getElementById("increase-frames").addEventListener("click", () => {
+      const value = Math.min(100000, (state.framesValid ? state.targetFrames : 200) + 50);
+      document.getElementById("target-frames").value = value;
+      updateTargetFrames(value);
+    });
+    document.getElementById("mode-search").addEventListener("input", event => { state.query = event.target.value.trim(); renderModes(); });
+    document.getElementById("select-visible").addEventListener("click", () => { visibleModes().forEach(name => state.selected.add(name)); refreshAll(); });
+    document.getElementById("clear-selected").addEventListener("click", () => { state.selected.clear(); refreshAll(); });
+    document.getElementById("back-button").addEventListener("click", () => { if (state.step > 1) showStep(state.step - 1); });
+    document.getElementById("next-button").addEventListener("click", () => {
+      if (state.step < 3) showStep(state.step + 1);
+      else {
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2600);
+      }
+    });
+
+    renderModules();
+    refreshAll();
+  </script>
+</body>
+</html>

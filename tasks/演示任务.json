@@ -1,0 +1,31 @@
+{
+  "case_id": "演示任务",
+  "name": "演示任务",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\liangtai\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+  },
+  "keywords": [
+    "Traceback",
+    "Exception",
+    "ERROR",
+    "失败",
+    "崩溃"
+  ],
+  "steps": [
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至大物体",
+      "params": {
+        "preset": "大物体"
+      },
+      "on_fail": {
+        "action": "abort",
+        "max_retries": 0,
+        "retry_wait_sec": 0.5
+      }
+    }
+  ]
+}

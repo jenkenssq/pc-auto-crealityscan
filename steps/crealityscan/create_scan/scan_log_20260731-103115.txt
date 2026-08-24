@@ -1,0 +1,639 @@
+[2026-07-31 10:31:15.746824][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:15.749051][INFO ][7812][::0] set fps file dir: D:\扫描软件\1.12.2\CrealityScan
+[2026-07-31 10:31:15.749096][WARN ][7812][::0] [1;33mthe num_thread is used default value[0m
+[2026-07-31 10:31:15.749111][INFO ][7812][::0] create thread pool with 10 threads
+[2026-07-31 10:31:15.749123][INFO ][7812][::0] create thread pool with 2 threads
+[2026-07-31 10:31:15.749135][INFO ][7812][::0] create thread pool with 1 threads
+[2026-07-31 10:31:15.749147][INFO ][7812][::0] create thread pool with 1 threads
+[2026-07-31 10:31:15.749309][INFO ][7812][::0] create thread pool with 1 threads
+[2026-07-31 10:31:15.749325][INFO ][7812][::0] scan log dir: C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260731103115
+[2026-07-31 10:31:15.749332][INFO ][7812][::0] the device config file path is nullptr !
+[2026-07-31 10:31:15.786678][INFO ][7812][::0] [1;33mthis is connect device mode ![0m
+[2026-07-31 10:31:15.786710][INFO ][7812][::0] ob_sdk_log_dir: C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260731103115
+[2026-07-31 10:31:15.786718][INFO ][7812][::0] init context success !
+[2026-07-31 10:31:15.786723][INFO ][7812][::0] create OBScanContext success !
+[2026-07-31 10:31:15.786728][INFO ][7812][::0] [OBHardwareDetect] Thread spawned successfully.
+[2026-07-31 10:31:15.786733][INFO ][7812][::0] start hardware detect thread
+[2026-07-31 10:31:15.786738][INFO ][7812][::0] detect all gpu before !
+[2026-07-31 10:31:15.788694][INFO ][38548][::0] dgg: Load OpenCL.dll from path: C:/Windows/System32/OpenCL.dll
+
+[2026-07-31 10:31:15.828478][INFO ][7812][::0] dgg: first platform device finding completed successfully.
+[2026-07-31 10:31:15.828532][INFO ][7812][::0] dgg: second platform device finding completed successfully.
+[2026-07-31 10:31:15.828538][INFO ][7812][::0] dgg: third platform device finding completed successfully.
+[2026-07-31 10:31:15.828544][INFO ][7812][::0] dgg: fourth platform device finding completed successfully.
+[2026-07-31 10:31:15.828549][INFO ][7812][::0] find 2 gpu devices !
+[2026-07-31 10:31:15.828554][INFO ][37796][::0] test all gpu b
+[2026-07-31 10:31:15.828559][INFO ][7812][::0] obscan_context_get_device_management
+[2026-07-31 10:31:15.828564][INFO ][7812][::0] before get device info list !
+[2026-07-31 10:31:15.828568][INFO ][7812][::0] get device infos success !
+[2026-07-31 10:31:15.828572][INFO ][7812][::0] obscan_context_add_data_msg_listener
+[2026-07-31 10:31:15.828577][INFO ][7812][::0] add OBScanMessageListener success !
+[2026-07-31 10:31:15.828582][INFO ][7812][::0] obscan_context_add_process_msg_listener
+[2026-07-31 10:31:15.828586][INFO ][7812][::0] add OBScanProcessMessageListener success !
+[2026-07-31 10:31:15.828591][INFO ][7812][::0] obscan_device_management_add_control_msg_listener
+[2026-07-31 10:31:15.828596][INFO ][7812][::0] add OBScanProcessMessageListener success !
+[2026-07-31 10:31:15.828601][INFO ][7812][::0] obscan_device_management_add_device_msg_listener
+[2026-07-31 10:31:16.170703][ERROR][7812][::0] function: ob::Device::getBoolProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:16.170738][INFO ][7812][::0] firmware version:1.0.57,get device calibration timestamp:1785463485
+[2026-07-31 10:31:16.170747][INFO ][7812][::0] add device info to list sn:CR5G16A00GX
+[2026-07-31 10:31:16.170754][INFO ][7812][::0] current device info list:
+[2026-07-31 10:31:16.170761][INFO ][7812][::0] device sn:CR5G16A00GX
+[2026-07-31 10:31:16.239861][INFO ][7812][::0] get device calibration timestamp:1785463485
+[2026-07-31 10:31:16.239914][ERROR][7812][::0] function: ob::Device::getBoolProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:16.241858][ERROR][7812][::0] function: ob::Device::getBoolProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:16.243845][INFO ][7812][::0] usb device is registered successfully 
+[2026-07-31 10:31:16.243953][INFO ][7812][::0] set select device serial number:CR5G16A00GX
+[2026-07-31 10:31:16.243976][INFO ][7812][::0] device connected state call back begin
+[2026-07-31 10:31:16.243987][INFO ][7812][::0] #########camera state###############
+[2026-07-31 10:31:16.243992][INFO ][7812][::0] #########usb connected##############
+[2026-07-31 10:31:16.243997][INFO ][7812][::0] [1;31mupdate_camera_status 0, cur_device: true[0m
+[2026-07-31 10:31:16.244002][INFO ][7812][::0] calib update callback begin
+[2026-07-31 10:31:16.244007][INFO ][7812][::0] calib update callback end
+[2026-07-31 10:31:16.244011][INFO ][7812][::0] camera name: SermoonP1
+[2026-07-31 10:31:16.244016][INFO ][7812][::0] camera serial number: CR5G16A00GX
+[2026-07-31 10:31:16.244021][INFO ][7812][::0] camera connection type: USB3.0
+[2026-07-31 10:31:16.244025][INFO ][7812][::0] camera firmware version: 1.0.57
+[2026-07-31 10:31:16.244030][INFO ][7812][::0] wifi device firmware version: Unknown
+[2026-07-31 10:31:16.244034][INFO ][7812][::0] get active device serial number:CR5G16A00GX
+[2026-07-31 10:31:16.245334][ERROR][7812][::0] function: ob::Device::getIntProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:16.247346][ERROR][7812][::0] function: ob::Device::getIntProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:16.247359][INFO ][7812][::0] the device calib status: false
+[2026-07-31 10:31:16.247364][INFO ][7812][::0] init get fpga upgrade state:3,percentage:100
+[2026-07-31 10:31:16.247369][INFO ][7812][::0] check device pccupancy status begin
+[2026-07-31 10:31:16.324963][INFO ][7812][::0] get origin calibration param done,origin params size:4
+[2026-07-31 10:31:16.421053][INFO ][37796][::0] test all gpu e: NVIDIA GeForce RTX 5060 Laptop GPU
+[2026-07-31 10:31:16.457607][INFO ][7812][::0] is support rescan: true
+[2026-07-31 10:31:16.457636][INFO ][7812][::0] send device msg id : OB_SCAN_MESSAGE_ID_DEVICE_CONNECT
+[2026-07-31 10:31:16.457642][INFO ][7812][::0] obscan_device_management_get_device_num
+[2026-07-31 10:31:16.457648][INFO ][7812][::0] device connected state call back done
+[2026-07-31 10:31:16.457653][INFO ][7812][::0] device state callback success !
+[2026-07-31 10:31:16.457657][INFO ][7812][::0] obscan_device_management_add_device_tips_msg_listener
+[2026-07-31 10:31:16.457662][INFO ][7812][::0] add OBScanDeviceTipsMessageListener success !
+[2026-07-31 10:31:16.459615][INFO ][7812][::0] obscan_context_get_hardware_infos
+[2026-07-31 10:31:17.659848][INFO ][7812][::0] obscan_device_management_get_device_num
+[2026-07-31 10:31:17.659899][INFO ][7812][::0] obscan_device_management_get_device_info
+[2026-07-31 10:31:17.659914][INFO ][7812][::0] obscan_device_management_get_device_num
+[2026-07-31 10:31:17.662077][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:17.664229][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:17.665877][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:17.686348][INFO ][7812][::0] obscan_context_get_gpu_device_info_list
+[2026-07-31 10:31:24.863289][INFO ][7812][::0] obscan_context_create_session
+[2026-07-31 10:31:24.863340][INFO ][7812][::0] before create session !
+[2026-07-31 10:31:24.863346][INFO ][7812][::0] [OBScanSession] Thread spawned successfully.
+[2026-07-31 10:31:24.863352][INFO ][7812][::0] create dir before: D:\projects\Project_20260731103124
+[2026-07-31 10:31:24.863357][INFO ][7812][::0] create dir after: D:/projects/Project_20260731103124
+[2026-07-31 10:31:24.869798][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:24.876147][INFO ][7812][::0] session init state : OB_SCAN_SUCCESS
+[2026-07-31 10:31:24.876173][INFO ][7812][::0] create session success !
+[2026-07-31 10:31:25.076659][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.076704][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.084666][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:25.084699][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:25.084711][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:25.084722][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:25.084732][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:25.084743][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.084756][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.084769][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.084783][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:25.084796][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:25.086684][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.086720][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.086726][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.086731][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.092661][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.092673][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.092678][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.092682][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.092687][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.092691][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.092696][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.092700][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.094653][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:25.094666][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:25.094676][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:25.094687][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:25.094697][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:25.094707][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:25.094717][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.094728][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.094739][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:25.094750][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:25.094760][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:25.094770][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.094779][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.094789][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.094794][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.094799][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:25.094803][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:25.100139][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:25.102135][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:25.104639][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:25.108643][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:25.108673][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:25.110344][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:25.113391][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:25.113416][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:26.433361][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:26.433417][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:26.433430][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:26.433441][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:26.433451][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:26.433455][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:26.433460][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:26.433466][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.434869][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.434922][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.434935][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:26.434946][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:26.434956][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.434962][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.434967][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.434971][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.437290][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:26.441281][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:26.443276][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:26.443293][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:26.448794][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:26.448827][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:26.448839][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:26.448849][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.448859][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.448870][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.448882][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.448894][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.448906][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.454770][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.454789][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.454794][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:26.454799][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:26.454803][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:26.454808][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:26.454813][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:26.454818][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.456288][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.456347][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:26.456355][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:26.456362][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:26.456366][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.456371][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.456375][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.456380][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458276][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458307][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458313][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458318][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458322][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458327][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458331][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458336][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458340][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458345][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458349][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458353][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458358][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458363][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458368][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458373][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458378][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458382][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458387][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458392][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458397][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458401][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458406][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458411][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458415][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.458420][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.458425][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:26.462259][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:26.462274][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:26.462283][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.462293][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.462303][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.462313][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.462323][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.462333][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466188][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466202][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466208][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466213][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466219][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466224][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466230][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466235][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466241][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466246][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466251][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466256][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:26.466262][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:26.466267][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.055067][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:27.055102][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:27.055109][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:27.055114][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:27.055119][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:27.055124][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:27.055128][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.055134][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.057062][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.057069][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:27.057077][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:27.057082][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.057086][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.057091][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.057095][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.057100][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.057104][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.061046][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:27.061059][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:27.061070][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:27.064553][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:27.066558][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:27.553589][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:27.553628][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:27.555082][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:27.555118][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:27.555125][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:27.555130][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:27.555135][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:27.555140][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.555144][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.555150][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.555155][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:27.555159][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:27.555164][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.555169][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.555174][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.555179][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.557075][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:27.559074][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:27.561073][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:27.561088][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:27.563064][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:27.563077][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:27.563087][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:27.564575][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.564606][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.564622][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.564636][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.564650][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.564662][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.566093][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.566105][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.566111][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:27.566116][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:27.566121][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:27.566125][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:27.566130][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:27.566135][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.568094][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.568113][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:27.568124][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:27.568134][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:27.568146][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568158][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568170][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568182][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568194][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568201][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568206][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568211][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568216][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568220][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568225][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568230][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568235][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568240][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568244][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568249][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568254][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568259][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568264][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568269][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568273][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568278][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568283][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568288][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568293][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568298][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568302][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568307][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568311][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.568316][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.568320][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:27.572076][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:27.574581][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:27.574623][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.574635][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.574645][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.574649][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.574654][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.574658][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580699][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580731][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580738][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580744][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580750][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580756][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580761][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580767][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580773][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580778][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580784][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580789][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:27.580795][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:27.580801][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.030906][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:28.030955][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:28.030968][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:28.030979][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:28.030991][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:28.031001][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:28.031006][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.031012][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.031017][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.031023][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:28.032895][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:28.032929][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.032934][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.032939][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.032944][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.032948][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.032952][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.037918][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:28.039912][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:28.039927][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:28.043897][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:28.043922][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:28.382433][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:28.382487][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:28.384930][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:28.384964][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:28.385015][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:28.385022][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:28.385027][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:28.385032][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.385037][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.385042][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.385049][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:28.385053][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:28.385058][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.385063][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.385071][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.385078][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.386715][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:28.388704][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:28.390739][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:28.392693][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:28.394696][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:28.394737][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:28.394751][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:28.394762][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.394772][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.394782][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.394792][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.394802][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.394812][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.398693][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.398712][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.398723][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:28.398734][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:28.398744][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:28.398755][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:28.398766][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:28.398777][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.398788][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.398800][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.398811][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:28.398821][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:28.398836][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.398851][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.398862][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.398872][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400684][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400701][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400712][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400722][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400733][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400748][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400762][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400780][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400792][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400804][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400816][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400828][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400840][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400852][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400863][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400875][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400887][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400898][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400910][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400924][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400936][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400948][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400960][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400971][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400979][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.400984][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.400989][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:28.404717][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:28.404736][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:28.404741][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.404747][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.404753][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.404758][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.404764][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.404770][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408070][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408094][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408100][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408106][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408112][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408117][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408122][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408128][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408134][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408140][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408146][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408152][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.408158][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.408164][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.695137][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:28.695166][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:28.695173][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:28.695177][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:28.695182][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:28.695188][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:28.695194][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.696303][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.696310][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:28.696315][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:28.696321][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:28.696325][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.696330][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.696335][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.696340][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.698304][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:28.698336][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:28.701809][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:28.701825][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:28.701836][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:28.705467][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:28.707461][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:29.010681][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:29.010721][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:29.013183][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:29.013197][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:29.013208][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:29.013218][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:29.013229][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:29.013242][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.013255][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.013268][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.013281][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:29.013293][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:29.013304][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.013315][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.013320][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.013325][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.014711][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:29.016712][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:29.020713][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:29.020740][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:29.022700][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:29.022725][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:29.022731][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:29.024686][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.024701][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.024706][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.024711][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.024716][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.024721][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.025873][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.025899][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.025912][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:29.025923][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:29.025934][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:29.025943][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:29.025953][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:29.025965][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.027948][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.027971][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.027976][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:29.027981][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:29.027986][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.027990][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.027995][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028000][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028004][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028009][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028013][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028018][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028023][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028028][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028033][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028037][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028042][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028047][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028052][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028057][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028062][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028067][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028071][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028076][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028081][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028086][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028091][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028096][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028100][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028105][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028110][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028115][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028119][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.028124][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.028129][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:29.031936][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:29.035440][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:29.035455][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.035467][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.035480][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.035494][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.035507][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.035518][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039813][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039852][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039861][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039868][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039876][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039883][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039891][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039898][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039906][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039913][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039920][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039927][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.039935][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.039942][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.290476][INFO ][7812][::0] obscan_context_get_device_scan_config
+[2026-07-31 10:31:29.290526][INFO ][7812][::0] obscan_session_get_meshlization_mesh(0)
+[2026-07-31 10:31:29.290540][INFO ][7812][::0] obscan_session_get_meshlization_mesh(1)
+[2026-07-31 10:31:29.290550][INFO ][7812][::0] obscan_session_get_meshlization_mesh(2)
+[2026-07-31 10:31:29.290561][INFO ][7812][::0] obscan_session_get_texturization_mesh
+[2026-07-31 10:31:29.290571][INFO ][7812][::0] obscan_session_get_replace_rgb_images_texturization_mesh
+[2026-07-31 10:31:29.290582][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.290593][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.290603][INFO ][7812][::0] obscan_session_get_texturization_3D_GS_mesh_absolute_dir
+[2026-07-31 10:31:29.290614][INFO ][7812][::0] obscan_session_get_meshlization_unique_ids
+[2026-07-31 10:31:29.290624][INFO ][7812][::0] obscan_session_get_scans_size
+[2026-07-31 10:31:29.290634][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.290644][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.290654][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.290663][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.292472][INFO ][7812][::0] obscan_session_get_information
+[2026-07-31 10:31:29.292522][WARN ][7812][::0] [1;33mmust first do meshlization ![0m
+[2026-07-31 10:31:29.294964][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:29.296982][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:29.296999][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:29.298976][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:29.300966][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:32.179907][INFO ][7812][::0] obscan_session_import_marker_framework_datas
+[2026-07-31 10:31:32.180000][INFO ][7812][::0] obscan_session_reference_rod_unregister_all
+[2026-07-31 10:31:32.180034][INFO ][7812][::0] obscan_session_get_active_scan
+[2026-07-31 10:31:32.279798][INFO ][7812][::0] obscan_context_is_need_test_computer_performance
+[2026-07-31 10:31:32.284459][INFO ][7812][::0] [1;33mSDK version 3.5.0.260729[0m
+[2026-07-31 10:31:32.284486][INFO ][7812][::0] find model fps !
+[2026-07-31 10:31:32.284497][INFO ][7812][::0] obscan_session_destroy
+[2026-07-31 10:31:32.284508][INFO ][7812][::0] b receipt
+[2026-07-31 10:31:32.284517][INFO ][7812][::0] a receipt
+[2026-07-31 10:31:32.284529][INFO ][7812][::0] b receipt
+[2026-07-31 10:31:32.284535][INFO ][7812][::0] a receipt
+[2026-07-31 10:31:32.284540][INFO ][7812][::0] set thread begin
+[2026-07-31 10:31:32.284544][INFO ][7812][::0] set thread end
+[2026-07-31 10:31:32.284548][INFO ][34588][::0] [OBScanSession] Thread execution finished.
+[2026-07-31 10:31:32.284553][INFO ][7812][::0] [OBScanSession] Thread joined and stopped.
+[2026-07-31 10:31:33.205347][INFO ][7812][::0] obscan_device_management_get_device_key_mute_status
+[2026-07-31 10:31:33.208526][ERROR][7812][::0] function: ob::Device::getBoolProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6
+[2026-07-31 10:31:33.212499][ERROR][7812][::0] function: ob::Device::getBoolProperty
+args: propertyId
+message: Request failed, device response with unknown error!
+type: 6

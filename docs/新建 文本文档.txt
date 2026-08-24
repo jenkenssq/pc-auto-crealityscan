@@ -1,0 +1,697 @@
+[UI] device_info name=SermoonP1 sn=CR563LA000A connection=USB3.0 firmware=1.0.41
+
+[UI] start task_json=D:\自动化工具\自动化脚本\pc自动化工具\tasks\1.json
+[17:15:55][INFO]<airtest.core.api> Try finding: Template(D:\自动化工具\自动化脚本\pc自动化工具\steps\crealityscan\scan_until_frames_then_stop\v1_0_0\templates\tpl1772626136357.png)
+[17:15:55][DEBUG]<airtest.core.api> try match with MultiScaleTemplateMatchingPre
+[17:15:55][DEBUG]<airtest.aircv.multiscale_template_matching> [MSTemplatePre] threshold=0.7, result={'result': (288, 116), 'rectangle': ((258.0, 89.76000000000005), (258.0, 142.76000000000005), (318.0, 142.76000000000005), (318.0, 89.76000000000005)), 'confidence': 0.5057968497276306}
+[17:15:55][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.01 s.
+[17:15:55][DEBUG]<airtest.core.api> try match with TemplateMatching
+[17:15:55][DEBUG]<airtest.aircv.template_matching> [Template] threshold=0.7, result={'result': (174, 114), 'rectangle': ((144, 88), (144, 141), (204, 141), (204, 88)), 'confidence': 0.780465841293335}
+[17:15:55][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.04 s.
+[17:15:55][DEBUG]<airtest.core.api> match result: {'result': (174, 114), 'rectangle': ((144, 88), (144, 141), (204, 141), (204, 88)), 'confidence': 0.780465841293335, 'time': 0.04007411003112793}
+[JENS][scan_debug] effective_log_root=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs source=case
+[JENS] log_file=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] scan_start detected
+[JENS] scan_start_log_time=2026-05-20T17:15:55.135705
+[JENS][scan_debug] wait_frames begin log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt start_pos=2794836 target_frames=200 timeout_sec=1800.0
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2794836 pos_after=2796324 bytes=1488
+[JENS][scan_debug] wait_frames batch_frame_max=25 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=25
+[JENS][scan_debug] wait_frames progress max_frame=25 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2796324
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2796324 pos_after=2797323 bytes=999
+[JENS][scan_debug] wait_frames batch_frame_max=26 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=26
+[JENS][scan_debug] wait_frames progress max_frame=26 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2797323
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2797323 pos_after=2798136 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=28 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=28
+[JENS][scan_debug] wait_frames progress max_frame=28 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2798136
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2798136 pos_after=2798742 bytes=606
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2798742 pos_after=2799406 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=29 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=29
+[JENS][scan_debug] wait_frames progress max_frame=29 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2799406
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2799406 pos_after=2800084 bytes=678
+[JENS][scan_debug] wait_frames batch_frame_max=30 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=30
+[JENS][scan_debug] wait_frames progress max_frame=30 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2800084
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2800084 pos_after=2800963 bytes=879
+[JENS][scan_debug] wait_frames batch_frame_max=31 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=31
+[JENS][scan_debug] wait_frames progress max_frame=31 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2800963
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2800963 pos_after=2801627 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=32 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=32
+[JENS][scan_debug] wait_frames progress max_frame=32 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2801627
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2801627 pos_after=2802562 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=33 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=33
+[JENS][scan_debug] wait_frames progress max_frame=33 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2802562
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2802562 pos_after=2803375 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=35 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=35
+[JENS][scan_debug] wait_frames progress max_frame=35 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2803375
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2803375 pos_after=2804374 bytes=999
+[JENS][scan_debug] wait_frames batch_frame_max=36 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=36
+[JENS][scan_debug] wait_frames progress max_frame=36 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2804374
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2804374 pos_after=2805309 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=37 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=37
+[JENS][scan_debug] wait_frames progress max_frame=37 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2805309
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2805309 pos_after=2806053 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=38 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=38
+[JENS][scan_debug] wait_frames progress max_frame=38 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2806053
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2806053 pos_after=2807201 bytes=1148
+[JENS][scan_debug] wait_frames batch_frame_max=40 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=40
+[JENS][scan_debug] wait_frames progress max_frame=40 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2807201
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2807201 pos_after=2807865 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=41 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=41
+[JENS][scan_debug] wait_frames progress max_frame=41 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2807865
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2807865 pos_after=2808609 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=42 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=42
+[JENS][scan_debug] wait_frames progress max_frame=42 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2808609
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2808609 pos_after=2809353 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=43 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=43
+[JENS][scan_debug] wait_frames progress max_frame=43 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2809353
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2809353 pos_after=2810277 bytes=924
+[JENS][scan_debug] wait_frames batch_frame_max=45 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=45
+[JENS][scan_debug] wait_frames progress max_frame=45 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2810277
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2810277 pos_after=2811021 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=46 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=46
+[JENS][scan_debug] wait_frames progress max_frame=46 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2811021
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2811021 pos_after=2811765 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=47 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=47
+[JENS][scan_debug] wait_frames progress max_frame=47 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2811765
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2811765 pos_after=2812509 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=48 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=48
+[JENS][scan_debug] wait_frames progress max_frame=48 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2812509
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2812509 pos_after=2813442 bytes=933
+[JENS][scan_debug] wait_frames batch_frame_max=49 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=49
+[JENS][scan_debug] wait_frames progress max_frame=49 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2813442
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2813442 pos_after=2814512 bytes=1070
+[JENS][scan_debug] wait_frames batch_frame_max=51 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=51
+[JENS][scan_debug] wait_frames progress max_frame=51 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2814512
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2814512 pos_after=2815256 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=52 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=52
+[JENS][scan_debug] wait_frames progress max_frame=52 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2815256
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2815256 pos_after=2815920 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=53 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=53
+[JENS][scan_debug] wait_frames progress max_frame=53 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2815920
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2815920 pos_after=2816526 bytes=606
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2816526 pos_after=2817270 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=54 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=54
+[JENS][scan_debug] wait_frames progress max_frame=54 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2817270
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2817270 pos_after=2818003 bytes=733
+[JENS][scan_debug] wait_frames batch_frame_max=56 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=56
+[JENS][scan_debug] wait_frames progress max_frame=56 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2818003
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2818003 pos_after=2819016 bytes=1013
+[JENS][scan_debug] wait_frames batch_frame_max=57 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=57
+[JENS][scan_debug] wait_frames progress max_frame=57 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2819016
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2819016 pos_after=2820017 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=58 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=58
+[JENS][scan_debug] wait_frames progress max_frame=58 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2820017
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2820017 pos_after=2820681 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=59 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=59
+[JENS][scan_debug] wait_frames progress max_frame=59 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2820681
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2820681 pos_after=2821494 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=61 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=61
+[JENS][scan_debug] wait_frames progress max_frame=61 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2821494
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2821494 pos_after=2822238 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=62 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=62
+[JENS][scan_debug] wait_frames progress max_frame=62 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2822238
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2822238 pos_after=2823317 bytes=1079
+[JENS][scan_debug] wait_frames batch_frame_max=63 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=63
+[JENS][scan_debug] wait_frames progress max_frame=63 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2823317
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2823317 pos_after=2823981 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=64 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=64
+[JENS][scan_debug] wait_frames progress max_frame=64 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2823981
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2823981 pos_after=2824321 bytes=340
+[JENS][scan_debug] wait_frames batch_frame_max=64 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2824321 pos_after=2825660 bytes=1339
+[JENS][scan_debug] wait_frames batch_frame_max=66 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=66
+[JENS][scan_debug] wait_frames progress max_frame=66 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2825660
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2825660 pos_after=2826473 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=68 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=68
+[JENS][scan_debug] wait_frames progress max_frame=68 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2826473
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2826473 pos_after=2827472 bytes=999
+[JENS][scan_debug] wait_frames batch_frame_max=69 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=69
+[JENS][scan_debug] wait_frames progress max_frame=69 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2827472
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2827472 pos_after=2828216 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=70 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=70
+[JENS][scan_debug] wait_frames progress max_frame=70 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2828216
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2828216 pos_after=2828811 bytes=595
+[JENS][scan_debug] wait_frames batch_frame_max=71 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=71
+[JENS][scan_debug] wait_frames progress max_frame=71 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2828811
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2828811 pos_after=2829760 bytes=949
+[JENS][scan_debug] wait_frames batch_frame_max=72 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=72
+[JENS][scan_debug] wait_frames progress max_frame=72 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2829760
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2829760 pos_after=2830368 bytes=608
+[JENS][scan_debug] wait_frames batch_frame_max=73 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=73
+[JENS][scan_debug] wait_frames progress max_frame=73 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2830368
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2830368 pos_after=2831032 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=74 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=74
+[JENS][scan_debug] wait_frames progress max_frame=74 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2831032
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2831032 pos_after=2831967 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=75 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=75
+[JENS][scan_debug] wait_frames progress max_frame=75 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2831967
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2831967 pos_after=2832780 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=77 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=77
+[JENS][scan_debug] wait_frames progress max_frame=77 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2832780
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2832780 pos_after=2833444 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=78 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=78
+[JENS][scan_debug] wait_frames progress max_frame=78 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2833444
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2833444 pos_after=2834188 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=79 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=79
+[JENS][scan_debug] wait_frames progress max_frame=79 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2834188
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2834188 pos_after=2835267 bytes=1079
+[JENS][scan_debug] wait_frames batch_frame_max=80 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=80
+[JENS][scan_debug] wait_frames progress max_frame=80 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2835267
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2835267 pos_after=2836011 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=81 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=81
+[JENS][scan_debug] wait_frames progress max_frame=81 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2836011
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2836011 pos_after=2836675 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=82 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=82
+[JENS][scan_debug] wait_frames progress max_frame=82 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2836675
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2836675 pos_after=2837610 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=83 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=83
+[JENS][scan_debug] wait_frames progress max_frame=83 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2837610
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2837610 pos_after=2838423 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=85 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=85
+[JENS][scan_debug] wait_frames progress max_frame=85 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2838423
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2838423 pos_after=2838896 bytes=473
+[JENS][scan_debug] wait_frames batch_frame_max=86 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=86
+[JENS][scan_debug] wait_frames progress max_frame=86 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2838896
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2838896 pos_after=2839831 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=87 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=87
+[JENS][scan_debug] wait_frames progress max_frame=87 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2839831
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2839831 pos_after=2840506 bytes=675
+[JENS][scan_debug] wait_frames batch_frame_max=87 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2840506 pos_after=2841594 bytes=1088
+[JENS][scan_debug] wait_frames batch_frame_max=88 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=88
+[JENS][scan_debug] wait_frames progress max_frame=88 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2841594
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2841594 pos_after=2842338 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=90 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=90
+[JENS][scan_debug] wait_frames progress max_frame=90 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2842338
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2842338 pos_after=2843016 bytes=678
+[JENS][scan_debug] wait_frames batch_frame_max=91 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=91
+[JENS][scan_debug] wait_frames progress max_frame=91 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2843016
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2843016 pos_after=2843746 bytes=730
+[JENS][scan_debug] wait_frames batch_frame_max=92 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=92
+[JENS][scan_debug] wait_frames progress max_frame=92 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2843746
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2843746 pos_after=2844681 bytes=935
+[JENS][scan_debug] wait_frames batch_frame_max=93 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=93
+[JENS][scan_debug] wait_frames progress max_frame=93 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2844681
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2844681 pos_after=2845494 bytes=813
+[JENS][scan_debug] wait_frames batch_frame_max=95 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=95
+[JENS][scan_debug] wait_frames progress max_frame=95 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2845494
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2845494 pos_after=2846158 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=96 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=96
+[JENS][scan_debug] wait_frames progress max_frame=96 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2846158
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2846158 pos_after=2846902 bytes=744
+[JENS][scan_debug] wait_frames batch_frame_max=97 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=97
+[JENS][scan_debug] wait_frames progress max_frame=97 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2846902
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2846902 pos_after=2847981 bytes=1079
+[JENS][scan_debug] wait_frames batch_frame_max=98 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=98
+[JENS][scan_debug] wait_frames progress max_frame=98 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2847981
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2847981 pos_after=2848645 bytes=664
+[JENS][scan_debug] wait_frames batch_frame_max=99 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=99
+[JENS][scan_debug] wait_frames progress max_frame=99 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2848645
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2848645 pos_after=2851999 bytes=3354
+[JENS][scan_debug] wait_frames batch_frame_max=100 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=100
+[JENS][scan_debug] wait_frames progress max_frame=100 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2851999
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2851999 pos_after=2853108 bytes=1109
+[JENS][scan_debug] wait_frames batch_frame_max=101 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=101
+[JENS][scan_debug] wait_frames progress max_frame=101 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2853108
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2853108 pos_after=2853704 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=102 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=102
+[JENS][scan_debug] wait_frames progress max_frame=102 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2853704
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2853704 pos_after=2854520 bytes=816
+[JENS][scan_debug] wait_frames batch_frame_max=104 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=104
+[JENS][scan_debug] wait_frames progress max_frame=104 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2854520
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2854520 pos_after=2855186 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=105 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=105
+[JENS][scan_debug] wait_frames progress max_frame=105 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2855186
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2855186 pos_after=2855852 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=106 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=106
+[JENS][scan_debug] wait_frames progress max_frame=106 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2855852
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2855852 pos_after=2856853 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=107 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=107
+[JENS][scan_debug] wait_frames progress max_frame=107 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2856853
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2856853 pos_after=2857599 bytes=746
+[JENS][scan_debug] wait_frames batch_frame_max=108 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=108
+[JENS][scan_debug] wait_frames progress max_frame=108 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2857599
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2857599 pos_after=2858456 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=109 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=109
+[JENS][scan_debug] wait_frames progress max_frame=109 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2858456
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2858456 pos_after=2859192 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=111 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=111
+[JENS][scan_debug] wait_frames progress max_frame=111 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2859192
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2859192 pos_after=2859858 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=112 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=112
+[JENS][scan_debug] wait_frames progress max_frame=112 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2859858
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2859858 pos_after=2860593 bytes=735
+[JENS][scan_debug] wait_frames batch_frame_max=113 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=113
+[JENS][scan_debug] wait_frames progress max_frame=113 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2860593
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2860593 pos_after=2861661 bytes=1068
+[JENS][scan_debug] wait_frames batch_frame_max=114 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=114
+[JENS][scan_debug] wait_frames progress max_frame=114 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2861661
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2861661 pos_after=2862521 bytes=860
+[JENS][scan_debug] wait_frames batch_frame_max=116 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=116
+[JENS][scan_debug] wait_frames progress max_frame=116 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2862521
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2862521 pos_after=2863187 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=117 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=117
+[JENS][scan_debug] wait_frames progress max_frame=117 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2863187
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2863187 pos_after=2864202 bytes=1015
+[JENS][scan_debug] wait_frames batch_frame_max=118 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=118
+[JENS][scan_debug] wait_frames progress max_frame=118 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2864202
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2864202 pos_after=2865004 bytes=802
+[JENS][scan_debug] wait_frames batch_frame_max=120 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=120
+[JENS][scan_debug] wait_frames progress max_frame=120 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2865004
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2865004 pos_after=2865670 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=121 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=121
+[JENS][scan_debug] wait_frames progress max_frame=121 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2865670
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2865670 pos_after=2866333 bytes=663
+[JENS][scan_debug] wait_frames batch_frame_max=121 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2866333 pos_after=2867053 bytes=720
+[JENS][scan_debug] wait_frames batch_frame_max=122 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=122
+[JENS][scan_debug] wait_frames progress max_frame=122 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2867053
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2867053 pos_after=2867869 bytes=816
+[JENS][scan_debug] wait_frames batch_frame_max=123 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=123
+[JENS][scan_debug] wait_frames progress max_frame=123 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2867869
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2867869 pos_after=2868465 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=124 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=124
+[JENS][scan_debug] wait_frames progress max_frame=124 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2868465
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2868465 pos_after=2869201 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=126 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=126
+[JENS][scan_debug] wait_frames progress max_frame=126 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2869201
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2869201 pos_after=2870132 bytes=931
+[JENS][scan_debug] wait_frames batch_frame_max=126 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2870132 pos_after=2870868 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=128 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=128
+[JENS][scan_debug] wait_frames progress max_frame=128 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2870868
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2870868 pos_after=2871725 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=129 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=129
+[JENS][scan_debug] wait_frames progress max_frame=129 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2871725
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2871725 pos_after=2872796 bytes=1071
+[JENS][scan_debug] wait_frames batch_frame_max=131 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=131
+[JENS][scan_debug] wait_frames progress max_frame=131 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2872796
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2872796 pos_after=2873723 bytes=927
+[JENS][scan_debug] wait_frames batch_frame_max=132 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=132
+[JENS][scan_debug] wait_frames progress max_frame=132 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2873723
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2873723 pos_after=2874319 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=133 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=133
+[JENS][scan_debug] wait_frames progress max_frame=133 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2874319
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2874319 pos_after=2874985 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=134 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=134
+[JENS][scan_debug] wait_frames progress max_frame=134 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2874985
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2874985 pos_after=2875651 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=135 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=135
+[JENS][scan_debug] wait_frames progress max_frame=135 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2875651
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2875651 pos_after=2876387 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=137 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=137
+[JENS][scan_debug] wait_frames progress max_frame=137 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2876387
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2876387 pos_after=2877398 bytes=1011
+[JENS][scan_debug] wait_frames batch_frame_max=137 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2877398 pos_after=2877799 bytes=401
+[JENS][scan_debug] wait_frames batch_frame_max=139 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=139
+[JENS][scan_debug] wait_frames progress max_frame=139 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2877799
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2877799 pos_after=2879061 bytes=1262
+[JENS][scan_debug] wait_frames batch_frame_max=141 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=141
+[JENS][scan_debug] wait_frames progress max_frame=141 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2879061
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2879061 pos_after=2879727 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=142 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=142
+[JENS][scan_debug] wait_frames progress max_frame=142 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2879727
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2879727 pos_after=2880742 bytes=1015
+[JENS][scan_debug] wait_frames batch_frame_max=143 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=143
+[JENS][scan_debug] wait_frames progress max_frame=143 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2880742
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2880742 pos_after=2881544 bytes=802
+[JENS][scan_debug] wait_frames batch_frame_max=145 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=145
+[JENS][scan_debug] wait_frames progress max_frame=145 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2881544
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2881544 pos_after=2882401 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=146 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=146
+[JENS][scan_debug] wait_frames progress max_frame=146 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2882401
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2882401 pos_after=2882876 bytes=475
+[JENS][scan_debug] wait_frames batch_frame_max=147 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=147
+[JENS][scan_debug] wait_frames progress max_frame=147 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2882876
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2882876 pos_after=2883539 bytes=663
+[JENS][scan_debug] wait_frames batch_frame_max=147 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2883539 pos_after=2884664 bytes=1125
+[JENS][scan_debug] wait_frames batch_frame_max=148 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=148
+[JENS][scan_debug] wait_frames progress max_frame=148 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2884664
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2884664 pos_after=2885264 bytes=600
+[JENS][scan_debug] wait_frames batch_frame_max=150 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=150
+[JENS][scan_debug] wait_frames progress max_frame=150 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2885264
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2885264 pos_after=2886066 bytes=802
+[JENS][scan_debug] wait_frames batch_frame_max=151 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=151
+[JENS][scan_debug] wait_frames progress max_frame=151 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2886066
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2886066 pos_after=2886731 bytes=665
+[JENS][scan_debug] wait_frames batch_frame_max=152 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=152
+[JENS][scan_debug] wait_frames progress max_frame=152 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2886731
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2886731 pos_after=2887397 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=153 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=153
+[JENS][scan_debug] wait_frames progress max_frame=153 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2887397
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2887397 pos_after=2888254 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=154 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=154
+[JENS][scan_debug] wait_frames progress max_frame=154 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2888254
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2888254 pos_after=2888920 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=155 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=155
+[JENS][scan_debug] wait_frames progress max_frame=155 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2888920
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2888920 pos_after=2889711 bytes=791
+[JENS][scan_debug] wait_frames batch_frame_max=157 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=157
+[JENS][scan_debug] wait_frames progress max_frame=157 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2889711
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2889711 pos_after=2890657 bytes=946
+[JENS][scan_debug] wait_frames batch_frame_max=158 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=158
+[JENS][scan_debug] wait_frames progress max_frame=158 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2890657
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2890657 pos_after=2891514 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=159 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=159
+[JENS][scan_debug] wait_frames progress max_frame=159 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2891514
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2891514 pos_after=2892180 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=160 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=160
+[JENS][scan_debug] wait_frames progress max_frame=160 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2892180
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2892180 pos_after=2892916 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=162 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=162
+[JENS][scan_debug] wait_frames progress max_frame=162 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2892916
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2892916 pos_after=2893582 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=163 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=163
+[JENS][scan_debug] wait_frames progress max_frame=163 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2893582
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2893582 pos_after=2894583 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=164 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=164
+[JENS][scan_debug] wait_frames progress max_frame=164 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2894583
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2894583 pos_after=2894914 bytes=331
+[JENS][scan_debug] wait_frames batch_frame_max=165 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=165
+[JENS][scan_debug] wait_frames progress max_frame=165 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2894914
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2894914 pos_after=2895915 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=166 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=166
+[JENS][scan_debug] wait_frames progress max_frame=166 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2895915
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2895915 pos_after=2896772 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=167 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=167
+[JENS][scan_debug] wait_frames progress max_frame=167 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2896772
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2896772 pos_after=2897508 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=169 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=169
+[JENS][scan_debug] wait_frames progress max_frame=169 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2897508
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2897508 pos_after=2898104 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=169 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2898104 pos_after=2898770 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=170 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=170
+[JENS][scan_debug] wait_frames progress max_frame=170 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2898770
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2898770 pos_after=2899366 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=171 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=171
+[JENS][scan_debug] wait_frames progress max_frame=171 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2899366
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2899366 pos_after=2900112 bytes=746
+[JENS][scan_debug] wait_frames batch_frame_max=172 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=172
+[JENS][scan_debug] wait_frames progress max_frame=172 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2900112
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2900112 pos_after=2900778 bytes=666
+[17:15:58][INFO]<airtest.core.api> Try finding: Template(D:\自动化工具\自动化脚本\pc自动化工具\steps\crealityscan\scan_until_frames_then_stop\v1_0_0\templates\tpl1772626510524.png)
+[17:15:58][DEBUG]<airtest.core.api> try match with MultiScaleTemplateMatchingPre
+[17:15:58][DEBUG]<airtest.aircv.multiscale_template_matching> [MSTemplatePre] threshold=0.7, result={'result': (444, 149), 'rectangle': ((411.84000000000003, 121.84000000000003), (411.84000000000003, 176.84000000000003), (476.84000000000003, 176.84000000000003), (476.84000000000003, 121.84000000000003)), 'confidence': 0.4059847891330719}
+[17:15:58][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.00 s.
+[17:15:58][DEBUG]<airtest.core.api> try match with TemplateMatching
+[17:15:58][DEBUG]<airtest.aircv.template_matching> [Template] threshold=0.7, result={'result': (287, 112), 'rectangle': ((255, 85), (255, 140), (320, 140), (320, 85)), 'confidence': 0.7118667960166931}
+[17:15:58][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.04 s.
+[17:15:58][DEBUG]<airtest.core.api> match result: {'result': (287, 112), 'rectangle': ((255, 85), (255, 140), (320, 140), (320, 85)), 'confidence': 0.7118667960166931, 'time': 0.036814212799072266}
+[17:16:02][INFO]<airtest.core.api> Try finding: Template(D:\自动化工具\自动化脚本\pc自动化工具\steps\crealityscan\create_scan\v1_0_0\templates\tpl1772628772383.png)
+[17:16:02][DEBUG]<airtest.core.api> try match with MultiScaleTemplateMatchingPre
+[17:16:02][DEBUG]<airtest.aircv.multiscale_template_matching> [MSTemplatePre] threshold=0.7, result={'result': (174, 113), 'rectangle': ((138.16000000000008, 90.76000000000005), (138.16000000000008, 136.76000000000005), (211.16000000000008, 136.76000000000005), (211.16000000000008, 90.76000000000005)), 'confidence': 0.6289306879043579}
+[17:16:02][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.00 s.
+[17:16:02][DEBUG]<airtest.core.api> try match with TemplateMatching
+[17:16:02][DEBUG]<airtest.aircv.template_matching> [Template] threshold=0.7, result={'result': (59, 113), 'rectangle': ((23, 90), (23, 136), (96, 136), (96, 90)), 'confidence': 0.7789492011070251}
+[17:16:02][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.03 s.
+[17:16:02][DEBUG]<airtest.core.api> match result: {'result': (59, 113), 'rectangle': ((23, 90), (23, 136), (96, 136), (96, 90)), 'confidence': 0.7789492011070251, 'time': 0.03467106819152832}
+[17:16:10][INFO]<airtest.core.api> Try finding: Template(D:\自动化工具\自动化脚本\pc自动化工具\steps\crealityscan\preview_scan\v1_0_0\templates\tpl1772635127022.png)
+[17:16:10][DEBUG]<airtest.core.api> try match with MultiScaleTemplateMatchingPre
+[17:16:10][DEBUG]<airtest.aircv.multiscale_template_matching> [MSTemplatePre] threshold=0.7, result={'result': (171, 113), 'rectangle': ((134.80000000000007, 86), (134.80000000000007, 140), (208.80000000000007, 140), (208.80000000000007, 86)), 'confidence': 1.0}
+[17:16:10][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.03 s.
+[17:16:10][DEBUG]<airtest.core.api> match result: {'result': (171, 113), 'rectangle': ((134.80000000000007, 86), (134.80000000000007, 140), (208.80000000000007, 140), (208.80000000000007, 86)), 'confidence': 1.0, 'time': 0.025873184204101562}
+[17:16:17][INFO]<airtest.core.api> Try finding: Template(D:\自动化工具\自动化脚本\pc自动化工具\steps\crealityscan\scan_until_frames_then_stop\v1_0_0\templates\tpl1772626136357.png)
+[17:16:18][DEBUG]<airtest.core.api> try match with MultiScaleTemplateMatchingPre
+[17:16:18][DEBUG]<airtest.aircv.multiscale_template_matching> [MSTemplatePre] threshold=0.7, result={'result': (288, 116), 'rectangle': ((258.0, 89.76000000000005), (258.0, 142.76000000000005), (318.0, 142.76000000000005), (318.0, 89.76000000000005)), 'confidence': 0.5057968497276306}
+[17:16:18][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.00 s.
+[17:16:18][DEBUG]<airtest.core.api> try match with TemplateMatching
+[17:16:18][DEBUG]<airtest.aircv.template_matching> [Template] threshold=0.7, result={'result': (174, 114), 'rectangle': ((144, 88), (144, 141), (204, 141), (204, 88)), 'confidence': 0.7804660797119141}
+[17:16:18][DEBUG]<airtest.aircv.utils> find_best_result() run time is 0.04 s.
+[17:16:18][DEBUG]<airtest.core.api> match result: {'result': (174, 114), 'rectangle': ((144, 88), (144, 141), (204, 141), (204, 88)), 'confidence': 0.7804660797119141, 'time': 0.04462909698486328}
+[JENS][scan_debug] wait_frames batch_frame_max=173 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=173
+[JENS][scan_debug] wait_frames progress max_frame=173 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2900778
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2900778 pos_after=2902040 bytes=1262
+[JENS][scan_debug] wait_frames batch_frame_max=175 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=175
+[JENS][scan_debug] wait_frames progress max_frame=175 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2902040
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2902040 pos_after=2903111 bytes=1071
+[JENS][scan_debug] wait_frames batch_frame_max=177 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=177
+[JENS][scan_debug] wait_frames progress max_frame=177 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2903111
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2903111 pos_after=2903791 bytes=680
+[JENS][scan_debug] wait_frames batch_frame_max=178 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=178
+[JENS][scan_debug] wait_frames progress max_frame=178 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2903791
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2903791 pos_after=2904523 bytes=732
+[JENS][scan_debug] wait_frames batch_frame_max=179 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=179
+[JENS][scan_debug] wait_frames progress max_frame=179 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2904523
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2904523 pos_after=2905450 bytes=927
+[JENS][scan_debug] wait_frames batch_frame_max=181 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=181
+[JENS][scan_debug] wait_frames progress max_frame=181 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2905450
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2905450 pos_after=2906116 bytes=666
+[JENS][scan_debug] wait_frames batch_frame_max=182 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=182
+[JENS][scan_debug] wait_frames progress max_frame=182 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2906116
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2906116 pos_after=2906862 bytes=746
+[JENS][scan_debug] wait_frames batch_frame_max=183 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=183
+[JENS][scan_debug] wait_frames progress max_frame=183 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2906862
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2906862 pos_after=2907458 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=183 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2907458 pos_after=2908054 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=184 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=184
+[JENS][scan_debug] wait_frames progress max_frame=184 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2908054
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2908054 pos_after=2908790 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=186 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=186
+[JENS][scan_debug] wait_frames progress max_frame=186 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2908790
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2908790 pos_after=2909791 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=187 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=187
+[JENS][scan_debug] wait_frames progress max_frame=187 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2909791
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2909791 pos_after=2910257 bytes=466
+[JENS][scan_debug] wait_frames batch_frame_max=188 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=188
+[JENS][scan_debug] wait_frames progress max_frame=188 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2910257
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2910257 pos_after=2911534 bytes=1277
+[JENS][scan_debug] wait_frames batch_frame_max=190 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=190
+[JENS][scan_debug] wait_frames progress max_frame=190 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2911534
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2911534 pos_after=2912130 bytes=596
+[JENS][scan_debug] wait_frames batch_frame_max=190 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2912130 pos_after=2913131 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=191 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=191
+[JENS][scan_debug] wait_frames progress max_frame=191 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2913131
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2913131 pos_after=2913988 bytes=857
+[JENS][scan_debug] wait_frames batch_frame_max=193 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=193
+[JENS][scan_debug] wait_frames progress max_frame=193 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2913988
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2913988 pos_after=2914724 bytes=736
+[JENS][scan_debug] wait_frames batch_frame_max=194 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=194
+[JENS][scan_debug] wait_frames progress max_frame=194 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2914724
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2914724 pos_after=2915459 bytes=735
+[JENS][scan_debug] wait_frames batch_frame_max=195 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=195
+[JENS][scan_debug] wait_frames progress max_frame=195 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2915459
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2915459 pos_after=2916460 bytes=1001
+[JENS][scan_debug] wait_frames batch_frame_max=196 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=196
+[JENS][scan_debug] wait_frames progress max_frame=196 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2916460
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2916460 pos_after=2916791 bytes=331
+[JENS][scan_debug] wait_frames batch_frame_max=198 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=198
+[JENS][scan_debug] wait_frames progress max_frame=198 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2916791
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2916791 pos_after=2917983 bytes=1192
+[JENS][scan_debug] wait_frames batch_frame_max=198 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=2917983 pos_after=2918906 bytes=923
+[JENS][scan_debug] wait_frames batch_frame_max=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] frame=200
+[JENS][scan_debug] wait_frames progress max_frame=200 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2918906
+[JENS][scan_debug] wait_frames target_reached first_frame=200 target_frames=200 log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt pos=2918906
+[JENS] reach target frames: 200 >= 200 source=log
+[JENS] frame=210
+[JENS] elapsed_sec=1.896 stop_click_frame=210
+[JENS] sys[0s] cpu=3.955% mem=46.200% wifi=0.000kbps
+[JENS] sys[1s] cpu=3.868% mem=46.203% wifi=0.000kbps
+[JENS] stop success detected
+[JENS] preview log_file=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] preview click
+[JENS] preview success log matched
+[JENS][scan_debug] effective_log_root=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs source=case
+[JENS] log_file=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt
+[JENS] scan_start detected
+[JENS] scan_start_log_time=2026-05-20T17:16:17.830831
+[JENS][scan_debug] wait_frames begin log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt start_pos=3041519 target_frames=200 timeout_sec=1800.0
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3041519 pos_after=3042014 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3042014 pos_after=3042347 bytes=333
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3042347 pos_after=3042568 bytes=221
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3042568 pos_after=3043143 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3043143 pos_after=3043444 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3043444 pos_after=3044019 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3044019 pos_after=3044493 bytes=474
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3044493 pos_after=3045068 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3045068 pos_after=3045624 bytes=556
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3045624 pos_after=3046119 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3046119 pos_after=3046374 bytes=255
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3046374 pos_after=3046454 bytes=80
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3046454 pos_after=3046824 bytes=370
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3046824 pos_after=3047466 bytes=642
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3047466 pos_after=3047968 bytes=502
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3047968 pos_after=3048846 bytes=878
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3048846 pos_after=3049008 bytes=162
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3049008 pos_after=3049309 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3049309 pos_after=3049804 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3049804 pos_after=3049966 bytes=162
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3049966 pos_after=3050682 bytes=716
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3050682 pos_after=3050985 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3050985 pos_after=3051560 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3051560 pos_after=3051642 bytes=82
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3051642 pos_after=3051943 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3051943 pos_after=3052438 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3052438 pos_after=3053236 bytes=798
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3053236 pos_after=3053316 bytes=80
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3053316 pos_after=3053619 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3053619 pos_after=3054194 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3054194 pos_after=3054497 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3054497 pos_after=3055072 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3055072 pos_after=3055375 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3055375 pos_after=3055950 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3055950 pos_after=3056748 bytes=798
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3056748 pos_after=3056910 bytes=162
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3056910 pos_after=3057211 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3057211 pos_after=3057706 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3057706 pos_after=3058009 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3058009 pos_after=3058504 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3058504 pos_after=3058887 bytes=383
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3058887 pos_after=3059462 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3059462 pos_after=3059683 bytes=221
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3059683 pos_after=3060340 bytes=657
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3060340 pos_after=3060422 bytes=82
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3060422 pos_after=3060723 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3060723 pos_after=3061218 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3061218 pos_after=3061521 bytes=303
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3061521 pos_after=3062096 bytes=575
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3062096 pos_after=3062332 bytes=236
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3062332 pos_after=3062974 bytes=642
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3062974 pos_after=3068324 bytes=5350
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3068324 pos_after=3068625 bytes=301
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3068625 pos_after=3069120 bytes=495
+[JENS][scan_debug] wait_frames poll log=C:\Users\liangtai\AppData\Local\Creality\CrealityScan\Logs\20260520151150\scan_log_20260520-151424.txt switched=False pos_before=3069120 pos_after=3069498 bytes=378

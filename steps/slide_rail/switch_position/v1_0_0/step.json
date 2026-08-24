@@ -1,0 +1,57 @@
+{
+  "id": "slide_rail.switch_position",
+  "name": "滑轨：切换物体位置",
+  "version": "1.0.0",
+  "description": "每次换位先执行完整的下降到底流程，再按 preset 将滑轨水平轴移动到指定物体位置；preset 可配置移动后的升降动作，大物体默认上升 20 秒。",
+  "params_schema": {
+    "preset": {
+      "type": "string",
+      "description": "位置 preset key 或中文名：小物体、中物体、人脸、大物体。"
+    },
+    "host": {
+      "type": "string",
+      "default": "127.0.0.1",
+      "description": "滑轨 motion_service 服务地址。"
+    },
+    "port": {
+      "type": "number",
+      "default": 5000,
+      "description": "滑轨 motion_service 服务端口。"
+    },
+    "use_mock": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否使用 MockMotionClient，仅用于无硬件调试。"
+    },
+    "connect_controller": {
+      "type": "boolean",
+      "default": false,
+      "description": "执行前是否调用 connect_controller。一般建议先在平台 GUI 中确认连接。"
+    },
+    "controller_ip": {
+      "type": "string",
+      "default": "192.168.0.11",
+      "description": "connect_controller=true 时使用的控制器 IP。"
+    },
+    "dll_path": {
+      "type": "string",
+      "default": "zauxdll.dll",
+      "description": "connect_controller=true 时使用的 DLL 路径。"
+    },
+    "reset_to_zero_first": {
+      "type": "boolean",
+      "default": false,
+      "description": "移动前是否先回软零点。"
+    },
+    "lift_bottom_safety_margin": {
+      "type": "number",
+      "default": 1,
+      "description": "完整下降到底流程在校准下降时间之外增加的安全余量。默认 1 秒，即当前约 48+1=49 秒。"
+    },
+    "position_log_dir": {
+      "type": "string",
+      "default": "",
+      "description": "位置日志目录；为空则写入 run_dir/slide_rail_position_logs。"
+    }
+  }
+}

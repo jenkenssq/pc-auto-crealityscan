@@ -1,0 +1,38 @@
+# 运行产物 / 测试报告
+artifacts/
+
+# 本地工具缓存与状态
+.cache/
+.appdata/
+.serena/
+.claude/
+.agents/
+.impeccable/
+
+# Python
+__pycache__/
+*.pyc
+
+# 凭据（SMTP 等）——严禁入库
+.env
+
+# 打包/构建产物（PyInstaller 与安装包）
+dist/
+build/
+安装程序/
+
+# 运行时输出
+output/
+
+# 工具内的构建产物、独立可执行文件与样本数据（固件工具另有自己的 .gitignore）
+工具/**/build/
+工具/**/dist/
+工具/**/*.exe
+工具/**/*.spec
+工具/**/__pycache__/
+工具/后处理对比工具/工程集/
+工具/后处理对比工具/结果工程集/
+
+# 滑轨厂商演示软件与运行日志
+滑轨/2米滑轨控制软件/
+滑轨/position_logs/

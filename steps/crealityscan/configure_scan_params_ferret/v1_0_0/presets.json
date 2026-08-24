@@ -1,0 +1,247 @@
+{
+  "group": "ferret_scan_params",
+  "presets": [
+    {
+      "key": "ferret.speckle.point_cloud.medium.geometry.fast",
+      "name": "中物体-几何-快速",
+      "aliases": ["中物体几何快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [60, 465] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.medium.geometry.high_precision",
+      "name": "中物体-几何-高精度",
+      "aliases": ["中物体几何高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [60, 465] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.medium.texture.fast",
+      "name": "中物体-纹理-快速",
+      "aliases": ["中物体纹理快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [170, 460] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.medium.texture.high_precision",
+      "name": "中物体-纹理-高精度",
+      "aliases": ["中物体纹理高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [170, 460] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.medium.marker.fast",
+      "name": "中物体-标志点-快速",
+      "aliases": ["中物体标志点快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [280, 460] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.medium.marker.high_precision",
+      "name": "中物体-标志点-高精度",
+      "aliases": ["中物体标志点高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [280, 460] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.small.geometry",
+      "name": "小物体-几何",
+      "aliases": ["小物体几何"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [280, 350] },
+        { "op": "touch", "pos": [60, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.small.texture",
+      "name": "小物体-纹理",
+      "aliases": ["小物体纹理"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [280, 350] },
+        { "op": "touch", "pos": [170, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.small.marker",
+      "name": "小物体-标志点",
+      "aliases": ["小物体标志点"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [280, 350] },
+        { "op": "touch", "pos": [280, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.geometry.fast",
+      "name": "大物体-几何-快速",
+      "aliases": ["大物体几何快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [60, 460] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.geometry.high_precision",
+      "name": "大物体-几何-高精度",
+      "aliases": ["大物体几何高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [60, 460] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.texture.fast",
+      "name": "大物体-纹理-快速",
+      "aliases": ["大物体纹理快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [170, 465] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.texture.high_precision",
+      "name": "大物体-纹理-高精度",
+      "aliases": ["大物体纹理高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [170, 465] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.marker.fast",
+      "name": "大物体-标志点-快速",
+      "aliases": ["大物体标志点快速"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [280, 460] },
+        { "op": "touch", "pos": [60, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.large.marker.high_precision",
+      "name": "大物体-标志点-高精度",
+      "aliases": ["大物体标志点高精度"],
+      "actions": [
+        { "op": "touch", "pos": [60, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [280, 460] },
+        { "op": "touch", "pos": [170, 570] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.face.geometry.fast",
+      "name": "人脸-几何-快速",
+      "aliases": ["人脸几何快速"],
+      "actions": [
+        { "op": "touch", "pos": [170, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [60, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.face.geometry.high_precision",
+      "name": "人脸-几何-高精度",
+      "aliases": ["人脸几何高精度"],
+      "actions": [
+        { "op": "touch", "pos": [170, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [170, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.face.texture.fast",
+      "name": "人脸-纹理-快速",
+      "aliases": ["人脸纹理快速"],
+      "actions": [
+        { "op": "touch", "pos": [170, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [60, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.face.texture.high_precision",
+      "name": "人脸-纹理-高精度",
+      "aliases": ["人脸纹理高精度"],
+      "actions": [
+        { "op": "touch", "pos": [170, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [170, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.body.geometry.fast",
+      "name": "人体-几何-快速",
+      "aliases": ["人体几何快速"],
+      "actions": [
+        { "op": "touch", "pos": [280, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [60, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.body.geometry.high_precision",
+      "name": "人体-几何-高精度",
+      "aliases": ["人体几何高精度"],
+      "actions": [
+        { "op": "touch", "pos": [280, 245] },
+        { "op": "touch", "pos": [60, 350] },
+        { "op": "touch", "pos": [170, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.body.texture.fast",
+      "name": "人体-纹理-快速",
+      "aliases": ["人体纹理快速"],
+      "actions": [
+        { "op": "touch", "pos": [280, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [60, 460] }
+      ]
+    },
+    {
+      "key": "ferret.speckle.point_cloud.body.texture.high_precision",
+      "name": "人体-纹理-高精度",
+      "aliases": ["人体纹理高精度"],
+      "actions": [
+        { "op": "touch", "pos": [280, 245] },
+        { "op": "touch", "pos": [170, 350] },
+        { "op": "touch", "pos": [170, 460] }
+      ]
+    }
+  ]
+}

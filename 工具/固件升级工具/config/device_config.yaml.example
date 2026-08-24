@@ -1,0 +1,55 @@
+# 设备配置示例
+# 复制此文件为 device_config.yaml 并根据实际情况修改
+
+devices:
+  # 默认设备（USB连接）
+  default:
+    name: "默认USB设备"
+    connection_type: "usb"
+    ip: ""
+    port: ""
+
+  # WiFi设备示例
+  wifi_device_1:
+    name: "WiFi测试设备1"
+    connection_type: "wifi"
+    ip: "192.168.1.100"
+    port: "8080"
+
+  # 另一个USB设备示例
+  usb_device_2:
+    name: "USB测试设备2"
+    connection_type: "usb"
+    ip: ""
+    port: ""
+
+# 固件配置
+firmware:
+  # 固件文件存放目录
+  directory: "resources/firmware"
+
+  # 默认固件文件名（可选）
+  # 如果指定，可以不用在命令行传入固件路径
+  default_file: ""
+
+  # 固件版本管理（可选）
+  versions:
+    - name: "v1.0.0"
+      file: "firmware_v1.0.0.bin"
+      description: "初始版本"
+
+    - name: "v1.1.0"
+      file: "firmware_v1.1.0.bin"
+      description: "修复开流问题"
+
+    - name: "v1.2.0"
+      file: "firmware_v1.2.0.bin"
+      description: "性能优化"
+
+# 设备特定配置（可选）
+device_specific:
+  # 不同设备可能有不同的升级超时时间
+  timeouts:
+    default: 300
+    slow_device: 600
+    fast_device: 180

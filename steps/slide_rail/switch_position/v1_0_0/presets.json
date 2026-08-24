@@ -1,0 +1,30 @@
+{
+  "group": "slide_rail_positions",
+  "presets": [
+    {
+      "key": "small",
+      "name": "小物体",
+      "aliases": ["小", "small"],
+      "position": 700000
+    },
+    {
+      "key": "medium",
+      "name": "中物体",
+      "aliases": ["中", "medium"],
+      "position": 560000
+    },
+    {
+      "key": "face",
+      "name": "人脸",
+      "aliases": ["face"],
+      "position": 370000
+    },
+    {
+      "key": "large",
+      "name": "大物体",
+      "aliases": ["人体", "大", "large", "body"],
+      "position": 170000,
+      "lift_up_seconds_after_move": 25
+    }
+  ]
+}

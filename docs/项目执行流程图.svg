@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1750" height="1080" viewBox="0 0 1750 1080">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,3 L0,6 z" fill="#666"/>
+    </marker>
+    <style>
+      .title { font: 700 24px "Microsoft YaHei", sans-serif; fill: #222; }
+      .label { font: 14px "Microsoft YaHei", sans-serif; fill: #222; }
+      .small { font: 12px "Microsoft YaHei", sans-serif; fill: #444; }
+      .edge { stroke: #666; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1750" height="1080" fill="#fafafa"/>
+  <text x="50" y="40" class="title">Jens 自动化平台项目执行流程图</text>
+
+  <rect x="60" y="80" rx="12" ry="12" width="170" height="70" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="145" y="118" text-anchor="middle" class="label">用户 / 测试工程师</text>
+
+  <rect x="300" y="70" rx="12" ry="12" width="300" height="95" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="450" y="108" text-anchor="middle" class="label">Qt 编排平台</text>
+  <text x="450" y="132" text-anchor="middle" class="small">jens_platform / platform_app.py</text>
+
+  <rect x="680" y="60" rx="12" ry="12" width="310" height="90" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+  <text x="835" y="98" text-anchor="middle" class="label">Step 注册扫描</text>
+  <text x="835" y="122" text-anchor="middle" class="small">scan_steps() 读取 steps/**/step.json</text>
+
+  <rect x="1060" y="40" width="380" height="170" rx="12" ry="12" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <rect x="1060" y="40" width="380" height="32" rx="12" ry="12" fill="#b7ddb5" stroke="#82b366" stroke-width="2"/>
+  <text x="1250" y="61" text-anchor="middle" class="label">步骤库 Steps</text>
+  <text x="1250" y="105" text-anchor="middle" class="small">step.json + impl.py + templates + presets</text>
+
+  <rect x="680" y="190" rx="12" ry="12" width="310" height="90" fill="#ffe6cc" stroke="#d79b00" stroke-width="2"/>
+  <text x="835" y="228" text-anchor="middle" class="label">用例 / 任务存储</text>
+  <text x="835" y="252" text-anchor="middle" class="small">cases/*.json / tasks/*.json</text>
+
+  <rect x="300" y="230" rx="12" ry="12" width="330" height="110" fill="#ffe6cc" stroke="#d79b00" stroke-width="2"/>
+  <text x="465" y="268" text-anchor="middle" class="label">运行请求</text>
+  <text x="465" y="292" text-anchor="middle" class="small">QProcess 启动 --run-case</text>
+  <text x="465" y="314" text-anchor="middle" class="small">或 jens_runner_helper.exe</text>
+
+  <rect x="680" y="340" rx="12" ry="12" width="310" height="90" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="835" y="378" text-anchor="middle" class="label">Runner 入口</text>
+  <text x="835" y="402" text-anchor="middle" class="small">jens_runner_entry.run_case()</text>
+
+  <rect x="1060" y="320" rx="12" ry="12" width="320" height="120" fill="#f5f5f5" stroke="#666" stroke-width="2"/>
+  <text x="1220" y="360" text-anchor="middle" class="label">初始化运行上下文</text>
+  <text x="1220" y="384" text-anchor="middle" class="small">创建 run_dir / auto_setup()</text>
+  <text x="1220" y="406" text-anchor="middle" class="small">connect_device()</text>
+
+  <rect x="680" y="500" rx="12" ry="12" width="310" height="90" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="835" y="538" text-anchor="middle" class="label">执行引擎</text>
+  <text x="835" y="562" text-anchor="middle" class="small">engine.executor.execute_case()</text>
+
+  <rect x="300" y="490" rx="12" ry="12" width="280" height="100" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+  <text x="440" y="528" text-anchor="middle" class="label">每步前置处理</text>
+  <text x="440" y="552" text-anchor="middle" class="small">激活窗口 / 注入步骤环境变量</text>
+
+  <rect x="1060" y="500" rx="12" ry="12" width="330" height="100" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <text x="1225" y="536" text-anchor="middle" class="label">动态加载 Step</text>
+  <text x="1225" y="560" text-anchor="middle" class="small">resolve_step_callable()</text>
+  <text x="1225" y="582" text-anchor="middle" class="small">steps.xxx.vx_x_x.impl:run</text>
+
+  <rect x="680" y="650" rx="12" ry="12" width="310" height="90" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <text x="835" y="688" text-anchor="middle" class="label">Step 实现执行</text>
+  <text x="835" y="712" text-anchor="middle" class="small">Airtest touch / wait / swipe / Template</text>
+
+  <polygon points="1160,650 1260,700 1160,750 1060,700" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+  <text x="1160" y="705" text-anchor="middle" class="label">失败策略</text>
+
+  <rect x="1320" y="610" rx="12" ry="12" width="220" height="70" fill="#ffe6cc" stroke="#d79b00" stroke-width="2"/>
+  <text x="1430" y="639" text-anchor="middle" class="label">retry</text>
+  <text x="1430" y="662" text-anchor="middle" class="small">等待后重试当前 Step</text>
+
+  <rect x="1320" y="700" rx="12" ry="12" width="220" height="70" fill="#ffe6cc" stroke="#d79b00" stroke-width="2"/>
+  <text x="1430" y="729" text-anchor="middle" class="label">continue</text>
+  <text x="1430" y="752" text-anchor="middle" class="small">记录失败并继续</text>
+
+  <rect x="1320" y="790" rx="12" ry="12" width="220" height="70" fill="#f8cecc" stroke="#b85450" stroke-width="2"/>
+  <text x="1430" y="819" text-anchor="middle" class="label">abort</text>
+  <text x="1430" y="842" text-anchor="middle" class="small">终止当前 Case</text>
+
+  <rect x="300" y="650" rx="12" ry="12" width="240" height="90" fill="#f5f5f5" stroke="#666" stroke-width="2"/>
+  <text x="420" y="688" text-anchor="middle" class="label">被测应用</text>
+  <text x="420" y="712" text-anchor="middle" class="small">CrealityScan</text>
+
+  <rect x="680" y="860" width="380" height="145" rx="12" ry="12" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <rect x="680" y="860" width="380" height="32" rx="12" ry="12" fill="#b8d6f5" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="870" y="881" text-anchor="middle" class="label">运行产物 Artifacts</text>
+  <text x="870" y="928" text-anchor="middle" class="small">result.json / summary.json / report.html</text>
+  <text x="870" y="952" text-anchor="middle" class="small">screenshots / airtest / logs</text>
+
+  <rect x="1120" y="900" rx="12" ry="12" width="260" height="90" fill="#fff2cc" stroke="#d6b656" stroke-width="2"/>
+  <text x="1250" y="938" text-anchor="middle" class="label">日志分析</text>
+  <text x="1250" y="962" text-anchor="middle" class="small">extract_device_info() / scan_keywords()</text>
+
+  <ellipse cx="1560" cy="945" rx="110" ry="50" fill="#f5f5f5" stroke="#666" stroke-width="2"/>
+  <text x="1560" y="950" text-anchor="middle" class="label">CrealityScan Logs</text>
+
+  <rect x="300" y="900" rx="12" ry="12" width="320" height="90" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <text x="460" y="938" text-anchor="middle" class="label">HTML 报告与结果回显</text>
+  <text x="460" y="962" text-anchor="middle" class="small">UI 读取 run_dir / report 路径</text>
+
+  <path class="edge" d="M230 115 L300 115"/>
+  <path class="edge" d="M600 110 L680 105"/>
+  <path class="edge" d="M990 105 L1060 105"/>
+  <path class="edge" d="M450 165 L450 230"/>
+  <path class="edge" d="M600 285 L680 385"/>
+  <path class="edge" d="M835 150 L835 190"/>
+  <path class="edge" d="M835 280 L835 340"/>
+  <path class="edge" d="M990 385 L1060 380"/>
+  <path class="edge" d="M835 430 L835 500"/>
+  <path class="edge" d="M680 545 L580 545"/>
+  <path class="edge" d="M990 545 L1060 550"/>
+  <path class="edge" d="M835 590 L835 650"/>
+  <path class="edge" d="M680 695 L540 695"/>
+  <path class="edge" d="M990 695 L1060 700"/>
+  <path class="edge" d="M1260 682 L1320 645"/>
+  <path class="edge" d="M1260 700 L1320 735"/>
+  <path class="edge" d="M1210 740 L1320 825"/>
+  <path class="edge" d="M1320 645 C1240 645, 1210 615, 1100 575" />
+  <path class="edge" d="M1320 735 C1230 760, 1200 790, 1030 560" />
+  <path class="edge" d="M890 740 L890 860"/>
+  <path class="edge" d="M1060 930 L1120 945"/>
+  <path class="edge" d="M1380 945 L1450 945"/>
+  <path class="edge" d="M680 930 L620 945"/>
+  <path class="edge" d="M460 900 L460 165"/>
+
+  <text x="618" y="280" class="small">传入 case_path</text>
+  <text x="815" y="174" class="small">加载 / 保存</text>
+  <text x="1010" y="372" class="small">初始化</text>
+  <text x="610" y="532" class="small">前置激活</text>
+  <text x="995" y="532" class="small">动态解析</text>
+  <text x="560" y="684" class="small">UI 操作</text>
+  <text x="1000" y="684" class="small">失败时截图 / 判断策略</text>
+  <text x="1080" y="923" class="small">分析日志</text>
+  <text x="628" y="935" class="small">run_dir / report 回传 UI</text>
+</svg>

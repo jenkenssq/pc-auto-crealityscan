@@ -1,0 +1,14 @@
+{
+  "id": "tool.postprocess_compare.texture_operation",
+  "name": "进行贴图操作",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：进行贴图操作（含进度条消失轮询）。",
+  "params_schema": {
+    "timeout_sec": {
+      "type": "number",
+      "default": 90,
+      "description": "等待进度条消失的超时（秒）。"
+    }
+  }
+}
+

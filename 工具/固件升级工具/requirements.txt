@@ -1,0 +1,18 @@
+# Airtest妗嗘灦 - Windows搴旂敤鑷姩鍖栨祴璇?airtest==1.3.2
+
+# Windows UI鑷姩鍖?pywinauto
+
+# 鍥惧儚澶勭悊
+Pillow==10.2.0
+
+# 閰嶇疆鏂囦欢瑙ｆ瀽
+PyYAML==6.0.1
+
+# 鏃ュ織澧炲己
+colorlog==6.8.2
+
+# 妯℃澘寮曟搸
+jinja2==3.1.3
+
+# 鏃ユ湡宸ュ叿
+python-dateutil==2.8.2

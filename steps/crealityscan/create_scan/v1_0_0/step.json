@@ -1,0 +1,7 @@
+{
+  "id": "crealityscan.create_scan",
+  "name": "新建扫描",
+  "version": "1.0.0",
+  "description": "点击新建扫描。",
+  "params_schema": {}
+}

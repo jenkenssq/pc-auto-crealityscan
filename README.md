@@ -1,0 +1,449 @@
+# Jens 扫描软件自动化测试平台
+
+Jens 是一个面向 Windows 版 CrealityScan 的桌面 UI 自动化测试平台。项目使用 Airtest 执行 UI 与图像识别动作，使用 JSON 编排可复用 Step，通过 PyQt5 平台管理任务队列、运行过程、设备信息和测试报告。
+
+当前已形成桌面端完整闭环：
+
+```text
+Step 步骤库 -> Case/Task JSON 编排 -> Runner 串行执行 -> Artifacts 归档与 HTML 报告
+                          ^
+                          |
+                 PyQt5 桌面管理平台
+```
+
+> 当前可用形态是本地 Qt 桌面平台。局域网 Web 平台和本地精简 Agent 目前只有设计文档，尚未实现账号登录、网页编排或远程任务下发。
+
+## 1. 核心能力
+
+- 自动发现版本化 Step，支持参数编辑、preset 选择和拖拽编排。
+- 创建、编辑、删除 Task，并持久化任务队列及拖拽顺序。
+- 支持从指定步骤开始运行，不修改原 Task。
+- 使用独立 Runner 子进程串行执行任务，实时显示输出，支持按钮或 `F4` 停止。
+- 每步执行前激活目标窗口；失败时自动截图，支持 `abort`、`continue`、`retry`。
+- 从 CrealityScan 日志提取模组、SN、连接方式和固件版本。
+- 对预览、扫描停止和点云模式切换执行日志驱动的完成判定。
+- 采集扫描帧数、SDK/UI FPS、CPU、内存等指标，生成 JSON 结果和 HTML 报告。
+- 支持任务失败和队列完成邮件通知。
+- 支持将部分 Airtest `.air` 脚本转换为 Step。
+- 源码态支持滑轨服务、独立控制台、位置 preset 和扫描联动。
+
+## 2. 运行环境
+
+### 2.1 必要条件
+
+- Windows。
+- 已安装并能正常运行 CrealityScan。
+- Python 3；当前目录版构建产物使用 Python 3.11。
+- CrealityScan 窗口保持可见，不要最小化。
+- 单显示器，推荐 `1920 x 1080`、系统缩放 `100%`。
+- 关闭 CrealityScan 全屏显示，运行期间不要改变窗口布局或操作被测软件。
+
+模板截图和大量坐标基于 `1920 x 1080`。分辨率、缩放、软件 UI 或主题变化都可能使模板匹配或坐标点击失效。
+
+### 2.2 安装依赖
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-ui.txt
+```
+
+执行依赖包括 `airtest`、`pyserial`、`mss`、`rapidocr-onnxruntime`；桌面平台依赖 `PyQt5`。
+
+## 3. 快速开始
+
+### 3.1 启动桌面平台
+
+先打开 CrealityScan，再在项目根目录执行：
+
+```powershell
+python platform_app.py
+```
+
+首次启动且未保存收件邮箱时，平台会打开邮件设置窗口。建议按以下顺序使用：
+
+1. 确认或选择 CrealityScan 日志目录。
+2. 点击“刷新设备”，检查模组、SN、连接方式和固件版本。
+3. 从任务库选择任务并加入主界面队列。
+4. 拖拽调整顺序；调试时可选择“起始步骤”。
+5. 点击“运行队列”。
+6. 在“运行输出”和“步骤结果”查看过程与结果。
+7. 执行结束后打开报告或本次产物目录。
+
+运行期间可点击“停止”或按 `F4`。Runner 先请求子进程退出，2 秒后仍未结束则强制终止。
+
+### 3.2 命令行运行 Case 或 Task
+
+```powershell
+python platform_app.py --run-case cases/example_case.json
+python platform_app.py --run-case "tasks/P1S开流.json"
+```
+
+也可使用 Airtest CLI：
+
+```powershell
+$env:JENS_CASE_PATH = (Resolve-Path "cases/example_case.json")
+python -m airtest.cli run "jens_runner.air" --log "artifacts/_airtest_cli_log"
+```
+
+成功返回退出码 `0`，失败返回 `1`。Runner 会打印 `run_dir`、`report` 和最终状态。
+
+## 4. 系统架构
+
+| 层级 | 主要模块 | 职责 |
+| --- | --- | --- |
+| 桌面平台 | `platform_app.py`、`jens_platform/` | 步骤编排、任务管理、队列调度、设备识别、结果展示 |
+| Runner | `jens_runner_entry.py`、`jens_runner_helper.py`、`jens_runner.air/` | 初始化 Airtest、创建运行目录、汇总结果 |
+| 执行引擎 | `engine/` | 动态加载 Step、失败策略、窗口激活、日志分析、报告生成 |
+| 自动化资产 | `steps/`、`cases/`、`tasks/` | Step、模板/preset、用例和任务编排 |
+| 外设控制 | `滑轨/`、`steps/slide_rail/` | 滑轨服务、客户端、控制台和位置 Step |
+| 运行产物 | `artifacts/` | JSON 结果、HTML 报告、截图、日志和失败现场 |
+
+执行链路：
+
+```text
+Qt 任务队列
+  -> QProcess 启动 platform_app.py --run-case 或 jens_runner_helper.exe
+  -> jens_runner_entry.run_case()
+  -> engine.executor.execute_case()
+  -> 动态加载 steps.<step_id>.v<version>.impl.run()
+  -> result.json + summary.json + report.html
+```
+
+`jens_runtime.py` 统一处理源码态与 PyInstaller 安装态路径。可写数据使用程序所在目录，内置资源可从 PyInstaller 的 `_internal` 目录加载。
+
+## 5. Step、Case 与 Task
+
+### 5.1 Step 插件
+
+标准目录：
+
+```text
+steps/<domain>/<step_name>/v1_0_0/
+├─ __init__.py
+├─ step.json
+├─ impl.py
+├─ presets.json       # 可选
+└─ templates/         # 可选
+```
+
+映射示例：
+
+```text
+id: crealityscan.import_project
+version: 1.0.0
+module: steps.crealityscan.import_project.v1_0_0.impl
+entry: run(ctx, params)
+```
+
+`step.json` 至少需要非空的 `id`、`name` 和 `version`。平台扫描 `steps/**/step.json`，无效元数据会被跳过。
+
+`run(ctx, params)` 中，`ctx` 包含 `case`、`run_dir`、`step_index` 和 `env`；`params` 来自当前编排。Step 应抛出明确异常，由引擎统一截图、重试和记录。
+
+### 5.2 Case JSON
+
+Case 默认保存在 `cases/`：
+
+```json
+{
+  "case_id": "example_case",
+  "name": "示例用例",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\...\\CrealityScan\\Logs"
+  },
+  "keywords": ["Traceback", "Exception", "ERROR", "失败", "崩溃"],
+  "steps": [
+    {
+      "id": "common.activate_window",
+      "version": "1.0.0",
+      "name": "激活/置顶窗口",
+      "params": {},
+      "on_fail": {"action": "abort"}
+    }
+  ]
+}
+```
+
+`on_fail.action` 支持：
+
+- `abort`：失败后终止任务。
+- `continue`：记录失败并继续。
+- `retry`：按 `max_retries` 和 `retry_wait_sec` 重试。
+
+“从指定步骤开始”会在 `cases/_generated/` 生成带 `run_options.start_step_index` 的临时 JSON。此前步骤记为 `skipped`，原 Task 不变。完整规范见 [docs/步骤与用例JSON规范.md](docs/步骤与用例JSON规范.md)。
+
+### 5.3 Task JSON
+
+Task 与 Case 使用相同结构，但默认位于 `tasks/`，用于任务库和批量队列。主界面只展示已加入队列的任务，队列状态保存在 `tasks/_queue.json`。
+
+当前标准任务覆盖：
+
+- Ferret（文件名沿用 `feeret`）、Otter、Otter Lite、P1、P1S、Raptor、S1、X1：开流和后处理。
+- Pika：Wi-Fi/USB 开流和后处理。
+
+`tasks/1.json`、`tasks/2.json`、`tasks/演示任务.json` 是示例或调试任务，不属于标准全量任务。
+
+任务生成器配置在 `jens_platform/task_generator.py`，当前支持：
+
+```text
+feeret, otter, otter lite, P1, raptor, S1, X1
+```
+
+P1S 和 Pika 已有 Task JSON，但尚未接入生成器。因此修改这两类 preset 后，需要显式同步对应任务。
+
+## 6. 标准扫描流程
+
+普通开流参数块：
+
+```text
+扫描参数 -> 预览扫描 -> 扫描至目标帧并完成
+```
+
+普通后处理参数块：
+
+```text
+扫描参数 -> 预览扫描 -> 扫描至目标帧并完成 -> 融合 -> 封装 -> 贴图
+```
+
+框架点后处理参数块：
+
+```text
+扫描参数 -> 预览 -> 开始扫描并暂停 -> 切点云并等待新流就绪
+         -> 预览 -> 扫描至目标帧并完成 -> 融合 -> 封装 -> 贴图
+```
+
+每个参数块结束后，在下一块开始前插入“新建扫描”；最后一个参数块后不插入。
+
+## 7. 扫描参数 preset
+
+当前有 9 个模组参数 Step：
+
+| 模组 | Step ID | preset 数 |
+| --- | --- | ---: |
+| Ferret | `crealityscan.configure_scan_params_ferret` | 23 |
+| Otter | `crealityscan.configure_scan_params_otter` | 26 |
+| Otter Lite | `crealityscan.configure_scan_params_otter_lite` | 20 |
+| P1 | `crealityscan.configure_scan_params_p1` | 20 |
+| P1S | `crealityscan.configure_scan_params_p1s` | 22 |
+| Pika | `crealityscan.configure_scan_params_pika` | 20 |
+| Raptor | `crealityscan.configure_scan_params_raptor` | 21 |
+| S1 | `crealityscan.configure_scan_params_s1` | 25 |
+| X1 | `crealityscan.configure_scan_params_x1` | 22 |
+
+preset 可用 `key`、中文 `name` 或 `aliases` 引用。平台读取步骤版本目录中的 `presets.json` 并显示选择窗口。
+
+### 7.1 P1S 当前配置
+
+P1S 使用独立 Step `crealityscan.configure_scan_params_p1s` 和 `p1s.*` key。22 个 preset 包括：
+
+- 线激光点云：交叉线、平行线、单线。
+- 线激光框架点：开启贴图、关闭贴图。
+- 线激光无标记点。
+- 散斑小物体、中物体：几何/纹理，各含快速和高精度。
+- 散斑大物体：几何、纹理。
+- 散斑人脸：几何/纹理，各含快速和高精度。
+- 散斑人体：几何、纹理。
+
+`tasks/P1S开流.json` 有 17 个参数块：16 个散斑 preset 加“线激光-无标记点”。
+
+`tasks/P1S后处理.json` 有 19 个参数块：上述 17 个块，再加 2 个线激光框架点 preset。3 个线激光点云 preset 当前不在 P1S 标准任务中。
+
+修改 P1S `presets.json` 后，必须同时校验两份 P1S Task 的引用。
+
+## 8. 日志驱动判定
+
+多个步骤通过读取 CrealityScan `scan_log` 增量判断真实状态。运行前应设置 `app.log_dir`；未配置时部分步骤会回退到当前 Windows 用户的默认日志目录。
+
+- `crealityscan.preview_scan`：匹配预览成功日志后返回。
+- `crealityscan.scan_until_frames_then_stop`：确认扫描开始和有效帧，等待帧数达标，点击完成后继续等待 `OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS`。
+- `crealityscan.pause_switch_point_cloud_scan`：严格按顺序等待：
+
+```text
+OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS
+obscan_scan_reconfig_scan_mode_config
+scan_type: OB_SCAN_CLOUD_FUSED
+start stream done.
+config property ex done.
+```
+
+全部匹配后再执行默认 1 秒的 `ready_stable_sec` 稳定等待。`scan_type: OB_SCAN_CLOUD_FUSED` 只代表配置已写入，不能单独判定 UI 就绪；未点击预览时底层流也可能产生点云，所以不使用 `total_points_num:`。
+
+`crealityscan.create_scan` 当前只执行原有点击动作，不做日志关键字匹配。
+
+## 9. 结果与报告
+
+每次运行创建：
+
+```text
+artifacts/<任务名>_<YYYYMMDD_HHMMSS>/
+├─ airtest/
+├─ screenshots/
+├─ logs/crealityscan/
+├─ result.json
+├─ summary.json
+└─ report.html
+```
+
+- 成功任务会清理部分重型临时产物。
+- 失败任务尽量保留截图、Airtest 明细和 CrealityScan 日志。
+- `result.json` 记录步骤状态、耗时、尝试次数、错误和扩展指标。
+- 报告包含设备信息、关键词命中、步骤明细及可用的 FPS/CPU/内存趋势。
+- 双击“步骤结果”中的截图路径可打开产物。
+
+默认日志关键词定义在 `engine/defaults.py`：`Traceback`、`Exception`、`ERROR`、`失败`、`崩溃`。
+
+## 10. 滑轨支持
+
+源码态启动独立控制台：
+
+```powershell
+python slide_rail_app.py
+```
+
+主平台启动时尝试在 `127.0.0.1:5000` 自动启动 `滑轨/motion_service.py`，控制器仍需单独连接。当前默认控制器 IP 为 `192.168.0.11`，DLL 为 `zauxdll.dll`。
+
+`slide_rail.switch_position` preset：
+
+| preset | 位置（脉冲） |
+| --- | ---: |
+| 小物体 | 0 |
+| 中物体 | -170000 |
+| 人脸 | -360000 |
+| 大物体/人体 | -580000 |
+
+位置日志默认写入 `run_dir/slide_rail_position_logs/`。`scan_until_frames_then_stop` 默认允许滑轨扫描联动；只有服务和控制器在线才执行，否则自动跳过。
+
+> 当前 `jens_pc_build.spec` 未打包 `滑轨/` 及 DLL。滑轨目前应以源码态使用；安装版支持前需补打包配置并完成硬件验收。
+
+## 11. 邮件通知
+
+收件邮箱保存在 `config/notification_settings.json`。SMTP 从项目或安装目录下的 `.env` 读取。
+
+必填：
+
+```dotenv
+JENS_SMTP_HOST=
+JENS_SMTP_PORT=
+JENS_SMTP_USER=
+JENS_SMTP_PASSWORD=
+```
+
+可选：
+
+```dotenv
+JENS_SMTP_USE_SSL=
+JENS_SMTP_USE_STARTTLS=
+JENS_SMTP_TIMEOUT_SEC=8
+```
+
+平台支持任务失败和队列完成通知。`.env` 已加入 `.gitignore`，通常包含凭证，不应提交；打包前必须确认构建机上的 `.env` 适合分发。
+
+## 12. 导入 Airtest .air
+
+“导入.air”会解析旧脚本，生成 Step 目录、`step.json`、`impl.py` 和模板资源。当前主要支持 `touch`、`wait`、`swipe`、`sleep`、`Template`。
+
+导入后仍需检查坐标、模板阈值、超时、异常信息和日志就绪条件。转换成功不等于 Step 已通过稳定性验收。
+
+## 13. 目录结构
+
+```text
+.
+├─ platform_app.py            # Qt 入口，也支持 --run-case
+├─ slide_rail_app.py          # 滑轨控制台入口
+├─ jens_runner_entry.py       # Runner 主逻辑
+├─ jens_runner_helper.py      # 安装态 Runner
+├─ jens_runtime.py            # 源码态/安装态路径
+├─ engine/                    # 执行、日志、窗口、报告、IO
+├─ jens_platform/             # Qt UI、任务、通知、Step 导入
+├─ jens_runner.air/           # Airtest CLI 入口
+├─ steps/                     # 版本化 Step 库
+├─ cases/                     # Case；含 user/ 和 _generated/
+├─ tasks/                     # Task 库和 _queue.json
+├─ 滑轨/                      # 服务、客户端、UI、DLL
+├─ tests/                     # 单元测试
+├─ docs/                      # 项目文档
+├─ web--gaizao/               # Web + Agent 设计，仅文档
+├─ 用例仓库/                  # 历史 .air 素材
+├─ build_assets/              # 打包资源
+├─ build/                     # PyInstaller 中间产物
+├─ 安装程序/                  # 当前目录版输出
+├─ config/                    # 通知配置
+└─ artifacts/                 # 运行时生成，Git 忽略
+```
+
+当前平台可发现 26 个有效 Step：`common` 3 个、`crealityscan` 22 个、`slide_rail` 1 个。
+
+`steps/crealityscan/set_scan_params_speckle_medium_geometry` 已清空 `id/version`，属于废弃 Step，不会被发现。
+
+## 14. 打包
+
+安装 PyInstaller 后构建 one-folder 目录版：
+
+```powershell
+python -m pip install pyinstaller
+python build.py          # 自动探测 dist 最高版本并 +1（如 v0.3 -> v0.4）
+python build.py 0.4      # 或手动指定版本
+python build.py --no-tools   # 不附带侧边栏工具
+```
+
+`build.py` 调用 PyInstaller 构建，并将产物自动命名为 `dist/jens_pc_app_vX.Y/`，版本号同时写入两个 exe 的 Windows 文件版本资源（右键 exe → 属性 → 详细信息可见）。版本递增规则：次版本 +1，`v0.9` 进位到 `v1.0`。
+
+默认会把 `工具/` 下三个侧边栏工具（后处理对比、标定分数、固件升级）附带进产物 `工具/` 目录，并排除 `__pycache__`、PyInstaller 产物（`build`/`dist`）和样本工程集等杂物；可用 `--no-tools` 跳过。侧边栏工具是运行时从 exe 目录向上查找 `工具/<工具名>` 动态加载的，工具在目标机正常运行仍需其自身依赖（如 Python 环境、excel 库等）。
+
+Spec 生成 `jens_pc_app.exe` 和 `jens_runner_helper.exe`，并收集 `steps/`、`cases/`、`tasks/`、`docs/`、`config/`、`jens_runner.air/`、`README.md`、`.env` 及运行依赖。
+
+分发时必须保留整个 `jens_pc_app/` 目录，不能只复制 EXE。`用例仓库/`、`web--gaizao/` 和 `滑轨/` 当前不在 Spec 中。
+
+## 15. 测试与校验
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+当前测试覆盖从指定 Step 开始执行、日志轮转与帧数轮询、SDK FPS、HTML 报告、OCR 文本解析和任务生成器。
+
+扫描注册表：
+
+```powershell
+python -c "from pathlib import Path; from jens_platform.step_registry import scan_steps; print([m.step_id for m in scan_steps(Path('.').resolve())])"
+```
+
+维护 preset 或 Task 后至少检查：
+
+1. 每个 `id + version` 都能解析到有效 Step。
+2. `params.preset` 能在对应 `key/name/aliases` 中命中。
+3. 普通、框架点和后处理块顺序正确。
+4. 最后一个参数块后没有多余“新建扫描”。
+5. 在目标分辨率和真实 CrealityScan 版本上完成冒烟测试。
+
+## 16. Web 改造状态
+
+`web--gaizao/` 是“中心 Web 平台 + 用户浏览器 + 用户本地精简 Agent”的设计文档集，当前没有实现代码，也未替代 Qt 平台。入口见 [web--gaizao/README.md](web--gaizao/README.md)。
+
+账号权限、共享任务库、本地 Agent、任务下发、进度日志、执行记录和紧急停止均属于规划能力，不能按当前 README 的命令直接使用。
+
+## 17. 维护入口
+
+- 新增动作：新建 `steps/<domain>/<name>/v1_0_0/` 插件。
+- 新增扫描参数：维护对应 `presets.json` 和模板。
+- 新增生成器模组：维护 `jens_platform/task_generator.py` 及 `tests/test_task_generator.py`。
+- 修改日志条件：复用增量读取和日志轮转逻辑，并补超时、轮转和关键字顺序测试。
+- 修改报告：维护 `engine/report_html.py`、`engine/logs.py`。
+- 修改桌面平台：入口为 `jens_platform/main.py:MainWindow`。
+- 修改滑轨协议：维护 `滑轨/motion_service.py` 和 `滑轨/motion_client.py`。
+
+相关背景资料见 [docs/项目技术框架说明.md](docs/项目技术框架说明.md)、[docs/项目执行流程图.svg](docs/项目执行流程图.svg)。其中历史文档的步骤数量与依赖清单可能未同步，当前盘点以本 README 和代码为准。
+
+## 18. 当前限制
+
+- UI 自动化强依赖分辨率、缩放、窗口布局、模板和 CrealityScan 版本。
+- 日志格式或目录变化会导致日志驱动 Step 超时。
+- Step 注册表会跳过无效 `step.json`，UI 当前不展示解析详情。
+- Qt 主窗口职责较多，复杂扩展应拆分模块。
+- P1S 和 Pika 未接入任务生成器，存在人工同步成本。
+- 当前 P1、S1、X1 的生成器输出与标准 Task JSON 已有差异，`tests/test_task_generator.py` 会报不一致；修改生成器或标准任务时应统一基准后再更新测试。
+- 安装版暂未包含滑轨资源。
+- Web 平台、账号数据库和本地 Agent 仍处于设计阶段。
+
+软件图标来源：[Icons8](https://icons8.com/icon/RIVoFQandML6/baseball-cap)。

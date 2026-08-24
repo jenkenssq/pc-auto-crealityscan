@@ -1,0 +1,23 @@
+{
+  "id": "crealityscan.set_point_distance",
+  "name": "点距选择（文本框输入）",
+  "version": "1.0.0",
+  "description": "点击点距文本框并直接输入点距（mm）。适用于 1920x1080、100% 缩放、窗口最大化的硬坐标场景。",
+  "params_schema": {
+    "distance_mm": {
+      "type": "string",
+      "default": "0.45",
+      "description": "点距（mm），例如：\"0.45\"。"
+    },
+    "input_pos": {
+      "type": "array",
+      "default": [300, 450],
+      "description": "点距输入框的点击坐标（像素）。格式：[x,y]，例如：[300,450]。"
+    },
+    "delay_sec": {
+      "type": "number",
+      "default": 0.2,
+      "description": "聚焦文本框后的延迟（秒）。"
+    }
+  }
+}

@@ -1,0 +1,338 @@
+{
+  "group": "s1_scan_params",
+  "presets": [
+    {
+      "key": "s1.line_laser.point_cloud.cross",
+      "name": "线激光-点云-交叉线",
+      "aliases": ["交叉线", "line_laser_cross"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712186259.png",
+            "record_pos": [-0.473, -0.007],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "s1.line_laser.point_cloud.parallel",
+      "name": "线激光-点云-平行线",
+      "aliases": ["平行线", "line_laser_parallel"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1774440021941.png",
+            "record_pos": [-0.479, 0.06],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "s1.line_laser.point_cloud.single",
+      "name": "线激光-点云-单线",
+      "aliases": ["单线", "line_laser_single"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1774410082997.png",
+            "record_pos": [-0.483, 0.019],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "s1.line_laser.frame_points.texture_on",
+      "name": "线激光-框架点-开启贴图-usb",
+      "aliases": ["开启贴图", "texture_on"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [100, 325] },
+        { "op": "touch", "pos": [65, 465] },
+        { "op": "touch", "pos": [310, 520] }
+      ]
+    },
+    {
+      "key": "s1.line_laser.frame_points.texture_off",
+      "name": "线激光-框架点-关闭贴图-usb",
+      "aliases": ["关闭贴图", "texture_off"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [100, 325] },
+        { "op": "touch", "pos": [65, 465] }
+      ]
+    },
+    {
+      "key": "s1.line_laser.frame_points.texture_on_wifi",
+      "name": "线激光-标记点-框架点-开启贴图-wifi",
+      "aliases": ["线激光-框架点-开启贴图-wifi", "框架点-开启贴图-wifi", "frame_points_texture_on_wifi"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [318, 415] }
+      ]
+    },
+    {
+      "key": "s1.line_laser.frame_points.texture_off_wifi",
+      "name": "线激光-标记点-框架点-关闭贴图-wifi",
+      "aliases": ["线激光-框架点-关闭贴图-wifi", "框架点-关闭贴图-wifi", "frame_points_texture_off_wifi"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [70, 360] }
+      ]
+    },
+    {
+      "key": "s1.line_laser.no_marker",
+      "name": "线激光-无标记点",
+      "aliases": ["无标记点", "线激光-无标志点", "line_laser_no_marker"],
+      "connections": ["usb"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [255, 325] },
+        { "op": "touch", "pos": [65, 415] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.large.geometry.standard",
+      "name": "散斑-点云-大物体-几何-标准",
+      "aliases": ["大物体-几何-标准"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [60, 545] },
+        { "op": "touch", "pos": [60, 650] },
+        { "op": "touch", "pos": [60, 760] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.large.geometry.wide_angle",
+      "name": "散斑-点云-大物体-几何-广角",
+      "aliases": ["大物体-几何-广角"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [60, 545] },
+        { "op": "touch", "pos": [60, 650] },
+        { "op": "touch", "pos": [170, 760] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.large.texture.standard",
+      "name": "散斑-点云-大物体-纹理-标准",
+      "aliases": ["大物体-纹理-标准"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [60, 545] },
+        { "op": "touch", "pos": [170, 650] },
+        { "op": "touch", "pos": [60, 760] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.large.texture.wide_angle",
+      "name": "散斑-点云-大物体-纹理-广角",
+      "aliases": ["大物体-纹理-广角"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [60, 545] },
+        { "op": "touch", "pos": [170, 650] },
+        { "op": "touch", "pos": [170, 760] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.large.marker.standard",
+      "name": "散斑-点云-大物体-标志点-标准",
+      "aliases": ["大物体-标志点-标准"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [60, 545] },
+        { "op": "touch", "pos": [280, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.medium.geometry",
+      "name": "散斑-点云-中物体-几何",
+      "aliases": ["中物体-几何"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [170, 545] },
+        { "op": "touch", "pos": [60, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.medium.texture",
+      "name": "散斑-点云-中物体-纹理",
+      "aliases": ["中物体-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [170, 545] },
+        { "op": "touch", "pos": [170, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.medium.marker",
+      "name": "散斑-点云-中物体-标志点",
+      "aliases": ["中物体-标志点"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [170, 545] },
+        { "op": "touch", "pos": [280, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.small.geometry",
+      "name": "散斑-点云-小物体-几何",
+      "aliases": ["小物体-几何"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [280, 540] },
+        { "op": "touch", "pos": [60, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.small.texture",
+      "name": "散斑-点云-小物体-纹理",
+      "aliases": ["小物体-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [280, 540] },
+        { "op": "touch", "pos": [170, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.small.marker",
+      "name": "散斑-点云-小物体-标志点",
+      "aliases": ["小物体-标志点"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [60, 435] },
+        { "op": "touch", "pos": [280, 540] },
+        { "op": "touch", "pos": [280, 650] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.face.geometry",
+      "name": "散斑-点云-人脸-几何",
+      "aliases": ["人脸-几何"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [170, 435] },
+        { "op": "touch", "pos": [60, 545] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.face.texture",
+      "name": "散斑-点云-人脸-纹理",
+      "aliases": ["人脸-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [170, 435] },
+        { "op": "touch", "pos": [170, 545] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.body.geometry",
+      "name": "散斑-点云-人体-几何",
+      "aliases": ["人体-几何"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [60, 545] }
+      ]
+    },
+    {
+      "key": "s1.speckle.point_cloud.body.texture",
+      "name": "散斑-点云-人体-纹理",
+      "aliases": ["人体-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [54, 300] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [170, 545] }
+      ]
+    },
+    {
+      "key": "s1.speckle.frame_points.large",
+      "name": "散斑框架点-大物体",
+      "aliases": ["框架点-大物体"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [60, 330] },
+        { "op": "touch", "pos": [60, 435] }
+      ]
+    },
+    {
+      "key": "s1.speckle.frame_points.medium",
+      "name": "散斑框架点-中物体",
+      "aliases": ["框架点-中物体"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [60, 330] },
+        { "op": "touch", "pos": [175, 435] }
+      ]
+    },
+    {
+      "key": "s1.speckle.frame_points.small",
+      "name": "散斑框架点-小物体",
+      "aliases": ["框架点-小物体"],
+      "actions": [
+        { "op": "touch", "pos": [240, 210] },
+        { "op": "touch", "pos": [60, 330] },
+        { "op": "touch", "pos": [280, 435] }
+      ]
+    }
+  ]
+}
