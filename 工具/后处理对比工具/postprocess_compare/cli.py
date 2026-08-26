@@ -35,6 +35,12 @@ _POSTPROCESS_CONFIG = {
         "module": "setps.ai_retexture_operation.v1_0_0.impl",
         "default_timeout_sec": 600.0,
     },
+    "human_body_completion": {
+        "name": "人体补全",
+        "step_name": "人体补全操作",
+        "module": "setps.human_body_completion.v1_0_0.impl",
+        "default_timeout_sec": 600.0,
+    },
 }
 
 
@@ -265,6 +271,8 @@ def _run_postprocess_step(
     enable_gaussian: bool = False,
     run_texture_first: bool = True,
     texture_timeout_sec: float = 90.0,
+    enable_hd_geometry: bool = False,
+    base_wait_sec: float = 20.0,
 ) -> None:
     config = _POSTPROCESS_CONFIG.get(operation)
     if config is None:
@@ -280,6 +288,9 @@ def _run_postprocess_step(
     if operation == "ai_retexture":
         params["run_texture_first"] = run_texture_first
         params["texture_timeout_sec"] = texture_timeout_sec
+    if operation == "human_body_completion":
+        params["enable_hd_geometry"] = enable_hd_geometry
+        params["base_wait_sec"] = base_wait_sec
     try:
         result = step_module.run(
             {
@@ -333,6 +344,8 @@ def _run_one(
     enable_gaussian: bool = False,
     run_texture_first: bool = True,
     texture_timeout_sec: float = 90.0,
+    enable_hd_geometry: bool = False,
+    base_wait_sec: float = 20.0,
 ) -> bool:
     app = ManagedCrealityScan(exe_path)
     try:
@@ -363,6 +376,8 @@ def _run_one(
                 enable_gaussian,
                 run_texture_first,
                 texture_timeout_sec,
+                enable_hd_geometry,
+                base_wait_sec,
             )
             _run_return_home_step(step_label)
             if position < len(work_items):
@@ -401,7 +416,7 @@ def build_parser() -> argparse.ArgumentParser:
         dest="operation",
         choices=tuple(_POSTPROCESS_CONFIG),
         default=None,
-        help="后处理对比类型：texture=贴图，gaussian=高斯渲染，ai_retexture=AI重贴图",
+        help="后处理对比类型：texture=贴图，gaussian=高斯渲染，ai_retexture=AI重贴图，human_body_completion=人体补全",
     )
     parser.add_argument(
         "--operation-timeout",
@@ -418,6 +433,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--gaussian-timeout", type=float, default=900.0, help="高斯渲染进度等待超时秒数")
     parser.add_argument("--ai-retexture-timeout", type=float, default=600.0, help="AI重贴图操作等待超时秒数")
     parser.add_argument("--ai-retexture-gaussian", action="store_true", help="AI重贴图开启高斯渲染")
+    parser.add_argument(
+        "--human-body-completion-timeout",
+        type=float,
+        default=600.0,
+        help="人体补全操作等待超时秒数（创建人体模型与AI人体补全两个进度条共用）",
+    )
+    parser.add_argument(
+        "--human-body-hd-geometry",
+        action="store_true",
+        help="人体补全开启超清几何精度（点击坐标 320,465 开启开关）",
+    )
+    parser.add_argument(
+        "--base-wait",
+        type=float,
+        default=20.0,
+        help="人体补全选择模型底座后的固定等待秒数",
+    )
     parser.add_argument(
         "--no-texture-first",
         action="store_true",
@@ -462,6 +494,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         operation_timeout_sec = max(1.0, args.gaussian_timeout)
     elif args.operation == "ai_retexture":
         operation_timeout_sec = max(1.0, args.ai_retexture_timeout)
+    elif args.operation == "human_body_completion":
+        operation_timeout_sec = max(1.0, args.human_body_completion_timeout)
     else:
         operation_timeout_sec = max(1.0, args.texture_timeout)
     release_work_items: list[ProjectWorkItem] = []
@@ -538,6 +572,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             enable_gaussian=args.ai_retexture_gaussian,
             run_texture_first=not args.no_texture_first,
             texture_timeout_sec=max(1.0, args.texture_timeout),
+            enable_hd_geometry=args.human_body_hd_geometry,
+            base_wait_sec=max(0.0, args.base_wait),
         )
         test_ok = _run_one(
             "测试版",
@@ -551,6 +587,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             enable_gaussian=args.ai_retexture_gaussian,
             run_texture_first=not args.no_texture_first,
             texture_timeout_sec=max(1.0, args.texture_timeout),
+            enable_hd_geometry=args.human_body_hd_geometry,
+            base_wait_sec=max(0.0, args.base_wait),
         )
     except KeyboardInterrupt:
         return 3

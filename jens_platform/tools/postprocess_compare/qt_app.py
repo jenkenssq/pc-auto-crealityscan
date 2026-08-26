@@ -233,6 +233,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             ("texture", "贴图"),
             ("gaussian", "高斯渲染"),
             ("ai_retexture", "AI重贴图"),
+            ("human_body_completion", "人体补全"),
         ):
             button = QtWidgets.QPushButton(text)
             button.setObjectName("segmentButton")
@@ -328,6 +329,20 @@ class CompareWindow(QtWidgets.QMainWindow):
 
         advanced_layout.addLayout(timeout_row)
         advanced_layout.addLayout(texture_row)
+
+        human_body_row = QtWidgets.QHBoxLayout()
+        human_body_row.setSpacing(9)
+        self.human_body_hd_geometry = QtWidgets.QCheckBox("人体补全开启超清几何精度")
+        self.human_body_hd_geometry.setChecked(False)
+        self.base_wait_label = QtWidgets.QLabel("底座等待")
+        self.base_wait = self._seconds_spin(20.0, 0.0, 3600.0)
+        human_body_row.addWidget(self.human_body_hd_geometry)
+        human_body_row.addWidget(self.base_wait_label)
+        human_body_row.addWidget(self.base_wait)
+        human_body_row.addWidget(QtWidgets.QLabel("秒"))
+        human_body_row.addStretch(1)
+
+        advanced_layout.addLayout(human_body_row)
         self.advanced_panel.setVisible(False)
         config_layout.addWidget(self.advanced_panel)
         layout.addWidget(config_panel)
@@ -528,6 +543,9 @@ class CompareWindow(QtWidgets.QMainWindow):
         elif operation == "ai_retexture":
             self.postprocess_timeout_label.setText("AI重贴图超时")
             self.operation_timeout.setValue(600.0)
+        elif operation == "human_body_completion":
+            self.postprocess_timeout_label.setText("人体补全超时")
+            self.operation_timeout.setValue(600.0)
         else:
             self.postprocess_timeout_label.setText("贴图超时")
             self.operation_timeout.setValue(90.0)
@@ -535,6 +553,10 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.ai_retexture_texture_first.setEnabled(is_ai)
         self.texture_timeout_label.setEnabled(is_ai)
         self.texture_timeout.setEnabled(is_ai)
+        is_human = operation == "human_body_completion"
+        self.human_body_hd_geometry.setEnabled(is_human)
+        self.base_wait_label.setEnabled(is_human)
+        self.base_wait.setEnabled(is_human)
         self._set_status(f"已选择{self.operation_buttons[operation].text()}对比", "idle")
 
     def _set_step_state(self, step: int, state: str) -> None:
@@ -662,6 +684,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.ai_retexture_gaussian,
             self.ai_retexture_texture_first,
             self.texture_timeout,
+            self.human_body_hd_geometry,
+            self.base_wait,
         )
         for widget in controls:
             widget.setEnabled(not running)
@@ -732,6 +756,10 @@ class CompareWindow(QtWidgets.QMainWindow):
             args.append("--no-texture-first")
         if self.ai_retexture_gaussian.isChecked():
             args.append("--ai-retexture-gaussian")
+        if self.human_body_hd_geometry.isChecked():
+            args.append("--human-body-hd-geometry")
+        args.append("--base-wait")
+        args.append(str(self.base_wait.value()))
         env = QtCore.QProcessEnvironment.systemEnvironment()
         env.insert("PYTHONIOENCODING", "utf-8")
         env.insert("PYTHONUTF8", "1")

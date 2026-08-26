@@ -16,6 +16,7 @@ _SNAPSHOT_PATTERNS = {
     "texture": "step*_texture_operation.png",
     "gaussian": "step*_gaussian_rendering.png",
     "ai_retexture": "step*_ai_retexture_operation.png",
+    "human_body_completion": "step*_human_body_completion.png",
 }
 _IMAGE_MAX_WIDTH = 500
 _IMAGE_MAX_HEIGHT = 282

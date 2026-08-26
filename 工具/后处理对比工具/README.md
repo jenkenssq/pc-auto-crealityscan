@@ -12,6 +12,7 @@ CrealityScan 后处理对比平台用于对比两个 CrealityScan 版本处理�
   - 贴图
   - 高斯渲染
   - AI重贴图
+  - 人体补全
 - 导入工程使用 `OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS` 日志标识判定完成。
 - 返回首页点击确认后固定等待 3 秒。
 - 后处理步骤记录耗时并保存全屏截图。
@@ -37,6 +38,8 @@ CrealityScan 后处理对比平台用于对比两个 CrealityScan 版本处理�
 │  ├─ import_project/             # 导入工程
 │  ├─ texture_operation/          # 贴图操作
 │  ├─ gaussian_rendering/         # 高斯渲染操作
+│  ├─ ai_retexture_operation/     # AI重贴图操作
+│  ├─ human_body_completion/      # 人体补全操作
 │  └─ return_home/                # 返回首页
 └─ artifacts/                     # 运行产物目录
 ```
@@ -69,7 +72,7 @@ python -m pip install -r requirements.txt
 
 界面操作流程：
 
-1. 选择“贴图”、“高斯渲染”或“AI重贴图”。必须明确选择，不能留空。
+1. 选择“贴图”、“高斯渲染”、“AI重贴图”或“人体补全”。必须明确选择，不能留空。
 2. 选择发布版 `CrealityScan.exe` 和版本标签。
 3. 选择测试版 `CrealityScan.exe` 和版本标签。
 4. 选择原始工程集目录。
@@ -89,7 +92,7 @@ python -m pip install -r requirements.txt
 启动命令行.bat
 ```
 
-脚本会先让用户选择贴图、高斯渲染或AI重贴图，然后依次询问 EXE、版本标签、工程集和输出目录。
+脚本会先让用户选择贴图、高斯渲染、AI重贴图或人体补全，然后依次询问 EXE、版本标签、工程集和输出目录。
 
 ### 参数启动
 
@@ -134,6 +137,22 @@ python -m postprocess_compare `
   --output-dir "D:\对比结果"
 ```
 
+人体补全对比：
+
+```powershell
+python -m postprocess_compare `
+  --operation human_body_completion `
+  --operation-timeout 600 `
+  --human-body-hd-geometry `
+  --base-wait 20 `
+  --release-exe "D:\CrealityScan\release\CrealityScan.exe" `
+  --release-version "1.12.3-release" `
+  --test-exe "D:\CrealityScan\test\CrealityScan.exe" `
+  --test-version "1.12.4-test" `
+  --project-set "D:\扫描工程集" `
+  --output-dir "D:\对比结果"
+```
+
 `--operation` 是必填参数：
 
 | 值 | 类型 | 默认超时 |
@@ -141,6 +160,7 @@ python -m postprocess_compare `
 | `texture` | 贴图 | 90 秒 |
 | `gaussian` | 高斯渲染 | 900 秒 |
 | `ai_retexture` | AI重贴图 | 600 秒 |
+| `human_body_completion` | 人体补全 | 600 秒 |
 
 其他超时参数：
 
@@ -152,6 +172,9 @@ python -m postprocess_compare `
 - `--ai-retexture-timeout`：AI重贴图操作等待超时，默认 600 秒。
 - `--ai-retexture-gaussian`：AI重贴图开启高斯渲染。
 - `--no-texture-first`：AI重贴图前不先执行贴图操作（默认先执行贴图）。
+- `--human-body-completion-timeout`：人体补全操作等待超时，默认 600 秒（创建人体模型与AI人体补全两个进度条共用）。
+- `--human-body-hd-geometry`：人体补全开启超清几何精度。
+- `--base-wait`：人体补全选择模型底座后的固定等待秒数，默认 20 秒。
 
 ## 执行流程
 
@@ -230,9 +253,11 @@ OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS
 
 未检测到该标识时不会进入后处理步骤。
 
-### 贴图、高斯渲染和 AI重贴图
+### 贴图、高斯渲染、AI重贴图和人体补全
 
-三个后处理 Step 都按照对应 Airtest 模板等待进度状态完成，并记录操作耗时。高斯渲染默认超时为 15 分钟，AI重贴图默认超时为 10 分钟，且 AI重贴图默认会先执行一次贴图操作（可用 `--no-texture-first` 关闭）。
+四个后处理 Step 都按照对应 Airtest 模板等待进度状态完成，并记录操作耗时。高斯渲染默认超时为 15 分钟，AI重贴图默认超时为 10 分钟，且 AI重贴图默认会先执行一次贴图操作（可用 `--no-texture-first` 关闭）。
+
+人体补全流程为：点击网格处理进入，点击AI人体补全，点击导入人体正面照片，在 `Select Head Front Image` 弹窗中全选工程副本 `img/` 目录图片导入；可选开启超清几何精度（`--human-body-hd-geometry`）；点击立即生成并确认后，等待"创建人体模型"进度条消失（默认超时 10 分钟）；点击选择模型底座后固定等待 `--base-wait` 秒（默认 20 秒）；点击预览，等待"AI人体补全"进度条消失；最后点击应用并保存全屏截图。
 
 贴图 Step 完成后、截图前通过 Airtest `move_to` 将鼠标移动到左上角安全位置，避免鼠标停留在操作控件上导致截图保留 hover 高亮。默认坐标为 `(10, 10)`，移动后等待 `0.3` 秒再截图；移动失败最多重试 2 次，仍失败则报告明确错误且不生成误导性截图。
 
@@ -267,7 +292,7 @@ OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS
 
 ## 当前限制
 
-- 一次任务只能选择一种后处理类型，不能在单个任务中组合执行贴图、高斯渲染和AI重贴图（AI重贴图内部自带的前置贴图除外）。
+- 一次任务只能选择一种后处理类型，不能在单个任务中组合执行贴图、高斯渲染、AI重贴图和人体补全（AI重贴图内部自带的前置贴图除外）。
 - CLI 当前固定执行导入工程、选中后处理、返回首页流程。
 - 左侧“对比任务、运行记录、设置”目前是界面导航占位入口。
 - Excel 对比表只汇总截图，不做图片质量评分或像素差异判定。

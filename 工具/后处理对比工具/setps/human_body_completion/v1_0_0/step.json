@@ -1,0 +1,53 @@
+{
+  "id": "crealityscan.human_body_completion",
+  "name": "进行人体补全操作",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：进行人体补全操作（点击网格处理进入，点击AI人体补全，点击导入人体正面照片，在 Select Head Front Image 弹窗中全选 img 目录图片导入，可选开启超清几何精度，点击立即生成，点击确认，等待创建人体模型进度条消失，点击选择模型底座，固定等待 20 秒，点击预览，等待AI人体补全进度条消失，点击应用，截图留证）。",
+  "params_schema": {
+    "timeout_sec": {
+      "type": "number",
+      "default": 600,
+      "description": "等待进度条出现和消失的总超时（秒），默认 10 分钟，适用于创建人体模型与AI人体补全两个进度条。"
+    },
+    "base_wait_sec": {
+      "type": "number",
+      "default": 20,
+      "description": "点击选择模型底座后固定等待的时长（秒）。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "截图前鼠标安全位置的横坐标。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "截图前鼠标安全位置的纵坐标。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.3,
+      "description": "移动后等待界面恢复非 hover 状态的时间。"
+    },
+    "enable_hd_geometry": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否开启超清几何精度：true 先点击坐标(320,465)开启开关，再点击立即生成；false 直接点击立即生成。"
+    },
+    "img_dir_name": {
+      "type": "string",
+      "default": "img",
+      "description": "工程目录下存放待导入图片的子目录名。"
+    },
+    "dialog_timeout_sec": {
+      "type": "number",
+      "default": 15,
+      "description": "等待图片选择弹窗及控件的超时（秒）。"
+    },
+    "click_delay_sec": {
+      "type": "number",
+      "default": 0.5,
+      "description": "弹窗内填路径、全选、确认之间的稳定等待（秒）。"
+    }
+  }
+}

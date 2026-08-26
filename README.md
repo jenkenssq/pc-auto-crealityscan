@@ -372,7 +372,7 @@ JENS_SMTP_TIMEOUT_SEC=8
 └─ artifacts/                 # 运行时生成，Git 忽略
 ```
 
-当前平台可发现 26 个有效 Step：`common` 3 个、`crealityscan` 22 个、`slide_rail` 1 个。
+当前平台可发现 37 个有效 Step：`common` 3 个、`crealityscan` 27 个、`slide_rail` 1 个、`tool.postprocess_compare` 6 个（贴图、高斯渲染、AI重贴图、人体补全、导入工程、返回首页）。
 
 `steps/crealityscan/set_scan_params_speckle_medium_geometry` 已清空 `id/version`，属于废弃 Step，不会被发现。
 
