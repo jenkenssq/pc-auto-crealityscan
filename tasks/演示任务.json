@@ -17,9 +17,9 @@
     {
       "id": "slide_rail.switch_position",
       "version": "1.0.0",
-      "name": "移动滑轨位置至大物体",
+      "name": "移动滑轨位置至小物体",
       "params": {
-        "preset": "大物体"
+        "preset": "小物体"
       },
       "on_fail": {
         "action": "abort",
