@@ -2,7 +2,7 @@
   "id": "slide_rail.switch_position",
   "name": "滑轨：切换物体位置",
   "version": "1.0.0",
-  "description": "每次换位先执行完整的下降到底流程，再按 preset 将滑轨水平轴移动到指定物体位置；preset 可配置移动后的升降动作，大物体默认上升 20 秒。",
+  "description": "每次换位先执行完整的下降到底流程，再按 preset 将滑轨水平轴移动到指定物体位置；preset 可配置移动后的升降动作，大物体默认上升 25 秒。",
   "params_schema": {
     "preset": {
       "type": "string",

@@ -75,7 +75,7 @@ python platform_app.py
 
 ```powershell
 python platform_app.py --run-case cases/example_case.json
-python platform_app.py --run-case "tasks/P1S开流.json"
+python platform_app.py --run-case "tasks/Ferret开流.json"
 ```
 
 也可使用 Airtest CLI：
@@ -177,20 +177,22 @@ Case 默认保存在 `cases/`：
 
 Task 与 Case 使用相同结构，但默认位于 `tasks/`，用于任务库和批量队列。主界面只展示已加入队列的任务，队列状态保存在 `tasks/_queue.json`。
 
-当前标准任务覆盖：
+当前任务库与生成器覆盖模组：
 
-- Ferret（文件名沿用 `feeret`）、Otter、Otter Lite、P1、P1S、Raptor、S1、X1：开流和后处理。
-- Pika：Wi-Fi/USB 开流和后处理。
+- Ferret（文件名沿用 `feeret`）、Otter、Otter Lite、Otter Lite Basic、P1、Pika、Raptor、Raptor X、Raptor Pro、S1、X1：`tasks/` 下已提交开流/后处理任务（含 USB/Wi-Fi 与 `-滑轨` 变体）。
+- P1S：已接入任务生成器，`tasks/` 下当前无提交任务文件。
+- Pika：Wi-Fi/USB 开流和后处理，生成时自动插入稳定性等待步骤。
 
 `tasks/1.json`、`tasks/2.json`、`tasks/演示任务.json` 是示例或调试任务，不属于标准全量任务。
 
-任务生成器配置在 `jens_platform/task_generator.py`，当前支持：
+任务生成器配置在 `jens_platform/task_generator.py`，当前支持（12 个模组）：
 
 ```text
-feeret, otter, otter lite, P1, raptor, S1, X1
+feeret, otter, otter lite, otter lite basic, P1, P1S, pika,
+raptor, raptor x, raptor pro, S1, X1
 ```
 
-P1S 和 Pika 已有 Task JSON，但尚未接入生成器。因此修改这两类 preset 后，需要显式同步对应任务。
+P1S 和 Pika 已接入生成器。其中 Pika 任务会自动插入稳定性等待步骤；`raptor`/`raptor x`/`raptor pro` 生成的“开流”任务不含“激活/置顶窗口”；P1、P1S、Pika、raptor x、raptor pro、S1、X1 支持 USB/Wi-Fi 连接方式过滤。新任务以生成器为准，手工 `tasks/*.json` 仅作样本或现场调试使用。
 
 ## 6. 标准扫描流程
 
@@ -217,39 +219,38 @@ P1S 和 Pika 已有 Task JSON，但尚未接入生成器。因此修改这两类
 
 ## 7. 扫描参数 preset
 
-当前有 9 个模组参数 Step：
+当前有 12 个模组参数 Step：
 
 | 模组 | Step ID | preset 数 |
 | --- | --- | ---: |
 | Ferret | `crealityscan.configure_scan_params_ferret` | 23 |
 | Otter | `crealityscan.configure_scan_params_otter` | 26 |
 | Otter Lite | `crealityscan.configure_scan_params_otter_lite` | 20 |
-| P1 | `crealityscan.configure_scan_params_p1` | 20 |
-| P1S | `crealityscan.configure_scan_params_p1s` | 22 |
-| Pika | `crealityscan.configure_scan_params_pika` | 20 |
-| Raptor | `crealityscan.configure_scan_params_raptor` | 21 |
-| S1 | `crealityscan.configure_scan_params_s1` | 25 |
-| X1 | `crealityscan.configure_scan_params_x1` | 22 |
+| Otter Lite Basic | `crealityscan.configure_scan_params_otter_lite_basic` | 20 |
+| P1 | `crealityscan.configure_scan_params_p1` | 23 |
+| P1S | `crealityscan.configure_scan_params_p1s` | 23 |
+| Pika | `crealityscan.configure_scan_params_pika` | 21 |
+| Raptor | `crealityscan.configure_scan_params_raptor` | 19 |
+| Raptor X | `crealityscan.configure_scan_params_raptor_x` | 22 |
+| Raptor Pro | `crealityscan.configure_scan_params_raptor_pro` | 21 |
+| S1 | `crealityscan.configure_scan_params_s1` | 26 |
+| X1 | `crealityscan.configure_scan_params_x1` | 24 |
 
 preset 可用 `key`、中文 `name` 或 `aliases` 引用。平台读取步骤版本目录中的 `presets.json` 并显示选择窗口。
 
 ### 7.1 P1S 当前配置
 
-P1S 使用独立 Step `crealityscan.configure_scan_params_p1s` 和 `p1s.*` key。22 个 preset 包括：
+P1S 使用独立 Step `crealityscan.configure_scan_params_p1s` 和 `p1s.*` key。当前 23 个 preset 包括：
 
-- 线激光点云：交叉线、平行线、单线。
-- 线激光框架点：开启贴图、关闭贴图。
-- 线激光无标记点。
-- 散斑小物体、中物体：几何/纹理，各含快速和高精度。
-- 散斑大物体：几何、纹理。
-- 散斑人脸：几何/纹理，各含快速和高精度。
-- 散斑人体：几何、纹理。
+- 线激光点云：交叉线、平行线、单线（3）。
+- 线激光框架点：开启贴图、关闭贴图（2）。
+- 线激光无标记点：交叉线、平行线（2）。
+- 散斑小物体、中物体：几何/纹理，各含快速和高精度（8）。
+- 散斑大物体：几何、纹理（2）。
+- 散斑人脸：几何/纹理，各含快速和高精度（4）。
+- 散斑人体：几何、纹理（2）。
 
-`tasks/P1S开流.json` 有 17 个参数块：16 个散斑 preset 加“线激光-无标记点”。
-
-`tasks/P1S后处理.json` 有 19 个参数块：上述 17 个块，再加 2 个线激光框架点 preset。3 个线激光点云 preset 当前不在 P1S 标准任务中。
-
-修改 P1S `presets.json` 后，必须同时校验两份 P1S Task 的引用。
+合计 23 个。P1S 已接入任务生成器（`jens_platform/task_generator.py`），默认按全部 23 个 preset 生成开流/后处理任务；`tasks/` 下当前没有提交 P1S 任务文件。修改 P1S `presets.json` 后，需用生成器重新生成对应任务并校验引用。
 
 ## 8. 日志驱动判定
 
@@ -307,10 +308,12 @@ python slide_rail_app.py
 
 | preset | 位置（脉冲） |
 | --- | ---: |
-| 小物体 | 0 |
+| 小物体 | -30000 |
 | 中物体 | -170000 |
-| 人脸 | -360000 |
+| 人脸 | -370000 |
 | 大物体/人体 | -580000 |
+
+“大物体/人体”换位后默认上升 25 秒；其余 preset 无上升动作。位置均为负脉冲，与 v1.3 统一后的 `presets.json` 一致。
 
 位置日志默认写入 `run_dir/slide_rail_position_logs/`。`scan_until_frames_then_stop` 默认允许滑轨扫描联动；只有服务和控制器在线才执行，否则自动跳过。
 
@@ -441,8 +444,7 @@ python -c "from pathlib import Path; from jens_platform.step_registry import sca
 - 日志格式或目录变化会导致日志驱动 Step 超时。
 - Step 注册表会跳过无效 `step.json`，UI 当前不展示解析详情。
 - Qt 主窗口职责较多，复杂扩展应拆分模块。
-- P1S 和 Pika 未接入任务生成器，存在人工同步成本。
-- 当前 P1、S1、X1 的生成器输出与标准 Task JSON 已有差异，`tests/test_task_generator.py` 会报不一致；修改生成器或标准任务时应统一基准后再更新测试。
+- 任务生成器已覆盖全部 12 个模组，`tests/test_task_generator.py` 当前全绿；新增模组或 preset 时需同时更新生成器配置、标准 Task 与测试基准。
 - 安装版暂未包含滑轨资源。
 - Web 平台、账号数据库和本地 Agent 仍处于设计阶段。
 

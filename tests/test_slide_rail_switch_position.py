@@ -52,13 +52,13 @@ class SlideRailSwitchPositionTests(unittest.TestCase):
             )
 
         lower_index = client.calls.index(("lift_down_to_bottom", 1.0))
-        move_index = client.calls.index(("move_absolute", 560000))
+        move_index = client.calls.index(("move_absolute", -170000))
         self.assertLess(lower_index, move_index)
         self.assertTrue(client.disconnected)
         self.assertEqual(result["lower_lift_result"]["status"], "success")
         self.assertFalse(any(isinstance(call, tuple) and call[0] == "lift_up_duration" for call in client.calls))
 
-    def test_large_object_lifts_twenty_seconds_after_horizontal_move(self) -> None:
+    def test_large_object_lifts_twenty_five_seconds_after_horizontal_move(self) -> None:
         client = _FakeClient()
         with tempfile.TemporaryDirectory() as temp_dir, patch.object(
             impl, "_create_client", return_value=client
@@ -68,10 +68,10 @@ class SlideRailSwitchPositionTests(unittest.TestCase):
                 {"preset": "大物体"},
             )
 
-        move_index = client.calls.index(("move_absolute", 170000))
-        lift_index = client.calls.index(("lift_up_duration", 20.0))
+        move_index = client.calls.index(("move_absolute", -580000))
+        lift_index = client.calls.index(("lift_up_duration", 25.0))
         self.assertLess(move_index, lift_index)
-        self.assertEqual(result["lift_up_seconds_after_move"], 20.0)
+        self.assertEqual(result["lift_up_seconds_after_move"], 25.0)
         self.assertEqual(result["lift_up_result"]["status"], "success")
 
     def test_large_object_lift_failure_fails_step(self) -> None:
