@@ -93,6 +93,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
 
     # 来自现有 Airtest 用例（进行人体补全操作.air/进行人体补全操作.py）
     operation_started = time.time()
+    touch((160, 285))
     touch(Template(str(base / "tpl1774270225446.png"), record_pos=(-0.277, -0.254), resolution=(1920, 1080)))
     touch(Template(str(base / "tpl1787753200875.png"), record_pos=(0.024, -0.224), resolution=(1920, 1080)))
     touch(Template(str(base / "tpl1787753248187.png"), record_pos=(-0.409, -0.096), resolution=(1920, 1080)))
