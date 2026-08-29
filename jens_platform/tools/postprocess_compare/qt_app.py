@@ -126,8 +126,15 @@ class CompareWindow(QtWidgets.QMainWindow):
             QPushButton#outlineButton { color: #0a5fb3; border-color: #8db5d8; padding: 8px 15px; }
             QPushButton#segmentButton { min-width: 112px; color: #435664; border: 1px solid #bdcad4; background: #ffffff; padding: 8px 18px; }
             QPushButton#segmentButton:checked { color: #ffffff; background: #0a66c2; border-color: #0a66c2; font-weight: 700; }
-            QPushButton#advancedToggle { color: #3e607b; border: 0; background: transparent; padding: 7px 0; text-align: left; }
+            QPushButton#advancedToggle { color: #3e607b; border: 0; background: transparent; padding: 7px 0; text-align: left; font-weight: 600; }
             QPushButton#advancedToggle:hover { color: #0a66c2; background: transparent; }
+            QLabel#advToggleBadge { color: #7b8c99; font-size: 11px; }
+            QLabel#advZoneTitle { color: #4f606e; font-size: 11px; font-weight: 700; padding: 4px 0; }
+            QLabel#advFieldLabel { color: #4f606e; font-size: 12px; }
+            QLabel#advUnit { color: #5d6d79; font-size: 12px; }
+            QLabel#advZoneHint { color: #5d6d79; font-size: 11px; background: #edf1f5; border: 1px dashed #cdd8e1; border-radius: 7px; padding: 7px 11px; }
+            QCheckBox { color: #263640; font-size: 12px; spacing: 7px; }
+            QCheckBox::indicator { width: 14px; height: 14px; }
             QPushButton#primaryButton { color: #ffffff; background: #0a66c2; border-color: #0a66c2; padding: 10px 14px; font-weight: 700; }
             QPushButton#primaryButton:hover { background: #095aa9; border-color: #095aa9; }
             QPushButton#primaryButton:pressed { background: #074d91; border-color: #074d91; }
@@ -283,66 +290,122 @@ class CompareWindow(QtWidgets.QMainWindow):
         config_layout.addWidget(self._separator())
         config_layout.addWidget(self._setting_row("输出目录", self.output_dir, self._browse_output_dir))
 
-        self.advanced_toggle = QtWidgets.QPushButton("显示高级参数")
+        # ── 高级参数：折叠头部（chevron + 状态徽标） ──
+        toggle_row = QtWidgets.QHBoxLayout()
+        toggle_row.setSpacing(8)
+        self.advanced_toggle = QtWidgets.QPushButton("高级参数 ▸")
         self.advanced_toggle.setObjectName("advancedToggle")
         self.advanced_toggle.setCheckable(True)
+        self.advanced_toggle.setChecked(False)
         self.advanced_toggle.toggled.connect(self._toggle_advanced)
-        config_layout.addSpacing(10)
-        config_layout.addWidget(self.advanced_toggle, 0, QtCore.Qt.AlignLeft)
+        self.advanced_badge = QtWidgets.QLabel("3 项超时 · 2 组专属选项")
+        self.advanced_badge.setObjectName("advToggleBadge")
+        toggle_row.addWidget(self.advanced_toggle)
+        toggle_row.addWidget(self.advanced_badge)
+        toggle_row.addStretch(1)
+        config_layout.addSpacing(12)
+        config_layout.addLayout(toggle_row)
 
+        # ── 高级参数：展开面板 ──
         self.advanced_panel = QtWidgets.QFrame()
         self.advanced_panel.setObjectName("advancedPanel")
         advanced_layout = QtWidgets.QVBoxLayout(self.advanced_panel)
-        advanced_layout.setContentsMargins(10, 10, 10, 10)
-        advanced_layout.setSpacing(9)
+        advanced_layout.setContentsMargins(14, 12, 14, 12)
+        advanced_layout.setSpacing(2)
 
-        timeout_row = QtWidgets.QHBoxLayout()
-        timeout_row.setSpacing(9)
+        def add_adv_title(text: str) -> None:
+            title = QtWidgets.QLabel(text)
+            title.setObjectName("advZoneTitle")
+            advanced_layout.addWidget(title)
+
+        def add_adv_timeout_row(label: QtWidgets.QLabel, spin: QtWidgets.QDoubleSpinBox) -> None:
+            row = QtWidgets.QHBoxLayout()
+            row.setSpacing(9)
+            label.setObjectName("advFieldLabel")
+            label.setFixedWidth(96)
+            spin.setFixedWidth(116)
+            unit = QtWidgets.QLabel("秒")
+            unit.setObjectName("advUnit")
+            row.addWidget(label)
+            row.addWidget(spin, 0, QtCore.Qt.AlignLeft)
+            row.addWidget(unit)
+            row.addStretch(1)
+            advanced_layout.addLayout(row)
+
+        # 通用超时
+        add_adv_title("通用超时 · 适用于所选对比类型")
         self.postprocess_timeout_label = QtWidgets.QLabel("后处理超时")
         self.operation_timeout = self._seconds_spin(90.0, 1.0, 86400.0)
         self.start_timeout = self._seconds_spin(120.0, 1.0, 3600.0)
         self.close_timeout = self._seconds_spin(20.0, 1.0, 600.0)
-        for label, spin in (
-            (self.postprocess_timeout_label, self.operation_timeout),
-            (QtWidgets.QLabel("启动超时"), self.start_timeout),
-            (QtWidgets.QLabel("关闭超时"), self.close_timeout),
-        ):
-            timeout_row.addWidget(label)
-            timeout_row.addWidget(spin)
-            timeout_row.addWidget(QtWidgets.QLabel("秒"))
-        self.ai_retexture_gaussian = QtWidgets.QCheckBox("AI重贴图开启高斯渲染")
-        self.ai_retexture_gaussian.setChecked(False)
-        timeout_row.addWidget(self.ai_retexture_gaussian)
-        timeout_row.addStretch(1)
+        add_adv_timeout_row(self.postprocess_timeout_label, self.operation_timeout)
+        add_adv_timeout_row(QtWidgets.QLabel("启动超时"), self.start_timeout)
+        add_adv_timeout_row(QtWidgets.QLabel("关闭超时"), self.close_timeout)
 
-        texture_row = QtWidgets.QHBoxLayout()
-        texture_row.setSpacing(9)
-        self.ai_retexture_texture_first = QtWidgets.QCheckBox("AI重贴图先执行贴图")
+        advanced_layout.addSpacing(8)
+
+        # 专属选项
+        add_adv_title("专属选项")
+        self.specific_none = QtWidgets.QLabel("贴图与高斯渲染无专属参数，直接使用上方通用超时。")
+        self.specific_none.setObjectName("advZoneHint")
+        advanced_layout.addWidget(self.specific_none)
+
+        # AI重贴图专属组
+        self.ai_group = QtWidgets.QWidget()
+        ai_layout = QtWidgets.QVBoxLayout(self.ai_group)
+        ai_layout.setContentsMargins(0, 0, 0, 0)
+        ai_layout.setSpacing(2)
+        ai_title = QtWidgets.QLabel("AI重贴图专属选项")
+        ai_title.setObjectName("advZoneTitle")
+        ai_layout.addWidget(ai_title)
+        self.ai_retexture_gaussian = QtWidgets.QCheckBox("开启高斯渲染")
+        self.ai_retexture_gaussian.setChecked(False)
+        ai_layout.addWidget(self.ai_retexture_gaussian)
+        ai_texture_row = QtWidgets.QHBoxLayout()
+        ai_texture_row.setSpacing(9)
+        self.ai_retexture_texture_first = QtWidgets.QCheckBox("先执行贴图")
         self.ai_retexture_texture_first.setChecked(True)
         self.texture_timeout_label = QtWidgets.QLabel("前置贴图超时")
+        self.texture_timeout_label.setObjectName("advFieldLabel")
         self.texture_timeout = self._seconds_spin(90.0, 1.0, 3600.0)
-        texture_row.addWidget(self.ai_retexture_texture_first)
-        texture_row.addWidget(self.texture_timeout_label)
-        texture_row.addWidget(self.texture_timeout)
-        texture_row.addWidget(QtWidgets.QLabel("秒"))
-        texture_row.addStretch(1)
+        self.texture_timeout.setFixedWidth(116)
+        ai_texture_row.addWidget(self.ai_retexture_texture_first)
+        ai_texture_row.addWidget(self.texture_timeout_label)
+        ai_texture_row.addWidget(self.texture_timeout, 0, QtCore.Qt.AlignLeft)
+        ai_texture_row.addWidget(QtWidgets.QLabel("秒"))
+        ai_texture_row.addStretch(1)
+        ai_layout.addLayout(ai_texture_row)
+        advanced_layout.addWidget(self.ai_group)
 
-        advanced_layout.addLayout(timeout_row)
-        advanced_layout.addLayout(texture_row)
-
-        human_body_row = QtWidgets.QHBoxLayout()
-        human_body_row.setSpacing(9)
-        self.human_body_hd_geometry = QtWidgets.QCheckBox("人体补全开启超清几何精度")
+        # 人体补全专属组
+        self.human_group = QtWidgets.QWidget()
+        human_layout = QtWidgets.QVBoxLayout(self.human_group)
+        human_layout.setContentsMargins(0, 0, 0, 0)
+        human_layout.setSpacing(2)
+        human_title = QtWidgets.QLabel("人体补全专属选项")
+        human_title.setObjectName("advZoneTitle")
+        human_layout.addWidget(human_title)
+        self.human_body_hd_geometry = QtWidgets.QCheckBox("开启超清几何精度")
         self.human_body_hd_geometry.setChecked(False)
+        human_layout.addWidget(self.human_body_hd_geometry)
+        human_base_row = QtWidgets.QHBoxLayout()
+        human_base_row.setSpacing(9)
         self.base_wait_label = QtWidgets.QLabel("底座等待")
+        self.base_wait_label.setObjectName("advFieldLabel")
         self.base_wait = self._seconds_spin(20.0, 0.0, 3600.0)
-        human_body_row.addWidget(self.human_body_hd_geometry)
-        human_body_row.addWidget(self.base_wait_label)
-        human_body_row.addWidget(self.base_wait)
-        human_body_row.addWidget(QtWidgets.QLabel("秒"))
-        human_body_row.addStretch(1)
+        self.base_wait.setFixedWidth(116)
+        human_base_row.addWidget(self.base_wait_label)
+        human_base_row.addWidget(self.base_wait, 0, QtCore.Qt.AlignLeft)
+        human_base_row.addWidget(QtWidgets.QLabel("秒"))
+        human_base_row.addStretch(1)
+        human_layout.addLayout(human_base_row)
+        advanced_layout.addWidget(self.human_group)
 
-        advanced_layout.addLayout(human_body_row)
+        # 初始无对比类型被选中：仅显示“无专属参数”提示，隐藏两组成组选项
+        self.specific_none.setVisible(True)
+        self.ai_group.setVisible(False)
+        self.human_group.setVisible(False)
+
         self.advanced_panel.setVisible(False)
         config_layout.addWidget(self.advanced_panel)
         layout.addWidget(config_panel)
@@ -528,7 +591,10 @@ class CompareWindow(QtWidgets.QMainWindow):
 
     def _toggle_advanced(self, expanded: bool) -> None:
         self.advanced_panel.setVisible(expanded)
-        self.advanced_toggle.setText("隐藏高级参数" if expanded else "显示高级参数")
+        self.advanced_toggle.setText("高级参数 ▾" if expanded else "高级参数 ▸")
+        self.advanced_badge.setText(
+            "展开 · 3 项超时 · 2 组专属选项" if expanded else "已收起 · 点击展开"
+        )
 
     def _select_operation(self, operation: str) -> None:
         self._selected_operation = operation
@@ -550,13 +616,10 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.postprocess_timeout_label.setText("贴图超时")
             self.operation_timeout.setValue(90.0)
         is_ai = operation == "ai_retexture"
-        self.ai_retexture_texture_first.setEnabled(is_ai)
-        self.texture_timeout_label.setEnabled(is_ai)
-        self.texture_timeout.setEnabled(is_ai)
         is_human = operation == "human_body_completion"
-        self.human_body_hd_geometry.setEnabled(is_human)
-        self.base_wait_label.setEnabled(is_human)
-        self.base_wait.setEnabled(is_human)
+        self.specific_none.setVisible(not is_ai and not is_human)
+        self.ai_group.setVisible(is_ai)
+        self.human_group.setVisible(is_human)
         self._set_status(f"已选择{self.operation_buttons[operation].text()}对比", "idle")
 
     def _set_step_state(self, step: int, state: str) -> None:
