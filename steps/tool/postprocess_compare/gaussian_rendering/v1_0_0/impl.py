@@ -122,15 +122,34 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
 
     progress = Template(str(base / "tpl1786174502310.png"), record_pos=(-0.001, 0.12), resolution=(1920, 1080))
     progress_started = time.time()
-    try:
-        wait(progress, timeout=timeout_sec)
-    except Exception as exc:
-        raise RuntimeError(f"等待高斯渲染进度条出现超时（{timeout_sec:.0f} 秒）") from exc
+    last_beat = progress_started
+    progress_deadline = time.time() + timeout_sec
+    while time.time() < progress_deadline:
+        if exists(progress):
+            break
+        now = time.time()
+        if now - last_beat >= 30.0:
+            print(
+                f"[高斯渲染] 等待高斯渲染进度条出现中... "
+                f"已等待{now - progress_started:.0f}s / 上限{timeout_sec:.0f}s"
+            )
+            last_beat = now
+        sleep(2.0)
+    else:
+        raise RuntimeError(f"等待高斯渲染进度条出现超时（{timeout_sec:.0f} 秒）")
 
+    last_beat = progress_started
     while time.time() - progress_started < timeout_sec:
         if not exists(progress):
             break
-        sleep(0.5)
+        now = time.time()
+        if now - last_beat >= 30.0:
+            print(
+                f"[高斯渲染] 高斯渲染进度条仍在显示，继续等待消失... "
+                f"已等待{now - progress_started:.0f}s / 上限{timeout_sec:.0f}s"
+            )
+            last_beat = now
+        sleep(2.0)
     else:
         raise RuntimeError(f"等待高斯渲染进度条消失超时（{timeout_sec:.0f} 秒）")
 

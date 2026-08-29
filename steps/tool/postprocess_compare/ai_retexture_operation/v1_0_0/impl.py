@@ -69,13 +69,36 @@ def _import_texture_images(process_id: int, img_dir: Path, params: Dict[str, Any
 
 def _wait_progress_disappear(template: Any, label: str, params: Dict[str, Any], wait, exists, sleep) -> None:
     timeout_sec = max(1.0, float(params.get("timeout_sec", 600) or 600))
-    wait(template)
     started = time.time()
-    while time.time() - started < timeout_sec:
+    deadline = started + timeout_sec
+    last_beat = started
+    while time.time() < deadline:
+        if exists(template):
+            break
+        now = time.time()
+        if now - last_beat >= 30.0:
+            print(
+                f"[AI重贴图] 等待{label}进度条出现中... "
+                f"已等待{now - started:.0f}s / 上限{timeout_sec:.0f}s"
+            )
+            last_beat = now
+        sleep(2.0)
+    else:
+        raise RuntimeError(f"等待{label}进度条出现超时（{timeout_sec:.0f} 秒）")
+
+    last_beat = started
+    while time.time() < deadline:
         if not exists(template):
             return
-        sleep(0.5)
-    raise RuntimeError(f"等待{label}进度条消失超时")
+        now = time.time()
+        if now - last_beat >= 30.0:
+            print(
+                f"[AI重贴图] {label}进度条仍在显示，继续等待消失... "
+                f"已等待{now - started:.0f}s / 上限{timeout_sec:.0f}s"
+            )
+            last_beat = now
+        sleep(2.0)
+    raise RuntimeError(f"等待{label}进度条消失超时（{timeout_sec:.0f} 秒）")
 
 
 def _creality_scan_dir() -> Path:

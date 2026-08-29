@@ -59,6 +59,48 @@ def _configure_console_encoding() -> None:
             stream.reconfigure(encoding="utf-8", errors="replace")
 
 
+class _Tee:
+    """同时写入原输出流与日志文件的输出流。
+
+    用于把 CLI 全部 print 输出原样复制到运行目录下的日志文件，
+    这样即使 GUI 日志窗口只保留有限行，也能在文件里拿到完整过程。
+    """
+
+    def __init__(self, stream, file):
+        self.stream = stream
+        self.file = file
+
+    def write(self, data: str) -> int:
+        self.stream.write(data)
+        self.file.write(data)
+        self.file.flush()
+        return len(data)
+
+    def flush(self) -> None:
+        self.stream.flush()
+        self.file.flush()
+
+
+def _install_run_log(path: Path) -> None:
+    """把当前进程 stdout/stderr 复制到 path（追加），并打印本次运行起点。"""
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        handle = path.open("a", encoding="utf-8", errors="replace")
+    except OSError as exc:
+        print(f"[COMPARE][WARN] 无法写入运行日志文件（{path}）：{exc}")
+        return
+    handle.write(f"\n===== 本次运行开始：{datetime.now():%Y-%m-%d %H:%M:%S} =====\n")
+    handle.flush()
+    sys.stdout = _Tee(sys.__stdout__, handle)
+    sys.stderr = _Tee(sys.__stderr__, handle)
+    print(f"[COMPARE][INFO] 运行日志已写入：{path}")
+
+
+def _ts() -> str:
+    """返回 [HH:MM:SS] 时间戳前缀，便于在日志里定位每个阶段耗时。"""
+    return f"[{datetime.now():%H:%M:%S}]"
+
+
 def _normalize_exe(value: str, label: str) -> Path:
     path = Path(value.strip().strip('"')).expanduser().resolve()
     if not path.is_file():
@@ -273,6 +315,7 @@ def _run_postprocess_step(
     texture_timeout_sec: float = 90.0,
     enable_hd_geometry: bool = False,
     base_wait_sec: float = 20.0,
+    version_label: Optional[str] = None,
 ) -> None:
     config = _POSTPROCESS_CONFIG.get(operation)
     if config is None:
@@ -295,7 +338,7 @@ def _run_postprocess_step(
         result = step_module.run(
             {
                 "step_index": 2,
-                "version_label": label,
+                "version_label": version_label or label,
                 "run_dir": str(run_dir),
                 "process_id": process_id,
             },
@@ -349,24 +392,35 @@ def _run_one(
 ) -> bool:
     app = ManagedCrealityScan(exe_path)
     try:
-        print(f"\n[COMPARE] 正在启动{label}：{exe_path}")
+        print(f"\n{'=' * 60}")
+        print(f"[COMPARE]{_ts()} 开始{label}阶段：启动 {exe_path}")
+        print("=" * 60)
+        phase_t0 = time.time()
         pid = app.start(timeout_sec=start_timeout_sec)
-        print(f"[COMPARE] {label}已启动，PID={pid}")
+        print(
+            f"[COMPARE]{_ts()} {label}已启动，PID={pid}，"
+            f"启动耗时={time.time() - phase_t0:.1f}s"
+        )
         for position, item in enumerate(work_items, start=1):
             step_label = f"{label}工程{item.sequence}"
+            postprocess_name = str(_POSTPROCESS_CONFIG[operation]["step_name"])
+            print(f"\n[COMPARE]{_ts()} —— {step_label}（阶段 {position}/{len(work_items)}）——")
             print(
-                f"\n[COMPARE] {label}开始处理工程 {position}/{len(work_items)}，"
-                f"序号={item.sequence}，源工程={item.source_project_dir}，"
+                f"[COMPARE] 源工程={item.source_project_dir}，"
                 f"工作副本={item.project_file_path.parent}"
             )
+            t0 = time.time()
             _run_import_project_step(
                 step_label,
                 project_set_path,
                 item.project_file_path,
                 pid,
             )
-            postprocess_name = str(_POSTPROCESS_CONFIG[operation]["step_name"])
-            print(f"[COMPARE] {step_label}导入成功，自动执行{postprocess_name}。")
+            print(
+                f"[COMPARE]{_ts()} {step_label}导入工程完成，耗时={time.time() - t0:.1f}s，"
+                f"自动执行{postprocess_name}。"
+            )
+            t0 = time.time()
             _run_postprocess_step(
                 step_label,
                 item.run_dir,
@@ -378,26 +432,30 @@ def _run_one(
                 texture_timeout_sec,
                 enable_hd_geometry,
                 base_wait_sec,
+                version_label=label,
             )
+            print(f"[COMPARE]{_ts()} {step_label}{postprocess_name}完成，耗时={time.time() - t0:.1f}s。")
+            t0 = time.time()
             _run_return_home_step(step_label)
+            print(f"[COMPARE]{_ts()} {step_label}返回首页完成，耗时={time.time() - t0:.1f}s。")
             if position < len(work_items):
-                print(f"[COMPARE] {step_label}已返回首页，自动继续导入下一个工程。")
+                print(f"[COMPARE] 本阶段后续工程继续，自动导入下一个工程。")
             else:
-                print(f"[COMPARE] {step_label}已返回首页，自动进入关闭流程。")
+                print(f"[COMPARE] 本阶段全部工程处理完毕，自动进入关闭流程。")
         close_result = app.close(timeout_sec=close_timeout_sec)
         close_mode = "强制结束" if close_result.forced else "正常关闭"
         confirm_mode = "已点击" if close_result.confirmation_clicked else "未点击"
         print(
-            f"[COMPARE] {label}已关闭，方式={close_mode}，"
+            f"[COMPARE]{_ts()} {label}已关闭，方式={close_mode}，"
             f"关闭确认坐标={confirm_mode}，耗时={close_result.elapsed_sec:.3f}s"
         )
         return True
     except KeyboardInterrupt:
-        print(f"\n[COMPARE] 用户中断，正在关闭{label}。")
+        print(f"\n[COMPARE]{_ts()} 用户中断，正在关闭{label}。")
         app.close(timeout_sec=close_timeout_sec)
         raise
     except (OSError, RuntimeError) as exc:
-        print(f"[COMPARE][ERROR] {label}执行失败：{exc}")
+        print(f"[COMPARE][ERROR]{_ts()} {label}执行失败：{exc}")
         app.force_kill()
         return False
 
@@ -480,6 +538,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--start-timeout", type=float, default=120.0, help="等待主窗口超时秒数")
     parser.add_argument("--close-timeout", type=float, default=20.0, help="正常关闭超时秒数")
+    parser.add_argument(
+        "--test-only",
+        action="store_true",
+        help="只跑测试版：跳过发布版阶段与最终对比表，用于单独验证测试版（如自动下载）。",
+    )
     return parser
 
 
@@ -490,10 +553,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print("[COMPARE][ERROR] 必须选择后处理对比类型：贴图或高斯渲染。")
         return 2
     try:
-        release_exe = _prompt_exe("发布版", args.release_exe)
-        release_version = _prompt_version("发布版", args.release_version)
-        test_exe = _prompt_exe("测试版", args.test_exe)
-        test_version = _prompt_version("测试版", args.test_version)
+        if args.test_only:
+            release_exe: Optional[Path] = None
+            release_version = ""
+            test_exe = _prompt_exe("测试版", args.test_exe)
+            test_version = _prompt_version("测试版", args.test_version)
+        else:
+            release_exe = _prompt_exe("发布版", args.release_exe)
+            release_version = _prompt_version("发布版", args.release_version)
+            test_exe = _prompt_exe("测试版", args.test_exe)
+            test_version = _prompt_version("测试版", args.test_version)
         project_set_path = _prompt_project_set(args.project_set)
         project_files = _resolve_project_files(project_set_path)
         output_dir = _prompt_output_dir(args.output_dir)
@@ -501,7 +570,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(f"[COMPARE][ERROR] 输入无效：{exc}")
         return 2
 
-    if release_exe == test_exe:
+    if not args.test_only and release_exe == test_exe:
         print("[COMPARE][ERROR] 发布版和测试版不能使用同一个 EXE 路径。")
         return 2
 
@@ -510,6 +579,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 2
 
     run_root = output_dir / f"compare_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+    # 尽早落盘完整运行日志：即使 GUI 窗口只保留有限行，也能从文件拿到全程输出。
+    try:
+        run_root.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        print(f"[COMPARE][WARN] 无法创建输出目录（{run_root}）：{exc}")
+    _install_run_log(run_root / "运行日志.txt")
     operation_config = _POSTPROCESS_CONFIG[args.operation]
     if args.operation_timeout is not None:
         operation_timeout_sec = max(1.0, args.operation_timeout)
@@ -581,43 +656,74 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         )
     print(f"[COMPARE] 本次输出目录：{run_root}")
     print(f"[COMPARE] 后处理类型：{operation_config['name']}，超时={operation_timeout_sec:.1f}s")
-    print("[COMPARE] 将按“发布版 -> 测试版”顺序运行，两个版本不会同时打开。")
+    if args.test_only:
+        print("[COMPARE] 测试版单跑模式（--test-only）：跳过发布版阶段与对比表。")
+    else:
+        print("[COMPARE] 将按“发布版 -> 测试版”顺序运行，两个版本不会同时打开。")
     try:
-        release_ok = _run_one(
-            "发布版",
-            release_exe,
-            project_set_path,
-            release_work_items,
-            postprocess_timeout_sec=operation_timeout_sec,
-            operation=args.operation,
-            start_timeout_sec=max(1.0, args.start_timeout),
-            close_timeout_sec=max(1.0, args.close_timeout),
-            enable_gaussian=args.ai_retexture_gaussian,
-            run_texture_first=not args.no_texture_first,
-            texture_timeout_sec=max(1.0, args.texture_timeout),
-            enable_hd_geometry=args.human_body_hd_geometry,
-            base_wait_sec=max(0.0, args.base_wait),
-        )
-        if release_ok:
-            print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
-            _delete_download_packages(args.operation)
-        test_ok = _run_one(
-            "测试版",
-            test_exe,
-            project_set_path,
-            test_work_items,
-            postprocess_timeout_sec=operation_timeout_sec,
-            operation=args.operation,
-            start_timeout_sec=max(1.0, args.start_timeout),
-            close_timeout_sec=max(1.0, args.close_timeout),
-            enable_gaussian=args.ai_retexture_gaussian,
-            run_texture_first=not args.no_texture_first,
-            texture_timeout_sec=max(1.0, args.texture_timeout),
-            enable_hd_geometry=args.human_body_hd_geometry,
-            base_wait_sec=max(0.0, args.base_wait),
-        )
+        release_ok = False
+        test_ok = False
+        if args.test_only:
+            test_ok = _run_one(
+                "测试版",
+                test_exe,
+                project_set_path,
+                test_work_items,
+                postprocess_timeout_sec=operation_timeout_sec,
+                operation=args.operation,
+                start_timeout_sec=max(1.0, args.start_timeout),
+                close_timeout_sec=max(1.0, args.close_timeout),
+                enable_gaussian=args.ai_retexture_gaussian,
+                run_texture_first=not args.no_texture_first,
+                texture_timeout_sec=max(1.0, args.texture_timeout),
+                enable_hd_geometry=args.human_body_hd_geometry,
+                base_wait_sec=max(0.0, args.base_wait),
+            )
+        else:
+            release_ok = _run_one(
+                "发布版",
+                release_exe,
+                project_set_path,
+                release_work_items,
+                postprocess_timeout_sec=operation_timeout_sec,
+                operation=args.operation,
+                start_timeout_sec=max(1.0, args.start_timeout),
+                close_timeout_sec=max(1.0, args.close_timeout),
+                enable_gaussian=args.ai_retexture_gaussian,
+                run_texture_first=not args.no_texture_first,
+                texture_timeout_sec=max(1.0, args.texture_timeout),
+                enable_hd_geometry=args.human_body_hd_geometry,
+                base_wait_sec=max(0.0, args.base_wait),
+            )
+            if release_ok:
+                print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
+                _delete_download_packages(args.operation)
+            test_ok = _run_one(
+                "测试版",
+                test_exe,
+                project_set_path,
+                test_work_items,
+                postprocess_timeout_sec=operation_timeout_sec,
+                operation=args.operation,
+                start_timeout_sec=max(1.0, args.start_timeout),
+                close_timeout_sec=max(1.0, args.close_timeout),
+                enable_gaussian=args.ai_retexture_gaussian,
+                run_texture_first=not args.no_texture_first,
+                texture_timeout_sec=max(1.0, args.texture_timeout),
+                enable_hd_geometry=args.human_body_hd_geometry,
+                base_wait_sec=max(0.0, args.base_wait),
+            )
     except KeyboardInterrupt:
         return 3
+
+    if args.test_only:
+        if test_ok:
+            print(
+                f"\n[COMPARE] 测试版单跑完成：{operation_config['name']}、返回首页和关闭流程。"
+            )
+            return 0
+        print("\n[COMPARE] 测试版单跑失败。")
+        return 1
 
     if release_ok and test_ok:
         print(

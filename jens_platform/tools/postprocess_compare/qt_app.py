@@ -44,7 +44,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self._output_dir: Optional[Path] = None
         self._report_path: Optional[Path] = None
         self._selected_operation: Optional[str] = None
-        self._log_lines: Deque[str] = deque(maxlen=5)
+        self._log_lines: Deque[str] = deque(maxlen=2000)
         self._current_step = 0
         self._spinner_index = 0
         self._spinner_phase = False
@@ -459,7 +459,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.log_view.setReadOnly(True)
         self.log_view.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
         self.log_view.setFont(QtGui.QFont("Consolas", 9))
-        self.log_view.setPlaceholderText("运行日志将在这里显示最近 5 行")
+        self.log_view.setPlaceholderText("运行日志（保留本次运行全部输出，完整日志同时写入输出目录的 运行日志.txt）")
         self.log_view.setMinimumHeight(300)
         layout.addWidget(self.log_view, 1)
 

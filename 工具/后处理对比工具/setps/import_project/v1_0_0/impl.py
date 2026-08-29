@@ -59,6 +59,7 @@ def _wait_project_import_success(
         f"baseline_log={baseline_log} baseline_position={baseline_position} "
         f"timeout_sec={timeout_sec}"
     )
+    last_beat = started
 
     while time.time() < deadline:
         candidate = _latest_scan_log(log_root)
@@ -88,6 +89,14 @@ def _wait_project_import_success(
                     )
                     return current_log, elapsed
         time.sleep(max(0.1, poll_interval_sec))
+        now = time.time()
+        if now - last_beat >= 30.0:
+            print(
+                f"[JENS][import_project] 仍在等待导入成功日志... "
+                f"已等待{now - started:.0f}s / 上限{timeout_sec:.0f}s，"
+                f"log_file={current_log}"
+            )
+            last_beat = now
 
     raise RuntimeError(
         f"等待导入工程成功日志超时：{PROJECT_IMPORT_SUCCESS_KEY.decode()}，"

@@ -51,13 +51,29 @@ class ManagedCrealityScan:
         self.process_id = int(self.app.process)
 
         window = self.app.window(title_re=self.window_title_re)
-        try:
-            window.wait("exists visible enabled ready", timeout=timeout_sec)
-        except PywinautoTimeoutError as exc:
-            self.force_kill()
-            raise RuntimeError(
-                f"CrealityScan 启动后 {timeout_sec:.0f} 秒内未出现可操作窗口：{self.exe_path}"
-            ) from exc
+        # 等待窗口就绪（exists+visible+enabled+ready），期间每 10s 打印一次已等时长，
+        # 便于在日志里区分“仍在等待”与“真的卡死”。
+        deadline = time.time() + timeout_sec
+        last_beat = 0.0
+        while True:
+            remaining = deadline - time.time()
+            if remaining <= 0:
+                self.force_kill()
+                raise RuntimeError(
+                    f"CrealityScan 启动后 {timeout_sec:.0f} 秒内未出现可操作窗口：{self.exe_path}"
+                )
+            try:
+                window.wait("exists visible enabled ready", timeout=min(5.0, remaining))
+                break
+            except PywinautoTimeoutError:
+                now = time.time()
+                if now - last_beat >= 10.0:
+                    print(
+                        f"[COMPARE] 等待 {self.exe_path.name} 主窗口就绪中... "
+                        f"已等待 {now - started:.1f}s / 上限 {timeout_sec:.0f}s"
+                    )
+                    last_beat = now
+                continue
 
         try:
             window.maximize()
