@@ -19,7 +19,7 @@ CrealityScan 后处理对比平台用于对比两个 CrealityScan 版本处理�
 - 贴图截图前自动将鼠标移到左上角，等待界面退出 hover 状态后再留证。
 - 两个版本全部完成后自动生成发布版/测试版截图并排的 Excel 对比表。
 - 发布版后处理完成后自动删除对应下载包（`%LOCALAPPDATA%\Creality\CrealityScan\Extensions\<包名>` 及其 `_Data` 目录），使测试版运行时重新下载新版本下载包，避免测试版误用发布版携带的旧包。
-- 人体补全、AI重贴图 Step 在测试版且本地无对应下载包时，自动点击 CrealityScan 的“下载”弹窗按钮，并等待下载完成（以 `AIBodyComplete/version.txt`、`AITextureRestore/version.txt` 出现为准，下载进度从 `app.log` 读取展示）后再继续后续流程。
+- 人体补全、AI重贴图、高斯渲染 Step 在测试版且本地无对应下载包时，自动点击 CrealityScan 的“下载”弹窗按钮，并等待下载完成（以 `AIBodyComplete/version.txt`、`AITextureRestore/version.txt` 出现为准，下载进度从 `app.log` 读取展示）后再继续后续流程。其中高斯渲染的下载弹窗出现在点击“应用”按钮之后，人体补全在点击“AI人体补全”按钮后、AI重贴图在点击“AI重贴图”按钮后。
 - 支持紧急停止，停止时会终止当前 CLI 进程树。
 - 支持中文、空格路径和独立输出目录。
 
