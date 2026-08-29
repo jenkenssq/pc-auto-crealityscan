@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import os
 import re
 import shutil
+import subprocess
 import sys
 import time
 from dataclasses import dataclass
@@ -483,6 +485,32 @@ def _delete_download_packages(operation: str) -> None:
             print(f"[COMPARE][WARN] 删除下载包失败（{directory}）：{exc}")
 
 
+def _launch_charles(exe_path: Path) -> None:
+    """在发布版完成后、测试版启动前，独立拉起 Charles 抓包代理。
+
+    以脱离 CLI 生命周期的方式启动（分离会话），不阻塞后续测试版流程；
+    仅负责“启动”这个动作，Charles 自身是否完成监听由用户/抓包结果验证。
+    """
+    if not exe_path.is_file():
+        raise RuntimeError(f"Charles.exe 不存在：{exe_path}")
+    print(f"[COMPARE]{_ts()} 开始启动 Charles：{exe_path}")
+    try:
+        kwargs: dict = {
+            "cwd": str(exe_path.parent),
+            "stdin": subprocess.DEVNULL,
+            "stdout": subprocess.DEVNULL,
+            "stderr": subprocess.DEVNULL,
+        }
+        if os.name == "nt":
+            flags = getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200)
+            flags |= getattr(subprocess, "CREATE_BREAKAWAY_FROM_JOB", 0x01000000)
+            kwargs["creationflags"] = flags
+        proc = subprocess.Popen([str(exe_path)], **kwargs)
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"启动 Charles 失败（{exe_path}）：{exc}") from exc
+    print(f"[COMPARE]{_ts()} Charles 已启动，PID={proc.pid}。")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="顺序执行导入工程、后处理操作、返回首页 Step")
     parser.add_argument("--release-exe", help="发布版 CrealityScan.exe 路径")
@@ -538,6 +566,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--start-timeout", type=float, default=120.0, help="等待主窗口超时秒数")
     parser.add_argument("--close-timeout", type=float, default=20.0, help="正常关闭超时秒数")
+    parser.add_argument(
+        "--charles-exe",
+        help="开启Charles时指定的 Charles.exe 路径；发布版完成后、测试版启动前自动启动抓包代理",
+    )
     parser.add_argument(
         "--test-only",
         action="store_true",
@@ -698,21 +730,30 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             if release_ok:
                 print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
                 _delete_download_packages(args.operation)
-            test_ok = _run_one(
-                "测试版",
-                test_exe,
-                project_set_path,
-                test_work_items,
-                postprocess_timeout_sec=operation_timeout_sec,
-                operation=args.operation,
-                start_timeout_sec=max(1.0, args.start_timeout),
-                close_timeout_sec=max(1.0, args.close_timeout),
-                enable_gaussian=args.ai_retexture_gaussian,
-                run_texture_first=not args.no_texture_first,
-                texture_timeout_sec=max(1.0, args.texture_timeout),
-                enable_hd_geometry=args.human_body_hd_geometry,
-                base_wait_sec=max(0.0, args.base_wait),
-            )
+            if release_ok and args.charles_exe:
+                print("\n[COMPARE] 发布版已关闭，将在启动测试版之前启动 Charles 抓包代理。")
+                try:
+                    _launch_charles(Path(args.charles_exe).expanduser().resolve())
+                except (OSError, RuntimeError) as exc:
+                    print(f"[COMPARE][ERROR]{_ts()} {exc}")
+                    print("[COMPARE][ERROR] 未启动 Charles，本次不再启动测试版，任务判定失败。")
+                    release_ok = False
+            if release_ok:
+                test_ok = _run_one(
+                    "测试版",
+                    test_exe,
+                    project_set_path,
+                    test_work_items,
+                    postprocess_timeout_sec=operation_timeout_sec,
+                    operation=args.operation,
+                    start_timeout_sec=max(1.0, args.start_timeout),
+                    close_timeout_sec=max(1.0, args.close_timeout),
+                    enable_gaussian=args.ai_retexture_gaussian,
+                    run_texture_first=not args.no_texture_first,
+                    texture_timeout_sec=max(1.0, args.texture_timeout),
+                    enable_hd_geometry=args.human_body_hd_geometry,
+                    base_wait_sec=max(0.0, args.base_wait),
+                )
     except KeyboardInterrupt:
         return 3
 

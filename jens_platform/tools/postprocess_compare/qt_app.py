@@ -289,6 +289,28 @@ class CompareWindow(QtWidgets.QMainWindow):
         config_layout.addWidget(self._setting_row("原始工程集", self.project_set, self._browse_project_set))
         config_layout.addWidget(self._separator())
         config_layout.addWidget(self._setting_row("输出目录", self.output_dir, self._browse_output_dir))
+        config_layout.addWidget(self._separator())
+
+        # ── 开启Charles（可选）：发布版后处理完成后、测试版启动前自动启动抓包代理 ──
+        charles_toggle_row = QtWidgets.QHBoxLayout()
+        charles_toggle_row.setSpacing(8)
+        self.charles_check = QtWidgets.QCheckBox("开启Charles")
+        self.charles_check.setToolTip(
+            "开启后，在发布版后处理完成并关闭、启动测试版之前，自动启动 Charles 抓包代理。"
+        )
+        self.charles_check.toggled.connect(self._toggle_charles)
+        self.charles_hint = QtWidgets.QLabel("发布版后处理完成后自动启动抓包代理")
+        self.charles_hint.setObjectName("panelHint")
+        charles_toggle_row.addWidget(self.charles_check)
+        charles_toggle_row.addWidget(self.charles_hint)
+        charles_toggle_row.addStretch(1)
+        config_layout.addLayout(charles_toggle_row)
+
+        self.charles_exe = self._path_edit("选择 Charles.exe 可执行文件路径")
+        self.charles_row = self._setting_row("Charles.exe", self.charles_exe, self._browse_charles_exe)
+        self.charles_row.setVisible(False)
+        config_layout.addWidget(self.charles_row)
+        config_layout.addWidget(self._separator())
 
         # ── 高级参数：折叠头部（chevron + 状态徽标） ──
         toggle_row = QtWidgets.QHBoxLayout()
@@ -596,6 +618,24 @@ class CompareWindow(QtWidgets.QMainWindow):
             "展开 · 3 项超时 · 2 组专属选项" if expanded else "已收起 · 点击展开"
         )
 
+    def _toggle_charles(self, enabled: bool) -> None:
+        """开启Charles开关：打开时展示路径行，未设置路径则弹出文件选择对话框。"""
+        self.charles_row.setVisible(enabled)
+        if enabled and not self.charles_exe.text().strip():
+            self._browse_charles_exe()
+            if not self.charles_exe.text().strip():
+                self.charles_check.setChecked(False)
+
+    def _charles_error(self) -> str:
+        if not self.charles_check.isChecked():
+            return ""
+        path = self.charles_exe.text().strip()
+        if not path:
+            return "已开启Charles，请选择 Charles.exe 可执行文件路径。"
+        if not Path(path).is_file():
+            return f"Charles.exe 路径不存在：{path}"
+        return ""
+
     def _select_operation(self, operation: str) -> None:
         self._selected_operation = operation
         self.operation_buttons[operation].setChecked(True)
@@ -740,6 +780,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.test_version,
             self.project_set,
             self.output_dir,
+            self.charles_check,
             self.operation_timeout,
             self.start_timeout,
             self.close_timeout,
@@ -780,6 +821,10 @@ class CompareWindow(QtWidgets.QMainWindow):
         missing = self._validate_inputs()
         if missing:
             QtWidgets.QMessageBox.warning(self, "配置不完整", "请填写：" + "、".join(missing))
+            return
+        charles_error = self._charles_error()
+        if charles_error:
+            QtWidgets.QMessageBox.warning(self, "配置不完整", charles_error)
             return
         if self._process.state() != QtCore.QProcess.NotRunning:
             return
@@ -823,6 +868,9 @@ class CompareWindow(QtWidgets.QMainWindow):
             args.append("--human-body-hd-geometry")
         args.append("--base-wait")
         args.append(str(self.base_wait.value()))
+        if self.charles_check.isChecked():
+            args.append("--charles-exe")
+            args.append(self.charles_exe.text().strip())
         env = QtCore.QProcessEnvironment.systemEnvironment()
         env.insert("PYTHONIOENCODING", "utf-8")
         env.insert("PYTHONUTF8", "1")
@@ -896,6 +944,9 @@ class CompareWindow(QtWidgets.QMainWindow):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "选择对比结果输出目录", self.output_dir.text())
         if path:
             self.output_dir.setText(path)
+
+    def _browse_charles_exe(self) -> None:
+        self._browse_file(self.charles_exe, "选择 Charles.exe", "可执行文件 (*.exe)")
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         if self._process.state() != QtCore.QProcess.NotRunning:

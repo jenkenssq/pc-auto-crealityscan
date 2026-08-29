@@ -375,7 +375,9 @@ JENS_SMTP_TIMEOUT_SEC=8
 └─ artifacts/                 # 运行时生成，Git 忽略
 ```
 
-当前平台可发现 37 个有效 Step：`common` 3 个、`crealityscan` 27 个、`slide_rail` 1 个、`tool.postprocess_compare` 6 个（贴图、高斯渲染、AI重贴图、人体补全、导入工程、返回首页）。
+当前平台可发现 40 个有效 Step：`common` 3 个、`crealityscan` 27 个、`slide_rail` 1 个、`tool.calibration_score` 1 个（读取标定分数）、`tool.firmware_upgrade` 2 个（固件开流、固件升级）、`tool.postprocess_compare` 6 个（贴图、高斯渲染、AI重贴图、人体补全、导入工程、返回首页）。
+
+其中 `tool.calibration_score.read`、`tool.firmware_upgrade.stream`、`tool.firmware_upgrade.upgrade` 分别沉淀自 `工具/标定分数查看工具`、`工具/固件升级工具`：标定分数读取为自包含实现；固件开流/升级 Step 复用源工具实现，运行时从 `工具/固件升级工具`（或环境变量 `JENS_FIRMWARE_UPGRADE_ROOT`）加载配置与核心模块。
 
 `steps/crealityscan/set_scan_params_speckle_medium_geometry` 已清空 `id/version`，属于废弃 Step，不会被发现。
 
@@ -393,6 +395,8 @@ python build.py --no-tools   # 不附带侧边栏工具
 `build.py` 调用 PyInstaller 构建，并将产物自动命名为 `dist/jens_pc_app_vX.Y/`，版本号同时写入两个 exe 的 Windows 文件版本资源（右键 exe → 属性 → 详细信息可见）。版本递增规则：次版本 +1，`v0.9` 进位到 `v1.0`。
 
 默认会把 `工具/` 下三个侧边栏工具（后处理对比、标定分数、固件升级）附带进产物 `工具/` 目录，并排除 `__pycache__`、PyInstaller 产物（`build`/`dist`）和样本工程集等杂物；可用 `--no-tools` 跳过。侧边栏工具是运行时从 exe 目录向上查找 `工具/<工具名>` 动态加载的，工具在目标机正常运行仍需其自身依赖（如 Python 环境、excel 库等）。
+
+后处理对比工具的任务配置支持“开启Charles”：勾选后选择 `Charles.exe`，在发布版全部后处理完成并关闭、启动测试版之前自动拉起 Charles 抓包代理（CLI 参数 `--charles-exe`）；Charles 启动失败时本次对比判定失败、不再启动测试版。
 
 Spec 生成 `jens_pc_app.exe` 和 `jens_runner_helper.exe`，并收集 `steps/`、`cases/`、`tasks/`、`docs/`、`config/`、`jens_runner.air/`、`README.md`、`.env` 及运行依赖。
 

@@ -1,0 +1,12 @@
+{
+  "id": "tool.calibration_score.read",
+  "name": "读取标定分数",
+  "version": "1.0.0",
+  "description": "从 CrealityScan 最新 scan_log 中解析设备信息与标定分数（沉淀自 工具/标定分数查看工具）。返回 device_name、sn_code、calibration_board、calibration_score、firmware_version、log_file 等字段。",
+  "params_schema": {
+    "log_dir": {
+      "type": "string",
+      "description": "CrealityScan 日志根目录（可选）。缺省时使用参数/用例 app.log_dir，再回退到当前用户默认日志目录。"
+    }
+  }
+}

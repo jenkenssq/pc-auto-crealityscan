@@ -1,0 +1,17 @@
+{
+  "id": "tool.firmware_upgrade.stream",
+  "name": "固件开流操作",
+  "version": "1.0.0",
+  "description": "执行 CrealityScan 固件升级前后的开流验证（沉淀自 工具/固件升级工具）。按设备模组自动路由（Pika 专用 / 蓝色线激光双流 / 散斑单流），等待开流、帧数达标并返回首页。",
+  "params_schema": {
+    "phase": {
+      "type": "string",
+      "default": "第一次",
+      "description": "开流阶段标识（用于日志，如 第一次/第二次）。"
+    },
+    "log_dir": {
+      "type": "string",
+      "description": "CrealityScan 日志根目录（可选）。缺省时使用用例 app.log_dir，再交给固件工具配置。"
+    }
+  }
+}
