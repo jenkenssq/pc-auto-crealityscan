@@ -18,6 +18,8 @@ CrealityScan 后处理对比平台用于对比两个 CrealityScan 版本处理�
 - 后处理步骤记录耗时并保存全屏截图。
 - 贴图截图前自动将鼠标移到左上角，等待界面退出 hover 状态后再留证。
 - 两个版本全部完成后自动生成发布版/测试版截图并排的 Excel 对比表。
+- 发布版后处理完成后自动删除对应下载包（`%LOCALAPPDATA%\Creality\CrealityScan\Extensions\<包名>` 及其 `_Data` 目录），使测试版运行时重新下载新版本下载包，避免测试版误用发布版携带的旧包。
+- 人体补全、AI重贴图 Step 在测试版且本地无对应下载包时，自动点击 CrealityScan 的“下载”弹窗按钮，并等待下载完成（以 `AIBodyComplete/version.txt`、`AITextureRestore/version.txt` 出现为准，下载进度从 `app.log` 读取展示）后再继续后续流程。
 - 支持紧急停止，停止时会终止当前 CLI 进程树。
 - 支持中文、空格路径和独立输出目录。
 
@@ -237,7 +239,7 @@ python -m postprocess_compare `
    └─ 20260808_153000贴图对比表.xlsx
 ```
 
-Excel 文件命名为“时间戳 + 执行的后处理名称 + 对比表”，每个工程的发布版和测试版截图按序号并排嵌入；截图缺失或数量异常时会在对应行明确标记，不会用其他工程截图替代。
+Excel 文件命名为“时间戳 + 执行的后处理名称 + 对比表”，每个工程的发布版和测试版截图按序号并排嵌入；截图缺失或数量异常时会在对应行明确标记，不会用其他工程截图替代。表头信息行会附带本次后处理对应的 CrealityScan 下载包版本号（读取自 `%LOCALAPPDATA%\Creality\CrealityScan\Extensions\<包名>\version.txt`）：AI重贴图/高斯渲染对应 `AITextureRestore`，人体补全对应 `AIBodyComplete`；读取不到时显示“未获取”，贴图无独立下载包不显示。
 
 任务完成后，“查看结果”按钮会优先直接打开 Excel 对比表；表格不可用时回退到本次输出目录。
 

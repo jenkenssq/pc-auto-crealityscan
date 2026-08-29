@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,22 @@ _SNAPSHOT_PATTERNS = {
 _IMAGE_MAX_WIDTH = 500
 _IMAGE_MAX_HEIGHT = 282
 _FONT_NAME = "Arial"
+
+# 各后处理类型对应的 CrealityScan 独立下载包目录名（Extensions 下的子目录）。
+# 高斯渲染与 AI重贴图共用同一个下载包；贴图无独立下载包。
+# 头模置换（head_restore）对应 AIHeadRestore，工具尚未纳入该后处理类型，暂不配置。
+_DOWNLOAD_PACKAGE_DIRS = {
+    "texture": None,
+    "gaussian": "AITextureRestore",
+    "ai_retexture": "AITextureRestore",
+    "human_body_completion": "AIBodyComplete",
+}
+_DOWNLOAD_PACKAGE_LABELS = {
+    "texture": None,
+    "gaussian": "高斯渲染下载包",
+    "ai_retexture": "AI重贴图下载包",
+    "human_body_completion": "人体补全下载包",
+}
 
 
 @dataclass(frozen=True)
@@ -127,6 +144,45 @@ def _style_report(worksheet: Worksheet, project_count: int) -> None:
     worksheet.print_area = f"A1:D{max(3, project_count + 3)}"
 
 
+def _extensions_root() -> Path:
+    """返回 CrealityScan Extensions 下载包根目录。
+
+    读取目录：%LOCALAPPDATA%\\Creality\\CrealityScan\\Extensions
+    """
+    local_appdata = os.environ.get("LOCALAPPDATA")
+    base = Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
+    return base / "Creality" / "CrealityScan" / "Extensions"
+
+
+def read_download_package_version(operation: str) -> Optional[str]:
+    """读取 CrealityScan 下载包 version.txt 中的版本号。
+
+    无独立下载包的后处理类型（如贴图）返回 None；读取失败也返回 None。
+    """
+    package_dir = _DOWNLOAD_PACKAGE_DIRS.get(operation)
+    if not package_dir:
+        return None
+    version_file = _extensions_root() / package_dir / "version.txt"
+    try:
+        version = version_file.read_text(encoding="utf-8", errors="replace").strip()
+    except OSError:
+        return None
+    return version or None
+
+
+def iter_download_package_dirs(operation: str) -> list[Path]:
+    """返回该后处理操作对应的 CrealityScan 下载包目录（含 _Data 数据目录）绝对路径列表。
+
+    无独立下载包的后处理类型（如贴图）返回空列表。用于发布版跑完后删除旧包，
+    使测试版运行前重新触发下载新版本下载包。
+    """
+    package_dir = _DOWNLOAD_PACKAGE_DIRS.get(operation)
+    if not package_dir:
+        return []
+    root = _extensions_root()
+    return [root / package_dir, root / f"{package_dir}_Data"]
+
+
 def generate_excel_report(
     run_root: Path,
     operation: str,
@@ -151,10 +207,16 @@ def generate_excel_report(
     worksheet.merge_cells("A1:D1")
     worksheet.merge_cells("A2:D2")
     worksheet["A1"] = f"{operation_name}截图对比表"
+    package_label = _DOWNLOAD_PACKAGE_LABELS.get(operation)
+    package_note = ""
+    if package_label:
+        package_version = read_download_package_version(operation)
+        package_note = f"    {package_label}：{package_version or '未获取'}"
     worksheet["A2"] = (
         f"生成时间：{report_time.strftime('%Y-%m-%d %H:%M:%S')}    "
         f"发布版：{release_version}    测试版：{test_version}    "
         f"工程数：{len(projects)}"
+        f"{package_note}"
     )
     worksheet.append(
         [

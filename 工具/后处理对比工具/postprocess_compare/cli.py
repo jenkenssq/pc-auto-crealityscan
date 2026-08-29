@@ -402,6 +402,29 @@ def _run_one(
         return False
 
 
+def _delete_download_packages(operation: str) -> None:
+    """删除当前后处理操作对应的 CrealityScan 下载包。
+
+    在发布版完成后、测试版开始前调用：删掉旧下载包后，测试版运行时才会触发
+    重新下载新版本下载包，从而让发布版与测试版使用不同版本的下载包。
+    """
+    from .excel_report import iter_download_package_dirs
+
+    dirs = iter_download_package_dirs(operation)
+    if not dirs:
+        print("[COMPARE][INFO] 当前后处理类型无独立下载包，跳过删除。")
+        return
+    for directory in dirs:
+        if not directory.exists():
+            print(f"[COMPARE][INFO] 下载包不存在，跳过：{directory}")
+            continue
+        try:
+            shutil.rmtree(directory)
+            print(f"[COMPARE][INFO] 已删除下载包：{directory}")
+        except OSError as exc:
+            print(f"[COMPARE][WARN] 删除下载包失败（{directory}）：{exc}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="顺序执行导入工程、后处理操作、返回首页 Step")
     parser.add_argument("--release-exe", help="发布版 CrealityScan.exe 路径")
@@ -575,6 +598,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             enable_hd_geometry=args.human_body_hd_geometry,
             base_wait_sec=max(0.0, args.base_wait),
         )
+        if release_ok:
+            print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
+            _delete_download_packages(args.operation)
         test_ok = _run_one(
             "测试版",
             test_exe,
