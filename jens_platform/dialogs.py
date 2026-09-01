@@ -328,6 +328,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         self._module_cards: dict[str, QtWidgets.QFrame] = {}
         self._active_category = "全部"
         self._last_default_task_name = ""
+        self._syncing_fps = False
         self.free_edit_requested = False
         self.free_edit_default_name = ""
 
@@ -658,6 +659,20 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         mode_hint.setObjectName("wizardMuted")
         mode_layout.addWidget(mode_hint)
 
+        fps_row = QtWidgets.QHBoxLayout()
+        fps_row.setSpacing(8)
+        self.chk_fps_stat = QtWidgets.QCheckBox("帧率统计任务")
+        self.chk_fps_stat.setToolTip(
+            "勾选后自动按业务顺序勾选扫描模式；第三步自动选择「帧率统计」并固定 1000 帧。"
+        )
+        fps_row.addWidget(self.chk_fps_stat)
+        fps_hint = QtWidgets.QLabel("自动按业务顺序勾选模式 · 第三步固定 1000 帧")
+        fps_hint.setObjectName("wizardMuted")
+        fps_row.addWidget(fps_hint)
+        fps_row.addStretch(1)
+        mode_layout.addSpacing(2)
+        mode_layout.addLayout(fps_row)
+
         toolbar = QtWidgets.QHBoxLayout()
         self.preset_filter = QtWidgets.QLineEdit()
         self.preset_filter.setPlaceholderText("搜索模式名称或内部 key")
@@ -696,6 +711,8 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         self.selected_list.setObjectName("selectedList")
         selected_layout.addWidget(self.selected_list, 1)
         layout.addWidget(selected_pane)
+
+        self.chk_fps_stat.toggled.connect(self._fps_stat_check_toggled)
         return page
 
     def _build_options_page(self) -> QtWidgets.QWidget:
@@ -1013,24 +1030,46 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         self._refresh_page_state()
 
     def _task_kind(self) -> str:
-        if self.radio_fps.isChecked():
+        if self._is_fps_stat():
             return TASK_KIND_FPS_STAT
         return TASK_KIND_POSTPROCESS if self.radio_post.isChecked() else TASK_KIND_OPEN_STREAM
 
     def _is_fps_stat(self) -> bool:
-        return self.radio_fps.isChecked()
+        return self.chk_fps_stat.isChecked()
+
+    def _fps_stat_check_toggled(self, checked: bool) -> None:
+        """第二步「帧率统计任务」勾选：自动按业务顺序选择模式并同步第三步任务类型。"""
+        self._set_fps_stat_enabled(checked)
+        self._options_changed()
 
     def _fps_stat_kind_toggled(self, checked: bool) -> None:
-        if checked:
-            # 帧率统计固定扫描 1000 帧，且模式必须按业务顺序，禁止随机打乱。
-            self.spin_target_frames.setValue(DEFAULT_FPS_STAT_FRAMES)
-            if self.chk_random_order.isChecked():
-                self.chk_random_order.setChecked(False)
-            self.random_widget.setVisible(False)
-            self._apply_fps_stat_preset_selection()
-        else:
-            self.random_widget.setVisible(True)
+        """第三步「帧率统计」任务类型切换：与第二步勾选保持一致。"""
+        self._set_fps_stat_enabled(checked)
         self._options_changed()
+
+    def _set_fps_stat_enabled(self, enabled: bool) -> None:
+        """保持第二步勾选与第三步「帧率统计」任务类型双向一致，并应用帧率统计规则。"""
+        if self._syncing_fps:
+            return
+        self._syncing_fps = True
+        try:
+            if self.chk_fps_stat.isChecked() != enabled:
+                self.chk_fps_stat.setChecked(enabled)
+            if self.radio_fps.isChecked() != enabled:
+                self.radio_fps.setChecked(enabled)
+            if enabled:
+                # 帧率统计固定扫描 1000 帧，且模式必须按业务顺序，禁止随机打乱。
+                self.spin_target_frames.setValue(DEFAULT_FPS_STAT_FRAMES)
+                if self.chk_random_order.isChecked():
+                    self.chk_random_order.setChecked(False)
+                self.random_widget.setVisible(False)
+                self._apply_fps_stat_preset_selection()
+            else:
+                self.random_widget.setVisible(True)
+                if not self.radio_open.isChecked() and not self.radio_post.isChecked():
+                    self.radio_open.setChecked(True)
+        finally:
+            self._syncing_fps = False
 
     def _apply_fps_stat_preset_selection(self) -> None:
         """按业务规则自动预勾选模式并固定顺序；用户仍可在第二步取消个别模式。"""
@@ -1183,7 +1222,12 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
             self.step_details[0].setText("确定扫描设备")
             self.module_aside_value.setText("尚未选择")
             self.module_aside_help.setText("选择一个模组后继续。切换模组会清空当前已选模式。")
-        self.step_details[1].setText(f"已选 {len(self._selected_order)} 个" if self._selected_order else "支持多选")
+        if self._is_fps_stat():
+            self.step_details[1].setText(
+                f"帧率统计 · 已选 {len(self._selected_order)} 个" if self._selected_order else "帧率统计"
+            )
+        else:
+            self.step_details[1].setText(f"已选 {len(self._selected_order)} 个" if self._selected_order else "支持多选")
         self.step_details[2].setText(self._task_kind() if self._selected_order else "开流/后处理/帧率统计")
         if page_index == 0:
             self.btn_next.setText("下一步：选择模式")
@@ -1229,6 +1273,8 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
             if not self._selected_order:
                 show_error(self, "无法继续", "请至少选择一个扫描模式。")
                 return
+            # 第二步勾选了帧率统计时，第三步自动选择「帧率统计」任务类型并固定 1000 帧。
+            self._set_fps_stat_enabled(self._is_fps_stat())
             source = MODULE_PRESET_SOURCES[self._module_name]
             self.pika_hint.setVisible(source.pika_waits)
             self._set_default_task_name()

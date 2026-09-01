@@ -11,6 +11,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PyQt5 import QtCore, QtWidgets  # type: ignore
 
 from jens_platform.dialogs import TaskCreationWizardDialog
+from jens_platform.task_generator import TASK_KIND_FPS_STAT, fps_stat_mode_plan
 
 
 class TaskCreationWizardTests(unittest.TestCase):
@@ -260,6 +261,49 @@ class TaskCreationWizardTests(unittest.TestCase):
             dialog.chk_slide_rail.setChecked(True)
             self.assertTrue(dialog.values()["slide_rail"])
             dialog.close()
+
+    def test_fps_stat_checkbox_auto_selects_modes_kind_and_1000_frames(self) -> None:
+        project_root = Path(__file__).resolve().parents[1]
+        dialog = TaskCreationWizardDialog(project_root)
+        module_items = {
+            str(dialog.module_list.item(index).data(QtCore.Qt.UserRole) or ""): dialog.module_list.item(index)
+            for index in range(dialog.module_list.count())
+        }
+        dialog.module_list.setCurrentItem(module_items["raptor pro"])
+        dialog.btn_wifi.click()
+        dialog._go_next()
+
+        self.assertFalse(dialog.chk_fps_stat.isChecked())
+        self.assertFalse(dialog._is_fps_stat())
+
+        # 第二步勾选「帧率统计任务」：自动按业务顺序勾选模式，并同步第三步任务类型。
+        dialog.chk_fps_stat.setChecked(True)
+        self.assertTrue(dialog._is_fps_stat())
+        self.assertTrue(dialog.radio_fps.isChecked())
+        expected = [
+            key for _, key in fps_stat_mode_plan("raptor pro", "Wi-Fi", project_root=project_root)
+        ]
+        self.assertEqual(dialog._selected_order, expected)
+        self.assertNotIn("no_marker", dialog._selected_order)
+
+        # 进入第三步：自动选中「帧率统计」，帧数固定 1000，禁止随机。
+        dialog._go_next()
+        self.assertTrue(dialog.radio_fps.isChecked())
+        self.assertEqual(dialog.spin_target_frames.value(), 1000)
+        self.assertTrue(dialog.random_widget.isHidden())
+        values = dialog.values()
+        self.assertEqual(values["task_kind"], TASK_KIND_FPS_STAT)
+        self.assertEqual(values["target_frames"], 1000)
+        self.assertEqual(values["preset_keys"], expected)
+        self.assertFalse(values["randomized"])
+
+        # 取消勾选后回到开流，恢复随机控件。
+        dialog.chk_fps_stat.setChecked(False)
+        self.assertFalse(dialog._is_fps_stat())
+        self.assertTrue(dialog.radio_open.isChecked())
+        self.assertFalse(dialog.random_widget.isHidden())
+        self.assertEqual(dialog.values()["task_kind"], "开流")
+        dialog.close()
 
 
 if __name__ == "__main__":
