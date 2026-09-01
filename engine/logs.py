@@ -20,6 +20,11 @@ _SDK_PIPELINE_START_RE = re.compile(r"Pipeline start done!")
 _SDK_PIPELINE_STOP_RE = re.compile(r"Stop pipeline done!")
 _SDK_FPS_RE = re.compile(r"frameset output rate=(\d+(?:\.\d+)?)fps", re.IGNORECASE)
 _SDK_TIMESTAMP_RE = re.compile(r"^\[(\d{2})/(\d{2}) (\d{2}:\d{2}:\d{2}\.\d+)\]")
+# scan_log_*.txt 的完整时间戳（含年份）。
+_SCAN_LOG_TIMESTAMP_RE = re.compile(r"\[(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2}:\d{2}\.\d+)\]")
+_SCAN_LOG_PREVIEW_RE = re.compile(r"obscan_scan_preview")
+_SCAN_LOG_SCAN_START_RE = re.compile(r"obscan_scan_start")
+_SCAN_LOG_SCAN_STOP_RE = re.compile(r"OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS")
 _DEVICE_INFO_JSON_ALIASES = {
     "camera_name": ("camera_name", "cameraName", "name", "camera"),
     "camera_serial_number": (
@@ -362,4 +367,152 @@ def extract_sdk_fps_stats(logs_root: str, max_bytes_per_file: int = 1024 * 1024)
         "sdk_fps_samples": latest["samples"],
         "sdk_fps_sessions_count": len(sessions),
     }
+
+
+def _parse_scan_log_timestamp(line: str) -> Optional[datetime]:
+    match = _SCAN_LOG_TIMESTAMP_RE.search(line)
+    if not match:
+        return None
+    try:
+        return datetime.strptime(
+            f"{match.group(1)}-{match.group(2)}-{match.group(3)} {match.group(4)}",
+            "%Y-%m-%d %H:%M:%S.%f",
+        )
+    except ValueError:
+        return None
+
+
+def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]], Optional[int]]:
+    """
+    从最新 scan_log_*.txt 中解析“预览开始 → 扫描开始 → 扫描停止”的分组。
+
+    返回 (blocks, year_hint)，每个 block:
+      {"preview_at": datetime|None, "scan_at": datetime|None, "stop_at": datetime|None}
+    """
+    root = _resolve_scan_root(Path(logs_root))
+    if root is None or not root.exists():
+        return [], None
+
+    scan_logs = sorted(
+        (p for p in root.glob("scan_log_*.txt") if p.is_file()),
+        key=_safe_mtime,
+        reverse=True,
+    )
+    if not scan_logs:
+        return [], None
+
+    events: list[tuple[str, datetime]] = []
+    year_hint: Optional[int] = None
+    try:
+        with scan_logs[0].open("r", encoding="utf-8", errors="ignore") as handle:
+            for line in handle:
+                stamp = _parse_scan_log_timestamp(line)
+                if stamp is None:
+                    continue
+                if year_hint is None:
+                    year_hint = stamp.year
+                if _SCAN_LOG_PREVIEW_RE.search(line):
+                    events.append(("preview", stamp))
+                elif _SCAN_LOG_SCAN_START_RE.search(line):
+                    events.append(("scan_start", stamp))
+                elif _SCAN_LOG_SCAN_STOP_RE.search(line):
+                    events.append(("stop", stamp))
+    except OSError:
+        return [], year_hint
+
+    blocks: list[dict[str, object]] = []
+    pending_preview: Optional[datetime] = None
+    for kind, stamp in events:
+        if kind == "preview":
+            pending_preview = stamp
+        elif kind == "scan_start":
+            blocks.append({"preview_at": pending_preview, "scan_at": stamp, "stop_at": None})
+            pending_preview = None
+        elif kind == "stop":
+            if blocks and blocks[-1].get("stop_at") is None:
+                blocks[-1]["stop_at"] = stamp
+    return blocks, year_hint
+
+
+def extract_fps_metrics_by_phase(logs_root: str) -> list[Dict[str, object]]:
+    """
+    按“预览/扫描”阶段切分 SDK 帧率采样，返回每个模式一个阶段指标块。
+
+    数据源：
+    - scan_log_*.txt：obscan_scan_preview / obscan_scan_start / SCANNING_STOP_SUCCESS 切分阶段；
+    - ScannerStreamSDK.log：`frameset output rate=<值>fps` 帧率采样点。
+
+    每个 block:
+      preview_at / scan_at / stop_at（ISO 或空串）
+      preview_fps / scan_min_fps / scan_max_fps / scan_avg_fps（原始浮点，可能为 None）
+      preview_samples / scan_samples（采样点数量）
+
+    返回原始浮点值，四舍五入在写入 Excel 时统一处理。
+    """
+    root = _resolve_scan_root(Path(logs_root))
+    if root is None or not root.exists():
+        return []
+
+    blocks, year_hint = _extract_scan_phase_blocks(logs_root)
+    if not blocks:
+        return []
+
+    sdk_log = root / "ScannerStreamSDK.log"
+    samples: list[tuple[datetime, float]] = []
+    if sdk_log.is_file():
+        year = year_hint
+        try:
+            with sdk_log.open("r", encoding="utf-8", errors="ignore") as handle:
+                for line in handle:
+                    fps_match = _SDK_FPS_RE.search(line)
+                    if not fps_match:
+                        continue
+                    ts_match = _SDK_TIMESTAMP_RE.search(line)
+                    if not ts_match or year is None:
+                        continue
+                    try:
+                        stamp = datetime.strptime(
+                            f"{year}-{ts_match.group(1)}-{ts_match.group(2)} {ts_match.group(3)}",
+                            "%Y-%m-%d %H:%M:%S.%f",
+                        )
+                        samples.append((stamp, float(fps_match.group(1))))
+                    except (ValueError, TypeError):
+                        continue
+        except OSError:
+            samples = []
+
+    result: List[Dict[str, object]] = []
+    for block in blocks:
+        preview_at = block.get("preview_at")
+        scan_at = block.get("scan_at")
+        stop_at = block.get("stop_at")
+        preview_values: list[float] = []
+        scan_values: list[float] = []
+        for stamp, value in samples:
+            if scan_at is None:
+                continue
+            if preview_at is not None and preview_at <= stamp < scan_at:
+                preview_values.append(value)
+            elif stop_at is not None and scan_at <= stamp <= stop_at:
+                scan_values.append(value)
+            elif stop_at is None and stamp >= scan_at:
+                scan_values.append(value)
+
+        def _avg(values: Sequence[float]) -> Optional[float]:
+            return sum(values) / len(values) if values else None
+
+        result.append(
+            {
+                "preview_at": preview_at.isoformat(timespec="microseconds") if preview_at else "",
+                "scan_at": scan_at.isoformat(timespec="microseconds") if scan_at else "",
+                "stop_at": stop_at.isoformat(timespec="microseconds") if stop_at else "",
+                "preview_fps": _avg(preview_values),
+                "scan_min_fps": min(scan_values) if scan_values else None,
+                "scan_max_fps": max(scan_values) if scan_values else None,
+                "scan_avg_fps": _avg(scan_values),
+                "preview_samples": len(preview_values),
+                "scan_samples": len(scan_values),
+            }
+        )
+    return result
 

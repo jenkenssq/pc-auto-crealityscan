@@ -32,6 +32,9 @@ class CaseModel:
     app_device_uri: str = "Windows:///"
     keywords: List[str] = field(default_factory=list)
     steps: List[CaseStep] = field(default_factory=list)
+    # 任务生成元信息（供运行器识别任务类型与连接方式，如“帧率统计”写 G/H 列）
+    task_kind: str = ""
+    connection_type: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -43,6 +46,8 @@ class CaseModel:
                 "log_dir": self.app_log_dir,
             },
             "keywords": list(self.keywords),
+            "task_kind": self.task_kind,
+            "connection_type": self.connection_type,
             "steps": [
                 {
                     "id": s.step_id,
@@ -65,6 +70,8 @@ class CaseModel:
         m.app_log_dir = str(app.get("log_dir") or "")
         m.app_device_uri = str(app.get("device_uri") or "Windows:///")
         m.keywords = [x for x in (d.get("keywords") or []) if isinstance(x, str)]
+        m.task_kind = str(d.get("task_kind") or "")
+        m.connection_type = str(d.get("connection_type") or "")
 
         steps = d.get("steps") if isinstance(d.get("steps"), list) else []
         m.steps = []

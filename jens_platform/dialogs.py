@@ -14,10 +14,13 @@ from jens_platform.step_registry import StepMeta
 from jens_platform.task_generator import (
     CONNECTION_USB,
     CONNECTION_WIFI,
+    DEFAULT_FPS_STAT_FRAMES,
     MODULE_PRESET_SOURCES,
+    TASK_KIND_FPS_STAT,
     TASK_KIND_OPEN_STREAM,
     TASK_KIND_POSTPROCESS,
     ScanPreset,
+    fps_stat_mode_plan,
     list_module_presets,
 )
 
@@ -363,7 +366,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         step_row.setContentsMargins(24, 9, 24, 9)
         step_row.setSpacing(8)
         for index, (text, detail) in enumerate(
-            (("模组与连接", "确定设备上下文"), ("选择扫描模式", "支持多选"), ("生成方式", "开流或后处理")),
+            (("模组与连接", "确定设备上下文"), ("选择扫描模式", "支持多选"), ("生成方式", "开流/后处理/帧率统计")),
             start=1,
         ):
             card = QtWidgets.QFrame()
@@ -730,11 +733,13 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         kind_row.setSpacing(12)
         self.radio_open = QtWidgets.QRadioButton("开流测试\n配置参数 → 扫描至目标帧 → 完成")
         self.radio_post = QtWidgets.QRadioButton("后处理测试\n开流步骤 + 融合 → 封装 → 贴图")
-        self.radio_open.setObjectName("taskKindCard")
-        self.radio_post.setObjectName("taskKindCard")
+        self.radio_fps = QtWidgets.QRadioButton("帧率统计\n开流步骤 + 预览/扫描/稳定帧率")
+        for radio in (self.radio_open, self.radio_post, self.radio_fps):
+            radio.setObjectName("taskKindCard")
         self.radio_open.setChecked(True)
         kind_row.addWidget(self.radio_open)
         kind_row.addWidget(self.radio_post)
+        kind_row.addWidget(self.radio_fps)
         form.addWidget(kind_widget)
 
         frames_label = QtWidgets.QLabel("目标帧数")
@@ -761,6 +766,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         random_row.addStretch(1)
         form.addSpacing(7)
         form.addWidget(random_widget)
+        self.random_widget = random_widget
 
         pika_hint = QtWidgets.QLabel("Pika 将按任务库现有规律自动加入稳定性等待步骤。")
         pika_hint.setWordWrap(True)
@@ -817,6 +823,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
 
         self.radio_open.toggled.connect(self._options_changed)
         self.radio_post.toggled.connect(self._options_changed)
+        self.radio_fps.toggled.connect(self._fps_stat_kind_toggled)
         self.spin_target_frames.valueChanged.connect(self._options_changed)
         self.edit_task_name.textChanged.connect(self._refresh_page_state)
         self.chk_random_order.toggled.connect(self._random_toggled)
@@ -1006,7 +1013,39 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         self._refresh_page_state()
 
     def _task_kind(self) -> str:
+        if self.radio_fps.isChecked():
+            return TASK_KIND_FPS_STAT
         return TASK_KIND_POSTPROCESS if self.radio_post.isChecked() else TASK_KIND_OPEN_STREAM
+
+    def _is_fps_stat(self) -> bool:
+        return self.radio_fps.isChecked()
+
+    def _fps_stat_kind_toggled(self, checked: bool) -> None:
+        if checked:
+            # 帧率统计固定扫描 1000 帧，且模式必须按业务顺序，禁止随机打乱。
+            self.spin_target_frames.setValue(DEFAULT_FPS_STAT_FRAMES)
+            if self.chk_random_order.isChecked():
+                self.chk_random_order.setChecked(False)
+            self.random_widget.setVisible(False)
+            self._apply_fps_stat_preset_selection()
+        else:
+            self.random_widget.setVisible(True)
+        self._options_changed()
+
+    def _apply_fps_stat_preset_selection(self) -> None:
+        """按业务规则自动预勾选模式并固定顺序；用户仍可在第二步取消个别模式。"""
+        if not self._module_name or not self._is_fps_stat():
+            return
+        source = MODULE_PRESET_SOURCES[self._module_name]
+        connection_type = self._connection_type() if source.supports_connection else ""
+        try:
+            plan = fps_stat_mode_plan(self._module_name, connection_type, project_root=self.project_root)
+        except (KeyError, ValueError, OSError):
+            return
+        self._selected_order = [key for _, key in plan]
+        if hasattr(self, "preset_list"):
+            self._populate_preset_list()
+        self._refresh_page_state()
 
     def _connection_type(self) -> str:
         return CONNECTION_WIFI if self.btn_wifi.isChecked() else CONNECTION_USB
@@ -1018,6 +1057,8 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         if not source.supports_connection:
             return
         self._reload_presets()
+        if self._is_fps_stat():
+            self._apply_fps_stat_preset_selection()
         self._set_default_task_name()
 
     def _random_toggled(self, enabled: bool) -> None:
@@ -1079,7 +1120,10 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
         by_key = {preset.key: preset for preset in self._presets}
         names = [by_key[key].name for key in self._selected_order if key in by_key]
         connection = f"\n连接方式：{self._connection_type()}" if source.supports_connection else ""
-        order_label = "随机顺序（已固化）" if self.chk_random_order.isChecked() else "preset 顺序"
+        if self._is_fps_stat():
+            order_label = "业务顺序（固定）"
+        else:
+            order_label = "随机顺序（已固化）" if self.chk_random_order.isChecked() else "preset 顺序"
         estimated_steps = 1 + len(names) * (7 if self._task_kind() == TASK_KIND_POSTPROCESS else 4)
         estimated_steps += sum(3 for key in self._selected_order if key in by_key and by_key[key].task_profile == "frame_points")
         if self.chk_slide_rail.isChecked():
@@ -1103,6 +1147,8 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
             lines.append("● 滑轨切换位置［启用］\n   每个模式扫描前自动移动到对应位置")
         if self._task_kind() == TASK_KIND_POSTPROCESS:
             lines.append("● 执行后处理［自动］\n   融合 → 封装 → 按模式规则贴图")
+        if self._is_fps_stat():
+            lines.append("● 采集帧率数据［自动］\n   运行后从日志提取预览/扫描/稳定帧率，写入帧率统计模板 Excel")
         lines.append(f"● 任务成功收尾［自动］\n   返回首页 · {self._task_kind()}{connection}")
         self.summary_text.setText("\n\n".join(lines))
 
@@ -1138,7 +1184,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
             self.module_aside_value.setText("尚未选择")
             self.module_aside_help.setText("选择一个模组后继续。切换模组会清空当前已选模式。")
         self.step_details[1].setText(f"已选 {len(self._selected_order)} 个" if self._selected_order else "支持多选")
-        self.step_details[2].setText(self._task_kind() if self._selected_order else "开流或后处理")
+        self.step_details[2].setText(self._task_kind() if self._selected_order else "开流/后处理/帧率统计")
         if page_index == 0:
             self.btn_next.setText("下一步：选择模式")
             self.btn_next.setEnabled(bool(self._module_name))

@@ -194,6 +194,8 @@ raptor, raptor x, raptor pro, S1, X1
 
 P1S 和 Pika 已接入生成器。其中 Pika 任务会自动插入稳定性等待步骤；`raptor`/`raptor x`/`raptor pro` 生成的“开流”任务不含“激活/置顶窗口”；P1、P1S、Pika、raptor x、raptor pro、S1、X1 支持 USB/Wi-Fi 连接方式过滤。新任务以生成器为准，手工 `tasks/*.json` 仅作样本或现场调试使用。
 
+任务类型支持三种：`开流`、`后处理`、`帧率统计`。其中 `帧率统计`（`TASK_KIND_FPS_STAT`）按业务规则自动挑选模式并固定顺序（平行线/单线/交叉/无标记点[仅USB]/大/中/小物体[几何]/人脸/人体[纹理]），每模式执行“预览 → 扫描至 1000 帧”，运行结束后由 `engine/fps_stat_xlsx.py` 按 `帧率统计模板.xlsx` 写入 A1:H3（WIFI→G 列、USB→H 列，回填不破坏另一列）。
+
 ## 6. 标准扫描流程
 
 普通开流参数块：

@@ -1,0 +1,11 @@
+System Information:
+CPU: Intel(R) Core(TM) Ultra 7 255HX
+CPU Cores: 20
+Memory: 32175MB
+GPU: NVIDIA GeForce RTX 5060 Laptop GPU
+GPU Memory: 7899MB
+GPU Vendor: NVIDIA
+OS: Windows 11  (10.0.22631) 64bit
+Unity Version: 2022.3.20f1
+App Version: 4.3.1
+DateTime: 2026/9/1 11:22:14

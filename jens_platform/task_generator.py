@@ -12,8 +12,24 @@ from jens_runtime import get_resource_root
 
 TASK_KIND_OPEN_STREAM = "开流"
 TASK_KIND_POSTPROCESS = "后处理"
+TASK_KIND_FPS_STAT = "帧率统计"
 CONNECTION_USB = "USB"
 CONNECTION_WIFI = "Wi-Fi"
+
+# 帧率统计任务的业务模式顺序（与 帧率统计模板.xlsx 的 G3/H3 行顺序一致）。
+FPS_STAT_MODE_ORDER: tuple[str, ...] = (
+    "平行线",
+    "单线",
+    "交叉",
+    "无标记点",
+    "大物体",
+    "中物体",
+    "小物体",
+    "人脸",
+    "人体",
+)
+# 帧率统计任务默认目标帧数。
+DEFAULT_FPS_STAT_FRAMES = 1000
 
 
 @dataclass(frozen=True)
@@ -207,10 +223,105 @@ def list_module_presets(
     return presets
 
 
+def _preset_haystack(preset: ScanPreset) -> str:
+    return f"{preset.key} {preset.name} {' '.join(preset.aliases)}".lower()
+
+
+def _fps_stat_key_has(preset: ScanPreset, *tokens: str) -> bool:
+    key = preset.key.lower()
+    return all(token in key for token in tokens)
+
+
+def _fps_stat_preference_score(preset: ScanPreset) -> int:
+    """同类 preset 的优先级：高精度 > 标准/默认 > 广角。"""
+    haystack = _preset_haystack(preset)
+    if "high_precision" in haystack or "高精度" in haystack:
+        return 0
+    if "wide_angle" in haystack or "广角" in haystack:
+        return 2
+    if "standard" in haystack or "标准" in haystack:
+        return 1
+    return 1
+
+
+def _fps_stat_candidates(
+    presets: Sequence[ScanPreset],
+    predicate,
+) -> list[ScanPreset]:
+    return [preset for preset in presets if predicate(preset)]
+
+
+def fps_stat_mode_plan(
+    module_name: str,
+    connection_type: str = "",
+    *,
+    project_root: Optional[Path] = None,
+) -> list[tuple[str, str]]:
+    """
+    按业务规则挑选“帧率统计”任务要测试的模式，返回 [(业务短名, preset key), ...]。
+
+    顺序固定为 平行线/单线/交叉/无标记点/大物体/中物体/小物体/人脸/人体，
+    与 帧率统计模板.xlsx 的 G3/H3 行顺序一致；模组不存在的模式直接跳过（不占位）。
+    - 无标记点仅存在于 USB 连接（connection_type=Wi-Fi 时被 list_module_presets 过滤掉）。
+    - 大/中/小物体默认取“几何”，人脸/人体取“纹理”（优先高精度）。
+    """
+    if module_name not in MODULE_PRESET_SOURCES:
+        raise KeyError(f"未知模组：{module_name}")
+    source = MODULE_PRESET_SOURCES[module_name]
+    presets = list_module_presets(
+        module_name,
+        project_root=project_root,
+        connection_type=connection_type if source.supports_connection else "",
+    )
+
+    def line(tail: str) -> Any:
+        return lambda p: _fps_stat_key_has(p, "line_laser", "point_cloud", tail)
+
+    def speckle(size: str) -> Any:
+        return lambda p: _fps_stat_key_has(p, size, "geometry") and "line_laser" not in p.key and "frame_points" not in p.key
+
+    def textured(part: str) -> Any:
+        return lambda p: _fps_stat_key_has(p, part, "texture") and "line_laser" not in p.key and "frame_points" not in p.key
+
+    rules: list[tuple[str, Any]] = [
+        ("平行线", line("parallel")),
+        ("单线", line("single")),
+        ("交叉", line("cross")),
+        ("无标记点", lambda p: "no_marker" in p.key),
+        ("大物体", speckle("large")),
+        ("中物体", speckle("medium")),
+        ("小物体", speckle("small")),
+        ("人脸", textured("face")),
+        ("人体", textured("body")),
+    ]
+
+    plan: list[tuple[str, str]] = []
+    for short_name, predicate in rules:
+        candidates = _fps_stat_candidates(presets, predicate)
+        if not candidates:
+            continue
+        if short_name == "无标记点":
+            exact = [p for p in candidates if p.key.rstrip(".").endswith("no_marker")]
+            if exact:
+                candidates = exact
+        candidates.sort(key=lambda p: (_fps_stat_preference_score(p), p.key))
+        plan.append((short_name, candidates[0].key))
+    return plan
+
+
+def fps_stat_preset_keys(
+    module_name: str,
+    connection_type: str = "",
+    *,
+    project_root: Optional[Path] = None,
+) -> list[str]:
+    return [key for _, key in fps_stat_mode_plan(module_name, connection_type, project_root=project_root)]
+
+
 def list_task_generation_options() -> list[TaskGenerationOption]:
     options: list[TaskGenerationOption] = []
     for source in sorted(MODULE_PRESET_SOURCES.values(), key=lambda item: item.display_name.lower()):
-        for task_kind in (TASK_KIND_OPEN_STREAM, TASK_KIND_POSTPROCESS):
+        for task_kind in (TASK_KIND_OPEN_STREAM, TASK_KIND_POSTPROCESS, TASK_KIND_FPS_STAT):
             options.append(
                 TaskGenerationOption(
                     module_name=source.module_name,
@@ -422,7 +533,7 @@ def build_task_model(
 ) -> CaseModel:
     if module_name not in MODULE_PRESET_SOURCES:
         raise KeyError(f"未知模组：{module_name}")
-    if task_kind not in {TASK_KIND_OPEN_STREAM, TASK_KIND_POSTPROCESS}:
+    if task_kind not in {TASK_KIND_OPEN_STREAM, TASK_KIND_POSTPROCESS, TASK_KIND_FPS_STAT}:
         raise KeyError(f"未知任务类型：{task_kind}")
     if isinstance(target_frames, bool) or not isinstance(target_frames, int) or not 1 <= target_frames <= 100000:
         raise ValueError("目标帧数必须是 1–100000 之间的整数")
@@ -434,13 +545,24 @@ def build_task_model(
         connection_type=connection_type if source.supports_connection else "",
     )
     by_key = {preset.key: preset for preset in available}
-    requested_keys = list(preset_keys) if preset_keys is not None else [preset.key for preset in available]
+    if preset_keys is None and task_kind == TASK_KIND_FPS_STAT:
+        # 帧率统计任务按业务规则自动挑选模式并固定顺序。
+        requested_keys = fps_stat_preset_keys(
+            module_name,
+            connection_type=connection_type if source.supports_connection else "",
+            project_root=project_root,
+        )
+    else:
+        requested_keys = list(preset_keys) if preset_keys is not None else [preset.key for preset in available]
     if not requested_keys:
         raise ValueError("至少选择一个扫描模式")
     missing = [key for key in requested_keys if key not in by_key]
     if missing:
         raise ValueError(f"preset 已不存在或不可用：{', '.join(missing)}")
     selected = [by_key[key] for key in requested_keys]
+    if task_kind == TASK_KIND_FPS_STAT:
+        # 帧率统计需要按固定业务顺序输出，禁止随机打乱。
+        randomize = False
     selected = ordered_presets(selected, randomize=randomize, random_seed=random_seed)
 
     normalized_name = (task_name or f"{source.display_name}{task_kind}").strip()
@@ -452,5 +574,7 @@ def build_task_model(
         app_log_dir=app_log_dir or "",
         app_device_uri=app_device_uri or "Windows:///",
         keywords=list(keywords or DEFAULT_KEYWORDS),
+        task_kind=task_kind,
+        connection_type=connection_type,
         steps=_build_steps(source, selected, task_kind, target_frames, slide_rail=slide_rail),
     )

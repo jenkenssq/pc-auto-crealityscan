@@ -12,10 +12,12 @@ from airtest.core.api import connect_device  # type: ignore
 
 from engine.defaults import DEFAULT_KEYWORDS
 from engine.executor import execute_case
+from engine.fps_stat_xlsx import WORKBOOK_NAME as FPS_STAT_WORKBOOK_NAME
 from engine.io import dump_json, load_json
-from engine.logs import copy_logs, extract_device_info, extract_sdk_fps_sessions, scan_keywords
+from engine.logs import copy_logs, extract_device_info, extract_fps_metrics_by_phase, extract_sdk_fps_sessions, scan_keywords
 from engine.report_html import render_report_html
 from engine.scan_fps_xlsx import write_scan_fps_workbook
+from engine.system_env import collect_environment_info
 from jens_runtime import get_app_root, get_resource_root
 
 
@@ -113,6 +115,8 @@ def _write_summary_json(
     has_airtest_ocr_debug: bool,
     scan_fps_xlsx_path: str = "",
     scan_fps_xlsx_error: str = "",
+    fps_stat_xlsx_path: str = "",
+    fps_stat_xlsx_error: str = "",
     ) -> None:
     retained_items = (
         (
@@ -125,6 +129,8 @@ def _write_summary_json(
     )
     if scan_fps_xlsx_path:
         retained_items.append("scan_fps_summary.xlsx")
+    if fps_stat_xlsx_path:
+        retained_items.append(FPS_STAT_WORKBOOK_NAME)
     dump_json(
         str(run_dir / "summary.json"),
         {
@@ -145,6 +151,8 @@ def _write_summary_json(
             "result_path": str(run_dir / "result.json"),
             "scan_fps_xlsx_path": scan_fps_xlsx_path,
             "scan_fps_xlsx_error": scan_fps_xlsx_error,
+            "fps_stat_xlsx_path": fps_stat_xlsx_path,
+            "fps_stat_xlsx_error": fps_stat_xlsx_error,
             "retained_items": retained_items,
         },
     )
@@ -284,6 +292,107 @@ def _cleanup_lightweight_artifacts(run_dir: Path) -> bool:
     return kept_airtest_debug
 
 
+def _fps_stat_connection(case: dict, device_info: Optional[dict]) -> str:
+    """返回归一化连接方式：Wi-Fi / USB / 空串（优先任务配置，回退设备信息）。"""
+    from jens_platform.task_generator import CONNECTION_USB, CONNECTION_WIFI
+
+    raw = str(case.get("connection_type") or "").strip().lower().replace("_", "-")
+    if raw in {"wifi", "wi-fi", "wlan"}:
+        return CONNECTION_WIFI
+    if raw in {"usb"}:
+        return CONNECTION_USB
+    info = device_info if isinstance(device_info, dict) else {}
+    device_conn = str(info.get("camera_connection_type") or "").lower()
+    if "usb" in device_conn:
+        return CONNECTION_USB
+    if "wifi" in device_conn or "wi-fi" in device_conn:
+        return CONNECTION_WIFI
+    return ""
+
+
+def _fps_stat_fallback_mode_name(preset_key: str) -> str:
+    key = preset_key.lower()
+    for token, name in (
+        ("no_marker", "无标记点"),
+        ("face", "人脸"),
+        ("body", "人体"),
+        ("large", "大物体"),
+        ("medium", "中物体"),
+        ("small", "小物体"),
+        ("cross", "交叉"),
+        ("parallel", "平行线"),
+        ("single", "单线"),
+    ):
+        if token in key:
+            return name
+    return preset_key
+
+
+def _fps_stat_module_and_modes(case: dict, connection_type: str) -> tuple[str, str, list[str]]:
+    """从任务步骤推导模组名与模式业务短名（按执行顺序）。"""
+    from jens_platform.task_generator import MODULE_PRESET_SOURCES, fps_stat_mode_plan
+
+    prefix = "crealityscan.configure_scan_params_"
+    module_key = ""
+    preset_keys: list[str] = []
+    for step in case.get("steps", []):
+        if not isinstance(step, dict):
+            continue
+        step_id = str(step.get("id") or "")
+        if not step_id.startswith(prefix):
+            continue
+        suffix = step_id[len(prefix):]
+        if not module_key:
+            by_lower = {key.lower(): key for key in MODULE_PRESET_SOURCES}
+            module_key = by_lower.get(suffix.replace("_", " ").lower(), "")
+        params = step.get("params") if isinstance(step.get("params"), dict) else {}
+        preset = str(params.get("preset") or "").strip()
+        if preset:
+            preset_keys.append(preset)
+    if not module_key:
+        return "", "", []
+    source = MODULE_PRESET_SOURCES[module_key]
+    reverse = {key: name for name, key in fps_stat_mode_plan(module_key, connection_type)}
+    mode_names = [reverse.get(key) or _fps_stat_fallback_mode_name(key) for key in preset_keys]
+    return source.module_name, source.display_name, mode_names
+
+
+def _write_fps_stat_workbook(case: dict, run_dir: Path, device_info: Optional[dict]) -> str:
+    """帧率统计任务运行后，按模板把各模式预览/扫描/稳定帧率写入 帧率统计.xlsx。"""
+    app = case.get("app") if isinstance(case.get("app"), dict) else {}
+    logs_root = str(app.get("log_dir") or "").strip()
+    if not logs_root:
+        return ""
+    connection = _fps_stat_connection(case, device_info)
+    if not connection:
+        return ""
+    _module_key, module_display, mode_names = _fps_stat_module_and_modes(case, connection)
+    if not mode_names:
+        return ""
+    blocks = extract_fps_metrics_by_phase(logs_root)
+    if not blocks:
+        return ""
+
+    from engine.fps_stat_xlsx import build_fps_rows, write_fps_stat_workbook
+
+    env = collect_environment_info(logs_root)
+    info = device_info if isinstance(device_info, dict) else {}
+    firmware = str(info.get("camera_firmware_version") or "").strip()
+    rows = build_fps_rows(mode_names, blocks)
+    out_path = run_dir / FPS_STAT_WORKBOOK_NAME
+    return write_fps_stat_workbook(
+        out_path,
+        software_version=str(env.get("software_version") or ""),
+        module_display_name=module_display,
+        connection_type=connection,
+        system_info=env,
+        firmware_version=firmware,
+        wifi_handle_version=str(env.get("wifi_handle_version") or ""),
+        wifi_band=str(env.get("wifi_band") or ""),
+        fps_rows=rows,
+    )
+
+
 def run_case(case_path: Optional[str] = None) -> int:
     app_root = get_app_root()
     resource_root = get_resource_root()
@@ -323,6 +432,20 @@ def run_case(case_path: Optional[str] = None) -> int:
     except (ImportError, OSError, ValueError, RuntimeError) as exc:
         scan_fps_xlsx_error = str(exc)
         print(f"[JENS] scan_fps_xlsx_failed error={scan_fps_xlsx_error}")
+
+    is_fps_stat = (
+        str(case.get("task_kind") or "") == "帧率统计" or "帧率统计" in case_name
+    )
+    fps_stat_xlsx_path = ""
+    fps_stat_xlsx_error = ""
+    if is_fps_stat:
+        try:
+            fps_stat_xlsx_path = _write_fps_stat_workbook(case, run_dir, device_info) or ""
+            if fps_stat_xlsx_path:
+                print(f"[JENS] fps_stat_xlsx={fps_stat_xlsx_path}")
+        except Exception as exc:
+            fps_stat_xlsx_error = str(exc)
+            print(f"[JENS] fps_stat_xlsx_failed error={fps_stat_xlsx_error}")
     keyword_hits = (
         scan_keywords(
             creality_logs_dir,
@@ -345,6 +468,8 @@ def run_case(case_path: Optional[str] = None) -> int:
             "device_info": device_info,
             "scan_fps_xlsx_path": scan_fps_xlsx_path,
             "scan_fps_xlsx_error": scan_fps_xlsx_error,
+            "fps_stat_xlsx_path": fps_stat_xlsx_path,
+            "fps_stat_xlsx_error": fps_stat_xlsx_error,
         },
     )
 
@@ -390,6 +515,8 @@ def run_case(case_path: Optional[str] = None) -> int:
         has_airtest_ocr_debug=has_airtest_ocr_debug,
         scan_fps_xlsx_path=scan_fps_xlsx_path,
         scan_fps_xlsx_error=scan_fps_xlsx_error,
+        fps_stat_xlsx_path=fps_stat_xlsx_path,
+        fps_stat_xlsx_error=fps_stat_xlsx_error,
     )
 
     print(f"[JENS] run_dir={run_dir}")
