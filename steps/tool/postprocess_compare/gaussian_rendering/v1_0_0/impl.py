@@ -53,6 +53,28 @@ def _latest_download_progress(app_log: Optional[Path]) -> Optional[str]:
     return f"{matches[-1]}%"
 
 
+# 高斯渲染质量等级对应的点击坐标（1920x1080 屏幕坐标，均在同一行 y=220）
+_GAUSSIAN_QUALITY_COORDS: Dict[str, tuple[int, int]] = {
+    "快速": (70, 220),
+    "标准": (180, 220),
+    "高质量": (290, 220),
+}
+
+
+def _select_quality(touch, sleep, quality: str) -> None:
+    """点击高斯渲染弹窗中的质量等级选项；默认“高质量”已在弹窗中选中，无需点击。
+
+    :param quality: 质量等级，取值 快速/标准/高质量。
+    """
+    coords = _GAUSSIAN_QUALITY_COORDS.get(quality)
+    if coords is None:
+        raise RuntimeError(f"未知的高斯渲染质量等级：{quality}（可选：快速/标准/高质量）")
+    if quality != "高质量":
+        print(f"[高斯渲染] 选择质量等级：{quality}（坐标 {coords[0]},{coords[1]}）")
+        touch(coords)
+        sleep(0.5)
+
+
 def _handle_download_package(base: Path, params: Dict[str, Any], Template, exists, touch, sleep) -> None:
     """处理测试版缺少高斯渲染下载包时的下载弹窗，并等待下载完成。
 
@@ -114,6 +136,11 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     # 来自现有 Airtest 用例：进行高斯渲染操作.air/进行高斯渲染操作.py
     touch(Template(str(base / "tpl1774270225446.png"), record_pos=(-0.277, -0.254), resolution=(1920, 1080)))
     touch(Template(str(base / "tpl1786174242991.png"), record_pos=(-0.118, -0.224), resolution=(1920, 1080)))
+
+    # 点击“高斯渲染”后弹出的质量等级选择：默认高质量（已在弹窗中选中），仅非默认时点击
+    quality = str(params.get("gaussian_quality") or "高质量")
+    _select_quality(touch, sleep, quality)
+
     touch(Template(str(base / "tpl1786174282206.png"), record_pos=(-0.358, -0.133), resolution=(1920, 1080)))
 
     # 测试版 + 本地无高斯渲染下载包时，点击“应用”后 CrealityScan 会弹窗要求下载；自动点击下载并等待完成

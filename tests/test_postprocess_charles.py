@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import tempfile
@@ -13,6 +14,7 @@ from PyQt5 import QtWidgets  # type: ignore
 
 from jens_platform.tools.postprocess_compare import cli, excel_report
 from jens_platform.tools.postprocess_compare.qt_app import CompareWindow
+from jens_platform.tools.postprocess_compare import qt_app as qt_app_module
 
 
 class PostprocessCharlesCliTests(unittest.TestCase):
@@ -20,6 +22,35 @@ class PostprocessCharlesCliTests(unittest.TestCase):
         parser = cli.build_parser()
         args = parser.parse_args(["--charles-exe", r"C:\Program Files\Charles\Charles.exe"])
         self.assertEqual(args.charles_exe, r"C:\Program Files\Charles\Charles.exe")
+
+    def test_parser_gaussian_quality_default_and_choices(self) -> None:
+        parser = cli.build_parser()
+        args = parser.parse_args([])
+        self.assertEqual(args.gaussian_quality, "高质量")
+        args = parser.parse_args(["--gaussian-quality", "标准"])
+        self.assertEqual(args.gaussian_quality, "标准")
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["--gaussian-quality", "超高"])
+
+    def test_run_postprocess_step_passes_gaussian_quality_to_params(self) -> None:
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as temp_dir, \
+                mock.patch.object(cli.importlib, "import_module") as import_module:
+            step_module = mock.Mock()
+            step_module.run.return_value = {"operation_elapsed_sec": 1.0, "snapshot": "x.png"}
+            import_module.return_value = step_module
+            cli._run_postprocess_step(
+                "发布版",
+                Path(temp_dir),
+                900.0,
+                "gaussian",
+                0,
+                gaussian_quality="标准",
+            )
+            ctx, params = step_module.run.call_args.args
+            self.assertEqual(params["gaussian_quality"], "标准")
+            self.assertNotIn("gaussian_quality", ctx)
 
     def test_launch_charles_starts_detached_and_logs_pid(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -173,10 +204,23 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
         cls.app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
 
     def setUp(self) -> None:
+        # 每个测试用独立的临时配置目录，避免相互污染真实/本机配置
+        self._settings_tmp = tempfile.TemporaryDirectory()
+        self._settings_dir_patcher = mock.patch.object(
+            qt_app_module, "_SETTINGS_DIR", Path(self._settings_tmp.name)
+        )
+        self._settings_file_patcher = mock.patch.object(
+            qt_app_module, "_SETTINGS_FILE", Path(self._settings_tmp.name) / "settings.json"
+        )
+        self._settings_dir_patcher.start()
+        self._settings_file_patcher.start()
         self.window = CompareWindow(project_root=Path(__file__).resolve().parents[1])
 
     def tearDown(self) -> None:
         self.window.deleteLater()
+        self._settings_file_patcher.stop()
+        self._settings_dir_patcher.stop()
+        self._settings_tmp.cleanup()
 
     def test_charles_widgets_present_and_toggle_reveals_path_row(self) -> None:
         w = self.window
@@ -280,6 +324,205 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
                 w.start_run()
                 _, args = start.call_args[0]
                 self.assertIn("--delete-download-package", args)
+
+
+    def test_advanced_button_replaces_inline_panel(self) -> None:
+        w = self.window
+        # 高级参数改为“按钮 + 摘要”，不再内联展开面板
+        self.assertTrue(hasattr(w, "advanced_button"))
+        self.assertTrue(hasattr(w, "advanced_summary"))
+        self.assertFalse(hasattr(w, "advanced_panel"))
+        self.assertFalse(hasattr(w, "advanced_toggle"))
+
+    def test_advanced_dialog_timeouts_are_horizontal(self) -> None:
+        from PyQt5 import QtCore
+
+        w = self.window
+        w.operation_buttons["ai_retexture"].click()
+        dlg = w._build_advanced_dialog()
+        w._sync_advanced_visibility()
+        dlg.show()
+        dlg.layout().activate()
+        QtWidgets.QApplication.processEvents()
+
+        def row_y(spin: QtWidgets.QDoubleSpinBox) -> int:
+            return spin.mapTo(dlg, spin.rect().topLeft()).y()
+
+        # 三项通用超时必须在同一水平行（避免纵向堆叠）
+        self.assertEqual(
+            len({row_y(w.operation_timeout), row_y(w.start_timeout), row_y(w.close_timeout)}),
+            1,
+        )
+
+    def test_advanced_dialog_accept_updates_summary(self) -> None:
+        from PyQt5 import QtCore
+
+        w = self.window
+        w.operation_buttons["ai_retexture"].click()
+
+        def _mutate_and_accept() -> None:
+            w.operation_timeout.setValue(321.0)
+            w.ai_retexture_gaussian.setChecked(True)
+            if w._advanced_dialog is not None:
+                w._advanced_dialog.accept()
+
+        QtCore.QTimer.singleShot(80, _mutate_and_accept)
+        w._open_advanced()
+        self.assertIn("321", w.advanced_summary.text())
+        self.assertIn("高斯开", w.advanced_summary.text())
+
+    def test_advanced_button_disabled_while_running(self) -> None:
+        w = self.window
+        self.assertTrue(w.advanced_button.isEnabled())
+        w._set_running(True)
+        self.assertFalse(w.advanced_button.isEnabled())
+        w._set_running(False)
+        self.assertTrue(w.advanced_button.isEnabled())
+
+    def test_gaussian_quality_combo_defaults_and_visibility(self) -> None:
+        w = self.window
+        self.assertEqual(w.gaussian_quality.currentText(), "高质量")
+        self.assertEqual(
+            [w.gaussian_quality.itemText(i) for i in range(w.gaussian_quality.count())],
+            ["快速", "标准", "高质量"],
+        )
+        # 未选择对比类型时高斯专属组隐藏
+        self.assertTrue(w.gaussian_group.isHidden())
+        w.operation_buttons["gaussian"].click()
+        self.assertFalse(w.gaussian_group.isHidden())
+        self.assertTrue(w.specific_none.isHidden())
+        self.assertIn("质量高质量", w.advanced_summary.text())
+
+    def test_gaussian_quality_summary_updates_with_combo(self) -> None:
+        w = self.window
+        w.operation_buttons["gaussian"].click()
+        w.gaussian_quality.setCurrentText("标准")
+        w._update_advanced_summary()
+        self.assertIn("质量标准", w.advanced_summary.text())
+
+    def test_start_run_passes_gaussian_quality(self) -> None:
+        w = self.window
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = Path(temp_dir)
+            release_exe = base / "release.exe"
+            test_exe = base / "test.exe"
+            for p in (release_exe, test_exe):
+                p.write_bytes(b"x")
+            project_set = base / "proj"
+            project_set.mkdir()
+            output_dir = base / "out"
+            output_dir.mkdir()
+
+            w.release_exe.setText(str(release_exe))
+            w.release_version.setText("1.0-r")
+            w.test_exe.setText(str(test_exe))
+            w.test_version.setText("1.0-t")
+            w.project_set.setText(str(project_set))
+            w.output_dir.setText(str(output_dir))
+            w.operation_buttons["gaussian"].click()
+            w.gaussian_quality.setCurrentText("快速")
+
+            with mock.patch.object(w._process, "start") as start, \
+                    mock.patch.object(w._process, "waitForStarted", return_value=True):
+                w.start_run()
+                _, args = start.call_args[0]
+                self.assertEqual(
+                    args[args.index("--gaussian-quality") + 1],
+                    "快速",
+                )
+
+    def _patch_settings(self, tmp: Path):
+        from contextlib import ExitStack
+
+        stack = ExitStack()
+        stack.enter_context(mock.patch.object(qt_app_module, "_SETTINGS_DIR", Path(tmp)))
+        stack.enter_context(
+            mock.patch.object(qt_app_module, "_SETTINGS_FILE", Path(tmp) / "settings.json")
+        )
+        return stack
+
+    def test_save_settings_writes_config_json(self) -> None:
+        w = self.window
+        w.operation_buttons["gaussian"].click()
+        w.release_exe.setText(r"D:\scan\release\CrealityScan.exe")
+        w.release_version.setText("1.12.11")
+        w.test_exe.setText(r"D:\scan\test\CrealityScan.exe")
+        w.test_version.setText("1.13.1")
+        w.project_set.setText(r"D:\projects")
+        w.output_dir.setText(r"D:\out")
+        w.gaussian_quality.setCurrentText("标准")
+        w.ai_retexture_gaussian.setChecked(True)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            tmp = Path(temp_dir)
+            with self._patch_settings(tmp):
+                w._save_settings()
+            data = json.loads((tmp / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(data["operation"], "gaussian")
+        self.assertEqual(data["release_exe"], r"D:\scan\release\CrealityScan.exe")
+        self.assertEqual(data["release_version"], "1.12.11")
+        self.assertEqual(data["gaussian_quality"], "标准")
+        self.assertTrue(data["ai_retexture_gaussian"])
+
+    def test_restore_settings_populates_window(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            tmp = Path(temp_dir)
+            payload = {
+                "operation": "gaussian",
+                "release_exe": r"D:\scan\release\CrealityScan.exe",
+                "release_version": "1.12.11",
+                "test_exe": r"D:\scan\test\CrealityScan.exe",
+                "test_version": "1.13.1",
+                "project_set": r"D:\projects",
+                "output_dir": r"D:\out",
+                "operation_timeout": 123.0,
+                "start_timeout": 45.0,
+                "close_timeout": 12.0,
+                "gaussian_quality": "标准",
+                "delete_package": False,
+                "charles": False,
+                "charles_exe": "",
+                "ai_retexture_gaussian": False,
+                "ai_retexture_texture_first": True,
+                "texture_timeout": 66.0,
+                "human_body_hd_geometry": False,
+                "base_wait": 33.0,
+            }
+            (tmp / "settings.json").write_text(
+                json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+            )
+            with self._patch_settings(tmp):
+                w2 = CompareWindow(project_root=Path(__file__).resolve().parents[1])
+            self.assertEqual(w2._selected_operation, "gaussian")
+            self.assertEqual(w2.release_exe.text(), r"D:\scan\release\CrealityScan.exe")
+            self.assertEqual(w2.release_version.text(), "1.12.11")
+            self.assertEqual(w2.gaussian_quality.currentText(), "标准")
+            self.assertEqual(w2.operation_timeout.value(), 123.0)
+            self.assertEqual(w2.start_timeout.value(), 45.0)
+            self.assertEqual(w2.close_timeout.value(), 12.0)
+            self.assertEqual(w2.texture_timeout.value(), 66.0)
+            self.assertEqual(w2.base_wait.value(), 33.0)
+            w2.deleteLater()
+
+    def test_settings_round_trip_restores_last_config(self) -> None:
+        w = self.window
+        with tempfile.TemporaryDirectory() as temp_dir:
+            tmp = Path(temp_dir)
+            w.operation_buttons["human_body_completion"].click()
+            w.release_exe.setText(r"D:\scan\release\CrealityScan.exe")
+            w.test_version.setText("1.99")
+            w.human_body_hd_geometry.setChecked(True)
+            w.base_wait.setValue(77.0)
+            w.operation_timeout.setValue(321.0)
+            with self._patch_settings(tmp):
+                w._save_settings()
+                w2 = CompareWindow(project_root=Path(__file__).resolve().parents[1])
+            self.assertEqual(w2._selected_operation, "human_body_completion")
+            self.assertEqual(w2.release_exe.text(), r"D:\scan\release\CrealityScan.exe")
+            self.assertEqual(w2.test_version.text(), "1.99")
+            self.assertTrue(w2.human_body_hd_geometry.isChecked())
+            self.assertEqual(w2.base_wait.value(), 77.0)
+            self.assertEqual(w2.operation_timeout.value(), 321.0)
+            w2.deleteLater()
 
 
 if __name__ == "__main__":

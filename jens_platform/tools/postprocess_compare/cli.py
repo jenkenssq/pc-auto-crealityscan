@@ -317,6 +317,7 @@ def _run_postprocess_step(
     texture_timeout_sec: float = 90.0,
     enable_hd_geometry: bool = False,
     base_wait_sec: float = 20.0,
+    gaussian_quality: str = "高质量",
     version_label: Optional[str] = None,
 ) -> None:
     config = _POSTPROCESS_CONFIG.get(operation)
@@ -330,6 +331,8 @@ def _run_postprocess_step(
 
     print(f"[COMPARE] {label}开始执行{config['step_name']} Step")
     params: dict[str, object] = {"timeout_sec": timeout_sec, "enable_gaussian": enable_gaussian}
+    if operation == "gaussian":
+        params["gaussian_quality"] = gaussian_quality
     if operation == "ai_retexture":
         params["run_texture_first"] = run_texture_first
         params["texture_timeout_sec"] = texture_timeout_sec
@@ -391,6 +394,7 @@ def _run_one(
     texture_timeout_sec: float = 90.0,
     enable_hd_geometry: bool = False,
     base_wait_sec: float = 20.0,
+    gaussian_quality: str = "高质量",
 ) -> bool:
     app = ManagedCrealityScan(exe_path)
     try:
@@ -434,6 +438,7 @@ def _run_one(
                 texture_timeout_sec,
                 enable_hd_geometry,
                 base_wait_sec,
+                gaussian_quality=gaussian_quality,
                 version_label=label,
             )
             print(f"[COMPARE]{_ts()} {step_label}{postprocess_name}完成，耗时={time.time() - t0:.1f}s。")
@@ -540,6 +545,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="贴图进度等待超时秒数（AI重贴图的前置贴图也使用该值）",
     )
     parser.add_argument("--gaussian-timeout", type=float, default=900.0, help="高斯渲染进度等待超时秒数")
+    parser.add_argument(
+        "--gaussian-quality",
+        choices=("快速", "标准", "高质量"),
+        default="高质量",
+        help="高斯渲染质量等级：快速/标准/高质量，默认高质量",
+    )
     parser.add_argument("--ai-retexture-timeout", type=float, default=600.0, help="AI重贴图操作等待超时秒数")
     parser.add_argument("--ai-retexture-gaussian", action="store_true", help="AI重贴图开启高斯渲染")
     parser.add_argument(
@@ -715,6 +726,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 texture_timeout_sec=max(1.0, args.texture_timeout),
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
+                gaussian_quality=args.gaussian_quality,
             )
         else:
             release_ok = _run_one(
@@ -731,6 +743,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 texture_timeout_sec=max(1.0, args.texture_timeout),
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
+                gaussian_quality=args.gaussian_quality,
             )
             if release_ok and args.delete_download_package:
                 print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
@@ -758,6 +771,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     texture_timeout_sec=max(1.0, args.texture_timeout),
                     enable_hd_geometry=args.human_body_hd_geometry,
                     base_wait_sec=max(0.0, args.base_wait),
+                    gaussian_quality=args.gaussian_quality,
                 )
     except KeyboardInterrupt:
         return 3

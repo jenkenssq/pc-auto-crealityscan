@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+import json
 import os
 import re
 import subprocess
@@ -18,6 +19,32 @@ _SPINNER_FRAMES = ("◐", "◓", "◑", "◒")
 
 
 _DISPLAY_FONT_PATH = Path(__file__).resolve().parent / "assets" / "fonts" / "IBMPlexSansSC-SemiBold.otf"
+
+_SETTINGS_DIR = Path(os.environ.get("LOCALAPPDATA") or (Path.home() / "AppData" / "Local")) / "Jens" / "后处理对比工具"
+_SETTINGS_FILE = _SETTINGS_DIR / "settings.json"
+
+
+def _load_settings() -> dict:
+    """读取上次任务配置；文件缺失或损坏时返回空字典。"""
+    try:
+        if _SETTINGS_FILE.is_file():
+            raw = json.loads(_SETTINGS_FILE.read_text(encoding="utf-8"))
+            return raw if isinstance(raw, dict) else {}
+    except (OSError, ValueError, TypeError):
+        pass
+    return {}
+
+
+def _save_settings(data: dict) -> None:
+    """把任务配置写入用户本地配置目录，保证下次打开可恢复。"""
+    try:
+        _SETTINGS_DIR.mkdir(parents=True, exist_ok=True)
+        _SETTINGS_FILE.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
 
 
 def _decode_output(data: bytes) -> str:
@@ -55,6 +82,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self._path_rows: list[QtWidgets.QWidget] = []
         self._build_ui()
         self._connect_process()
+        self._restore_settings()
         self._apply_mica()
 
     def _build_ui(self) -> None:
@@ -109,7 +137,6 @@ class CompareWindow(QtWidgets.QMainWindow):
             QLabel#panelHint, QLabel#helperText { color: #5d6d79; font-size: 11px; }
             QLabel#stepCaption { color: #334654; font-size: 12px; font-weight: 700; }
             QFrame#floatingPanel { background: #ffffff; border: 1px solid #d5dfe6; border-radius: 12px; }
-            QFrame#advancedPanel { background: #f4f7f9; border: 0; border-radius: 8px; }
             QFrame#settingSeparator { color: #e8edf1; background: #e8edf1; max-height: 1px; }
             QLineEdit, QDoubleSpinBox { color: #263640; background: #ffffff; border: 1px solid #bdcad4; border-radius: 8px; padding: 8px 10px; min-height: 20px; font-size: 12px; selection-background-color: #0a66c2; }
             QLineEdit { placeholder-text-color: #5f7280; }
@@ -126,8 +153,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             QPushButton#outlineButton { color: #0a5fb3; border-color: #8db5d8; padding: 8px 15px; }
             QPushButton#segmentButton { min-width: 112px; color: #435664; border: 1px solid #bdcad4; background: #ffffff; padding: 8px 18px; }
             QPushButton#segmentButton:checked { color: #ffffff; background: #0a66c2; border-color: #0a66c2; font-weight: 700; }
-            QPushButton#advancedToggle { color: #3e607b; border: 0; background: transparent; padding: 7px 0; text-align: left; font-weight: 600; }
-            QPushButton#advancedToggle:hover { color: #0a66c2; background: transparent; }
+            QPushButton#advancedButton { color: #3e607b; border: 1px solid #b8c5ce; background: #ffffff; padding: 7px 13px; border-radius: 8px; font-weight: 600; }
+            QPushButton#advancedButton:hover { color: #0a66c2; border-color: #82add2; background: #f2f7fb; }
             QLabel#advToggleBadge { color: #7b8c99; font-size: 11px; }
             QLabel#advZoneTitle { color: #4f606e; font-size: 11px; font-weight: 700; padding: 4px 0; }
             QLabel#advFieldLabel { color: #4f606e; font-size: 12px; }
@@ -327,124 +354,106 @@ class CompareWindow(QtWidgets.QMainWindow):
         config_layout.addWidget(self.charles_row)
         config_layout.addWidget(self._separator())
 
-        # ── 高级参数：折叠头部（chevron + 状态徽标） ──
-        toggle_row = QtWidgets.QHBoxLayout()
-        toggle_row.setSpacing(8)
-        self.advanced_toggle = QtWidgets.QPushButton("高级参数 ▸")
-        self.advanced_toggle.setObjectName("advancedToggle")
-        self.advanced_toggle.setCheckable(True)
-        self.advanced_toggle.setChecked(False)
-        self.advanced_toggle.toggled.connect(self._toggle_advanced)
-        self.advanced_badge = QtWidgets.QLabel("3 项超时 · 2 组专属选项")
-        self.advanced_badge.setObjectName("advToggleBadge")
-        toggle_row.addWidget(self.advanced_toggle)
-        toggle_row.addWidget(self.advanced_badge)
-        toggle_row.addStretch(1)
-        config_layout.addSpacing(12)
-        config_layout.addLayout(toggle_row)
-
-        # ── 高级参数：展开面板 ──
-        self.advanced_panel = QtWidgets.QFrame()
-        self.advanced_panel.setObjectName("advancedPanel")
-        advanced_layout = QtWidgets.QVBoxLayout(self.advanced_panel)
-        advanced_layout.setContentsMargins(14, 12, 14, 12)
-        advanced_layout.setSpacing(2)
-
-        def add_adv_title(text: str) -> None:
-            title = QtWidgets.QLabel(text)
-            title.setObjectName("advZoneTitle")
-            advanced_layout.addWidget(title)
-
-        def add_adv_timeout_row(label: QtWidgets.QLabel, spin: QtWidgets.QDoubleSpinBox) -> None:
-            row = QtWidgets.QHBoxLayout()
-            row.setSpacing(9)
-            label.setObjectName("advFieldLabel")
-            label.setFixedWidth(96)
-            spin.setFixedWidth(116)
-            unit = QtWidgets.QLabel("秒")
-            unit.setObjectName("advUnit")
-            row.addWidget(label)
-            row.addWidget(spin, 0, QtCore.Qt.AlignLeft)
-            row.addWidget(unit)
-            row.addStretch(1)
-            advanced_layout.addLayout(row)
-
+        # ── 高级参数：点击打开弹窗，避免在表单内纵向堆叠占空间 ──
         # 通用超时
-        add_adv_title("通用超时 · 适用于所选对比类型")
         self.postprocess_timeout_label = QtWidgets.QLabel("后处理超时")
         self.operation_timeout = self._seconds_spin(90.0, 1.0, 86400.0)
         self.start_timeout = self._seconds_spin(120.0, 1.0, 3600.0)
         self.close_timeout = self._seconds_spin(20.0, 1.0, 600.0)
-        add_adv_timeout_row(self.postprocess_timeout_label, self.operation_timeout)
-        add_adv_timeout_row(QtWidgets.QLabel("启动超时"), self.start_timeout)
-        add_adv_timeout_row(QtWidgets.QLabel("关闭超时"), self.close_timeout)
 
-        advanced_layout.addSpacing(8)
-
-        # 专属选项
-        add_adv_title("专属选项")
-        self.specific_none = QtWidgets.QLabel("贴图与高斯渲染无专属参数，直接使用上方通用超时。")
+        # 专属选项提示（贴图无专属参数时显示）
+        self.specific_none = QtWidgets.QLabel("贴图无专属参数，直接使用上方通用超时。")
         self.specific_none.setObjectName("advZoneHint")
-        advanced_layout.addWidget(self.specific_none)
+        self.specific_none.setWordWrap(True)
+
+        # 高斯渲染专属组
+        self.gaussian_quality = QtWidgets.QComboBox()
+        self.gaussian_quality.addItems(["快速", "标准", "高质量"])
+        self.gaussian_quality.setCurrentText("高质量")
+        self.gaussian_quality.setToolTip("选择高斯渲染质量等级，默认高质量")
+        self.gaussian_quality_label = QtWidgets.QLabel("质量等级")
+        self.gaussian_quality_label.setObjectName("advFieldLabel")
+        self.gaussian_group = QtWidgets.QWidget()
+        gaussian_layout = QtWidgets.QHBoxLayout(self.gaussian_group)
+        gaussian_layout.setContentsMargins(0, 0, 0, 0)
+        gaussian_layout.setSpacing(9)
+        gaussian_title = QtWidgets.QLabel("高斯渲染专属选项")
+        gaussian_title.setObjectName("advZoneTitle")
+        gaussian_layout.addWidget(gaussian_title)
+        gaussian_layout.addSpacing(8)
+        gaussian_layout.addWidget(self.gaussian_quality_label)
+        gaussian_layout.addWidget(self.gaussian_quality, 0, QtCore.Qt.AlignLeft)
+        gaussian_layout.addStretch(1)
 
         # AI重贴图专属组
-        self.ai_group = QtWidgets.QWidget()
-        ai_layout = QtWidgets.QVBoxLayout(self.ai_group)
-        ai_layout.setContentsMargins(0, 0, 0, 0)
-        ai_layout.setSpacing(2)
-        ai_title = QtWidgets.QLabel("AI重贴图专属选项")
-        ai_title.setObjectName("advZoneTitle")
-        ai_layout.addWidget(ai_title)
         self.ai_retexture_gaussian = QtWidgets.QCheckBox("开启高斯渲染")
         self.ai_retexture_gaussian.setChecked(False)
-        ai_layout.addWidget(self.ai_retexture_gaussian)
-        ai_texture_row = QtWidgets.QHBoxLayout()
-        ai_texture_row.setSpacing(9)
         self.ai_retexture_texture_first = QtWidgets.QCheckBox("先执行贴图")
         self.ai_retexture_texture_first.setChecked(True)
         self.texture_timeout_label = QtWidgets.QLabel("前置贴图超时")
         self.texture_timeout_label.setObjectName("advFieldLabel")
         self.texture_timeout = self._seconds_spin(90.0, 1.0, 3600.0)
-        self.texture_timeout.setFixedWidth(116)
+        self.ai_group = QtWidgets.QWidget()
+        ai_layout = QtWidgets.QVBoxLayout(self.ai_group)
+        ai_layout.setContentsMargins(0, 0, 0, 0)
+        ai_layout.setSpacing(6)
+        ai_title = QtWidgets.QLabel("AI重贴图专属选项")
+        ai_title.setObjectName("advZoneTitle")
+        ai_layout.addWidget(ai_title)
+        ai_layout.addWidget(self.ai_retexture_gaussian)
+        ai_texture_row = QtWidgets.QHBoxLayout()
+        ai_texture_row.setSpacing(9)
         ai_texture_row.addWidget(self.ai_retexture_texture_first)
         ai_texture_row.addWidget(self.texture_timeout_label)
         ai_texture_row.addWidget(self.texture_timeout, 0, QtCore.Qt.AlignLeft)
         ai_texture_row.addWidget(QtWidgets.QLabel("秒"))
         ai_texture_row.addStretch(1)
         ai_layout.addLayout(ai_texture_row)
-        advanced_layout.addWidget(self.ai_group)
 
         # 人体补全专属组
-        self.human_group = QtWidgets.QWidget()
-        human_layout = QtWidgets.QVBoxLayout(self.human_group)
-        human_layout.setContentsMargins(0, 0, 0, 0)
-        human_layout.setSpacing(2)
-        human_title = QtWidgets.QLabel("人体补全专属选项")
-        human_title.setObjectName("advZoneTitle")
-        human_layout.addWidget(human_title)
         self.human_body_hd_geometry = QtWidgets.QCheckBox("开启超清几何精度")
         self.human_body_hd_geometry.setChecked(False)
-        human_layout.addWidget(self.human_body_hd_geometry)
-        human_base_row = QtWidgets.QHBoxLayout()
-        human_base_row.setSpacing(9)
         self.base_wait_label = QtWidgets.QLabel("底座等待")
         self.base_wait_label.setObjectName("advFieldLabel")
         self.base_wait = self._seconds_spin(20.0, 0.0, 3600.0)
-        self.base_wait.setFixedWidth(116)
+        self.human_group = QtWidgets.QWidget()
+        human_layout = QtWidgets.QVBoxLayout(self.human_group)
+        human_layout.setContentsMargins(0, 0, 0, 0)
+        human_layout.setSpacing(6)
+        human_title = QtWidgets.QLabel("人体补全专属选项")
+        human_title.setObjectName("advZoneTitle")
+        human_layout.addWidget(human_title)
+        human_layout.addWidget(self.human_body_hd_geometry)
+        human_base_row = QtWidgets.QHBoxLayout()
+        human_base_row.setSpacing(9)
         human_base_row.addWidget(self.base_wait_label)
         human_base_row.addWidget(self.base_wait, 0, QtCore.Qt.AlignLeft)
         human_base_row.addWidget(QtWidgets.QLabel("秒"))
         human_base_row.addStretch(1)
         human_layout.addLayout(human_base_row)
-        advanced_layout.addWidget(self.human_group)
 
-        # 初始无对比类型被选中：仅显示“无专属参数”提示，隐藏两组成组选项
+        # 初始无对比类型被选中：仅显示“无专属参数”提示
         self.specific_none.setVisible(True)
         self.ai_group.setVisible(False)
         self.human_group.setVisible(False)
+        self.gaussian_group.setVisible(False)
 
-        self.advanced_panel.setVisible(False)
-        config_layout.addWidget(self.advanced_panel)
+        # 表单内只保留一个“高级参数”入口按钮 + 当前值摘要
+        self._advanced_dialog: Optional[QtWidgets.QDialog] = None
+        adv_row = QtWidgets.QHBoxLayout()
+        adv_row.setSpacing(8)
+        self.advanced_button = QtWidgets.QPushButton("高级参数...")
+        self.advanced_button.setObjectName("advancedButton")
+        self.advanced_button.setToolTip("打开高级参数设置弹窗（超时、专属选项）")
+        self.advanced_button.clicked.connect(self._open_advanced)
+        self.advanced_summary = QtWidgets.QLabel()
+        self.advanced_summary.setObjectName("advToggleBadge")
+        adv_row.addWidget(self.advanced_button)
+        adv_row.addWidget(self.advanced_summary, 1)
+        config_layout.addSpacing(12)
+        config_layout.addLayout(adv_row)
+        self._update_advanced_summary()
+
         layout.addWidget(config_panel)
 
         note = QtWidgets.QLabel("导入工程、后处理和返回首页均由自动化流程完成；运行过程中会锁定配置。")
@@ -626,12 +635,169 @@ class CompareWindow(QtWidgets.QMainWindow):
         edit.style().unpolish(edit)
         edit.style().polish(edit)
 
-    def _toggle_advanced(self, expanded: bool) -> None:
-        self.advanced_panel.setVisible(expanded)
-        self.advanced_toggle.setText("高级参数 ▾" if expanded else "高级参数 ▸")
-        self.advanced_badge.setText(
-            "展开 · 3 项超时 · 2 组专属选项" if expanded else "已收起 · 点击展开"
+    def _restore_settings(self) -> None:
+        """把上次保存的任务配置恢复到界面控件上。"""
+        data = _load_settings()
+        if not data:
+            return
+        operation = str(data.get("operation") or "")
+        if operation in self.operation_buttons:
+            self._select_operation(operation)
+        self.release_exe.setText(str(data.get("release_exe") or ""))
+        self.release_version.setText(str(data.get("release_version") or ""))
+        self.test_exe.setText(str(data.get("test_exe") or ""))
+        self.test_version.setText(str(data.get("test_version") or ""))
+        self.project_set.setText(str(data.get("project_set") or ""))
+        self.output_dir.setText(str(data.get("output_dir") or ""))
+        self.operation_timeout.setValue(float(data.get("operation_timeout") or self.operation_timeout.value()))
+        self.start_timeout.setValue(float(data.get("start_timeout") or self.start_timeout.value()))
+        self.close_timeout.setValue(float(data.get("close_timeout") or self.close_timeout.value()))
+        self.delete_package_check.setChecked(bool(data.get("delete_package")))
+        # 先填 Charles 路径再勾选，避免 _toggle_charles 在路径为空时弹出文件选择框
+        self.charles_exe.setText(str(data.get("charles_exe") or ""))
+        self.charles_check.setChecked(bool(data.get("charles")))
+        quality = str(data.get("gaussian_quality") or "高质量")
+        if self.gaussian_quality.findText(quality) >= 0:
+            self.gaussian_quality.setCurrentText(quality)
+        self.ai_retexture_gaussian.setChecked(bool(data.get("ai_retexture_gaussian")))
+        self.ai_retexture_texture_first.setChecked(bool(data.get("ai_retexture_texture_first", True)))
+        self.texture_timeout.setValue(float(data.get("texture_timeout") or self.texture_timeout.value()))
+        self.human_body_hd_geometry.setChecked(bool(data.get("human_body_hd_geometry")))
+        self.base_wait.setValue(float(data.get("base_wait") or self.base_wait.value()))
+        self._update_advanced_summary()
+        for edit in (self.release_exe, self.test_exe, self.project_set, self.output_dir, self.charles_exe):
+            self._update_path_state(edit, edit.text())
+
+    def _save_settings(self) -> None:
+        """把当前界面任务配置保存到本地，供下次启动恢复。"""
+        data = {
+            "operation": self._selected_operation or "",
+            "release_exe": self.release_exe.text().strip(),
+            "release_version": self.release_version.text().strip(),
+            "test_exe": self.test_exe.text().strip(),
+            "test_version": self.test_version.text().strip(),
+            "project_set": self.project_set.text().strip(),
+            "output_dir": self.output_dir.text().strip(),
+            "operation_timeout": self.operation_timeout.value(),
+            "start_timeout": self.start_timeout.value(),
+            "close_timeout": self.close_timeout.value(),
+            "delete_package": self.delete_package_check.isChecked(),
+            "charles": self.charles_check.isChecked(),
+            "charles_exe": self.charles_exe.text().strip(),
+            "gaussian_quality": self.gaussian_quality.currentText(),
+            "ai_retexture_gaussian": self.ai_retexture_gaussian.isChecked(),
+            "ai_retexture_texture_first": self.ai_retexture_texture_first.isChecked(),
+            "texture_timeout": self.texture_timeout.value(),
+            "human_body_hd_geometry": self.human_body_hd_geometry.isChecked(),
+            "base_wait": self.base_wait.value(),
+        }
+        _save_settings(data)
+
+    def _open_advanced(self) -> None:
+        """打开高级参数弹窗；保存后刷新表单摘要。"""
+        if self._advanced_dialog is None:
+            self._advanced_dialog = self._build_advanced_dialog()
+        self._sync_advanced_visibility()
+        if self._advanced_dialog.exec_() == QtWidgets.QDialog.Accepted:
+            self._update_advanced_summary()
+
+    def _build_advanced_dialog(self) -> QtWidgets.QDialog:
+        """构建高级参数弹窗：通用超时横向排一行，专属选项按类型显示。"""
+        dlg = QtWidgets.QDialog(self)
+        dlg.setWindowTitle("高级参数")
+        dlg.setModal(True)
+        dlg.setMinimumWidth(640)
+        outer = QtWidgets.QVBoxLayout(dlg)
+        outer.setContentsMargins(18, 16, 18, 14)
+        outer.setSpacing(12)
+
+        def zone_title(text: str) -> QtWidgets.QLabel:
+            title = QtWidgets.QLabel(text)
+            title.setObjectName("advZoneTitle")
+            return title
+
+        def timeout_field(label: QtWidgets.QLabel, spin: QtWidgets.QDoubleSpinBox) -> QtWidgets.QWidget:
+            field = QtWidgets.QWidget()
+            lay = QtWidgets.QHBoxLayout(field)
+            lay.setContentsMargins(0, 0, 0, 0)
+            lay.setSpacing(6)
+            label.setObjectName("advFieldLabel")
+            label.setFixedWidth(112)
+            spin.setFixedWidth(112)
+            unit = QtWidgets.QLabel("秒")
+            unit.setObjectName("advUnit")
+            lay.addWidget(label)
+            lay.addWidget(spin)
+            lay.addWidget(unit)
+            return field
+
+        outer.addWidget(zone_title("通用超时 · 适用于所选对比类型"))
+        timeout_row = QtWidgets.QHBoxLayout()
+        timeout_row.setSpacing(18)
+        timeout_row.addWidget(timeout_field(self.postprocess_timeout_label, self.operation_timeout))
+        timeout_row.addWidget(timeout_field(QtWidgets.QLabel("启动超时"), self.start_timeout))
+        timeout_row.addWidget(timeout_field(QtWidgets.QLabel("关闭超时"), self.close_timeout))
+        timeout_row.addStretch(1)
+        outer.addLayout(timeout_row)
+
+        outer.addSpacing(6)
+        outer.addWidget(zone_title("专属选项"))
+        outer.addWidget(self.specific_none)
+        outer.addWidget(self.gaussian_group)
+        outer.addWidget(self.ai_group)
+        outer.addWidget(self.human_group)
+
+        outer.addSpacing(6)
+        buttons = QtWidgets.QHBoxLayout()
+        buttons.addStretch(1)
+        cancel = QtWidgets.QPushButton("取消")
+        cancel.setObjectName("secondaryButton")
+        cancel.clicked.connect(dlg.reject)
+        ok = QtWidgets.QPushButton("保存")
+        ok.setObjectName("primaryButton")
+        ok.clicked.connect(dlg.accept)
+        buttons.addWidget(cancel)
+        buttons.addWidget(ok)
+        outer.addLayout(buttons)
+        return dlg
+
+    def _sync_advanced_visibility(self) -> None:
+        """按当前所选对比类型切换专属选项区可见性。"""
+        is_gaussian = self._selected_operation == "gaussian"
+        is_ai = self._selected_operation == "ai_retexture"
+        is_human = self._selected_operation == "human_body_completion"
+        self.specific_none.setVisible(not is_gaussian and not is_ai and not is_human)
+        self.gaussian_group.setVisible(is_gaussian)
+        self.ai_group.setVisible(is_ai)
+        self.human_group.setVisible(is_human)
+
+    def _update_advanced_summary(self) -> None:
+        """刷新表单内“高级参数”入口旁的当前值摘要（紧凑单行）。"""
+        if not hasattr(self, "advanced_summary"):
+            return
+
+        def fmt(value: float) -> str:
+            return f"{value:g}"
+
+        summary = "超时 {} / {} / {} 秒".format(
+            fmt(self.operation_timeout.value()),
+            fmt(self.start_timeout.value()),
+            fmt(self.close_timeout.value()),
         )
+        extra: list[str] = []
+        if self._selected_operation == "gaussian":
+            extra.append(f"质量{self.gaussian_quality.currentText()}")
+        elif self._selected_operation == "ai_retexture":
+            extra.append("高斯" + ("开" if self.ai_retexture_gaussian.isChecked() else "关"))
+            extra.append("先贴图" if self.ai_retexture_texture_first.isChecked() else "不先贴图")
+            extra.append(f"前置{fmt(self.texture_timeout.value())}秒")
+        elif self._selected_operation == "human_body_completion":
+            extra.append("超清" + ("开" if self.human_body_hd_geometry.isChecked() else "关"))
+            extra.append(f"底座{fmt(self.base_wait.value())}秒")
+        else:
+            extra.append("无专属参数")
+        summary += " · " + " · ".join(extra)
+        self.advanced_summary.setText(summary)
 
     def _toggle_charles(self, enabled: bool) -> None:
         """开启Charles开关：打开时展示路径行，未设置路径则弹出文件选择对话框。"""
@@ -670,11 +836,8 @@ class CompareWindow(QtWidgets.QMainWindow):
         else:
             self.postprocess_timeout_label.setText("贴图超时")
             self.operation_timeout.setValue(90.0)
-        is_ai = operation == "ai_retexture"
-        is_human = operation == "human_body_completion"
-        self.specific_none.setVisible(not is_ai and not is_human)
-        self.ai_group.setVisible(is_ai)
-        self.human_group.setVisible(is_human)
+        self._sync_advanced_visibility()
+        self._update_advanced_summary()
         self._set_status(f"已选择{self.operation_buttons[operation].text()}对比", "idle")
 
     def _set_step_state(self, step: int, state: str) -> None:
@@ -800,7 +963,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.operation_timeout,
             self.start_timeout,
             self.close_timeout,
-            self.advanced_toggle,
+            self.advanced_button,
+            self.gaussian_quality,
             self.ai_retexture_gaussian,
             self.ai_retexture_texture_first,
             self.texture_timeout,
@@ -852,6 +1016,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.open_output_button.setText("查看结果")
         self.open_output_button.setEnabled(False)
         self._stop_requested = False
+        self._save_settings()
         args = [
             "--release-exe",
             self.release_exe.text().strip(),
@@ -874,6 +1039,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             "--close-timeout",
             str(self.close_timeout.value()),
         ]
+        args.append("--gaussian-quality")
+        args.append(self.gaussian_quality.currentText())
         args.append("--texture-timeout")
         args.append(str(self.texture_timeout.value()))
         if not self.ai_retexture_texture_first.isChecked():
@@ -979,6 +1146,7 @@ class CompareWindow(QtWidgets.QMainWindow):
                 return
             self.stop_run()
             self._process.waitForFinished(2500)
+        self._save_settings()
         event.accept()
 
 

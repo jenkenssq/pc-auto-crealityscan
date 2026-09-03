@@ -8,6 +8,12 @@
       "type": "number",
       "default": 900,
       "description": "等待高斯渲染进度条出现和消失的总超时（秒），默认 15 分钟。"
+    },
+    "gaussian_quality": {
+      "type": "string",
+      "default": "高质量",
+      "enum": ["快速", "标准", "高质量"],
+      "description": "高斯渲染质量等级：快速(70,220)、标准(180,220)、高质量(290,220)，默认高质量。"
     }
   }
 }

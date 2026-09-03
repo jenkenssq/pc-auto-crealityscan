@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+import json
 import os
 import re
 import subprocess
@@ -18,6 +19,32 @@ _SPINNER_FRAMES = ("◐", "◓", "◑", "◒")
 
 
 _DISPLAY_FONT_PATH = Path(__file__).resolve().parent / "assets" / "fonts" / "IBMPlexSansSC-SemiBold.otf"
+
+_SETTINGS_DIR = Path(os.environ.get("LOCALAPPDATA") or (Path.home() / "AppData" / "Local")) / "Jens" / "后处理对比工具"
+_SETTINGS_FILE = _SETTINGS_DIR / "settings.json"
+
+
+def _load_settings() -> dict:
+    """读取上次任务配置；文件缺失或损坏时返回空字典。"""
+    try:
+        if _SETTINGS_FILE.is_file():
+            raw = json.loads(_SETTINGS_FILE.read_text(encoding="utf-8"))
+            return raw if isinstance(raw, dict) else {}
+    except (OSError, ValueError, TypeError):
+        pass
+    return {}
+
+
+def _save_settings(data: dict) -> None:
+    """把任务配置写入用户本地配置目录，保证下次打开可恢复。"""
+    try:
+        _SETTINGS_DIR.mkdir(parents=True, exist_ok=True)
+        _SETTINGS_FILE.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
 
 
 def _decode_output(data: bytes) -> str:
@@ -54,6 +81,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self._path_rows: list[QtWidgets.QWidget] = []
         self._build_ui()
         self._connect_process()
+        self._restore_settings()
         self._apply_mica()
 
     def _build_ui(self) -> None:
@@ -588,6 +616,52 @@ class CompareWindow(QtWidgets.QMainWindow):
         edit.style().unpolish(edit)
         edit.style().polish(edit)
 
+    def _restore_settings(self) -> None:
+        """把上次保存的任务配置恢复到界面控件上。"""
+        data = _load_settings()
+        if not data:
+            return
+        operation = str(data.get("operation") or "")
+        if operation in self.operation_buttons:
+            self._select_operation(operation)
+        self.release_exe.setText(str(data.get("release_exe") or ""))
+        self.release_version.setText(str(data.get("release_version") or ""))
+        self.test_exe.setText(str(data.get("test_exe") or ""))
+        self.test_version.setText(str(data.get("test_version") or ""))
+        self.project_set.setText(str(data.get("project_set") or ""))
+        self.output_dir.setText(str(data.get("output_dir") or ""))
+        self.operation_timeout.setValue(float(data.get("operation_timeout") or self.operation_timeout.value()))
+        self.start_timeout.setValue(float(data.get("start_timeout") or self.start_timeout.value()))
+        self.close_timeout.setValue(float(data.get("close_timeout") or self.close_timeout.value()))
+        self.ai_retexture_gaussian.setChecked(bool(data.get("ai_retexture_gaussian")))
+        self.ai_retexture_texture_first.setChecked(bool(data.get("ai_retexture_texture_first", True)))
+        self.texture_timeout.setValue(float(data.get("texture_timeout") or self.texture_timeout.value()))
+        self.human_body_hd_geometry.setChecked(bool(data.get("human_body_hd_geometry")))
+        self.base_wait.setValue(float(data.get("base_wait") or self.base_wait.value()))
+        for edit in (self.release_exe, self.test_exe, self.project_set, self.output_dir):
+            self._update_path_state(edit, edit.text())
+
+    def _save_settings(self) -> None:
+        """把当前界面任务配置保存到本地，供下次启动恢复。"""
+        data = {
+            "operation": self._selected_operation or "",
+            "release_exe": self.release_exe.text().strip(),
+            "release_version": self.release_version.text().strip(),
+            "test_exe": self.test_exe.text().strip(),
+            "test_version": self.test_version.text().strip(),
+            "project_set": self.project_set.text().strip(),
+            "output_dir": self.output_dir.text().strip(),
+            "operation_timeout": self.operation_timeout.value(),
+            "start_timeout": self.start_timeout.value(),
+            "close_timeout": self.close_timeout.value(),
+            "ai_retexture_gaussian": self.ai_retexture_gaussian.isChecked(),
+            "ai_retexture_texture_first": self.ai_retexture_texture_first.isChecked(),
+            "texture_timeout": self.texture_timeout.value(),
+            "human_body_hd_geometry": self.human_body_hd_geometry.isChecked(),
+            "base_wait": self.base_wait.value(),
+        }
+        _save_settings(data)
+
     def _toggle_advanced(self, expanded: bool) -> None:
         self.advanced_panel.setVisible(expanded)
         self.advanced_toggle.setText("高级参数 ▾" if expanded else "高级参数 ▸")
@@ -790,6 +864,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.open_output_button.setText("查看结果")
         self.open_output_button.setEnabled(False)
         self._stop_requested = False
+        self._save_settings()
         root = Path(__file__).resolve().parents[1]
         args = [
             "--release-exe",
@@ -909,6 +984,7 @@ class CompareWindow(QtWidgets.QMainWindow):
                 return
             self.stop_run()
             self._process.waitForFinished(2500)
+        self._save_settings()
         event.accept()
 
 
