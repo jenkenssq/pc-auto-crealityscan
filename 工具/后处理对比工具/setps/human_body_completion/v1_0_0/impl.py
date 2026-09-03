@@ -30,15 +30,36 @@ def _select_head_front_images(process_id: int, img_dir: Path, params: Dict[str, 
 
     file_name_edit = dialog.child_window(control_id=1148, class_name="Edit")
     file_name_edit.wait("exists visible enabled ready", timeout=dialog_timeout_sec)
-    file_name_edit.set_edit_text(str(img_dir))
-    sleep(click_delay_sec)
-
     open_button = dialog.child_window(control_id=1, class_name="Button")
     open_button.wait("exists visible enabled ready", timeout=dialog_timeout_sec)
+
+    # 只统计图片类文件（与弹窗右下角的过滤 *.png;*.jpg;*.jpeg 保持一致）
+    image_exts = {".png", ".jpg", ".jpeg", ".bmp", ".webp"}
+    images = sorted(
+        p for p in img_dir.iterdir() if p.is_file() and p.suffix.lower() in image_exts
+    )
+
+    # 单图场景：直接在文件名框填入该图片的完整路径并点“打开”即可导入，
+    # 完全绕开文件列表点击——只有一张图时点击列表中心可能落在空白处导致选不中。
+    # 该方式与“导入工程”Step 直接填入 project.obp 完整路径的成熟做法一致。
+    if len(images) == 1:
+        file_name_edit.set_edit_text(str(images[0]))
+        sleep(click_delay_sec)
+        open_button.click_input()
+        try:
+            dialog.wait_not("visible", timeout=3.0)
+            return
+        except (ElementNotFoundError, PywinautoTimeoutError, RuntimeError):
+            # 个别弹窗版本未直接关闭，回退到下面的“导航+全选”流程
+            pass
+
+    # 多图：文件名框填入目录路径并点“打开”会导航进入该目录；
+    # 再点击文件列表获取键盘焦点后 Ctrl+A 全选，最后点“打开”确认导入全部图片
+    file_name_edit.set_edit_text(str(img_dir))
+    sleep(click_delay_sec)
     open_button.click_input()
     sleep(click_delay_sec)
 
-    # 文件名框填入目录路径并点“打开”会导航进入该目录；点击文件列表获取键盘焦点后 Ctrl+A 全选，再点“打开”确认导入
     shell_view = dialog.child_window(class_name="SHELLDLL_DefView")
     shell_view.wait("exists visible enabled ready", timeout=dialog_timeout_sec)
     for attempt in range(3):

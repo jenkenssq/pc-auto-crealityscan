@@ -57,6 +57,7 @@ class PostprocessCharlesCliTests(unittest.TestCase):
         charles_path: str | None,
         release_ok: bool = True,
         charles_raise: bool = False,
+        delete_package: bool = False,
     ) -> tuple:
         with tempfile.TemporaryDirectory() as temp_dir:
             base = Path(temp_dir)
@@ -71,6 +72,8 @@ class PostprocessCharlesCliTests(unittest.TestCase):
             argv = ["--operation", "texture"]
             if charles_path is not None:
                 argv += ["--charles-exe", charles_path]
+            if delete_package:
+                argv += ["--delete-download-package"]
 
             with mock.patch.object(cli, "_prompt_exe") as prompt_exe, \
                     mock.patch.object(cli, "_prompt_version") as prompt_version, \
@@ -106,29 +109,62 @@ class PostprocessCharlesCliTests(unittest.TestCase):
 
                 code = cli.main(argv)
                 calls = [call.args[0] for call in run_one.call_args_list]
-                return code, calls, launch_charles, run_one
+                return code, calls, launch_charles, delete_packages, run_one
 
     def test_main_launches_charles_between_release_and_test(self) -> None:
-        code, calls, launch_charles, _ = self._run_main(r"C:\dummy\Charles.exe")
+        code, calls, launch_charles, delete_packages, _ = self._run_main(r"C:\dummy\Charles.exe")
         self.assertEqual(code, 0)
         self.assertEqual(calls, ["发布版", "测试版"])
         launch_charles.assert_called_once()
+        # 未勾选删除开关：不应删除下载包
+        delete_packages.assert_not_called()
         launched = launch_charles.call_args[0][0]
         self.assertEqual(str(launched), str(Path(r"C:\dummy\Charles.exe").expanduser().resolve()))
 
     def test_main_without_charles_exe_does_not_launch(self) -> None:
-        code, calls, launch_charles, _ = self._run_main(None)
+        code, calls, launch_charles, delete_packages, _ = self._run_main(None)
         self.assertEqual(code, 0)
         self.assertEqual(calls, ["发布版", "测试版"])
         launch_charles.assert_not_called()
+        # 未勾选删除开关：不应删除下载包
+        delete_packages.assert_not_called()
 
     def test_main_charles_launch_failure_aborts_before_test(self) -> None:
-        code, calls, launch_charles, _ = self._run_main(
+        code, calls, launch_charles, delete_packages, _ = self._run_main(
             r"C:\dummy\Charles.exe", release_ok=True, charles_raise=True
         )
         self.assertEqual(code, 1)
         self.assertEqual(calls, ["发布版"])
         self.assertEqual(launch_charles.call_count, 1)
+        # 未勾选删除开关：即使 Charles 启动失败，也不删除下载包
+        delete_packages.assert_not_called()
+
+    def test_main_delete_download_package_when_flag_set(self) -> None:
+        code, calls, launch_charles, delete_packages, _ = self._run_main(
+            None, delete_package=True
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["发布版", "测试版"])
+        launch_charles.assert_not_called()
+        delete_packages.assert_called_once()
+
+    def test_main_delete_download_package_independent_of_charles(self) -> None:
+        code, calls, launch_charles, delete_packages, _ = self._run_main(
+            r"C:\dummy\Charles.exe", delete_package=True
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, ["发布版", "测试版"])
+        launch_charles.assert_called_once()
+        delete_packages.assert_called_once()
+
+    def test_main_does_not_delete_when_release_fails(self) -> None:
+        code, calls, launch_charles, delete_packages, _ = self._run_main(
+            None, release_ok=False, delete_package=True
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(calls, ["发布版"])
+        launch_charles.assert_not_called()
+        delete_packages.assert_not_called()
 
 
 class PostprocessCharlesGuiTests(unittest.TestCase):
@@ -208,6 +244,42 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
                     args[args.index("--charles-exe") + 1],
                     str(charles_exe),
                 )
+
+    def test_start_run_passes_delete_download_package_flag_when_checked(self) -> None:
+        w = self.window
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = Path(temp_dir)
+            release_exe = base / "release.exe"
+            test_exe = base / "test.exe"
+            for p in (release_exe, test_exe):
+                p.write_bytes(b"x")
+            project_set = base / "proj"
+            project_set.mkdir()
+            output_dir = base / "out"
+            output_dir.mkdir()
+
+            w.release_exe.setText(str(release_exe))
+            w.release_version.setText("1.0-r")
+            w.test_exe.setText(str(test_exe))
+            w.test_version.setText("1.0-t")
+            w.project_set.setText(str(project_set))
+            w.output_dir.setText(str(output_dir))
+            w.operation_buttons["texture"].click()
+
+            # 默认不勾选：不应传 --delete-download-package
+            with mock.patch.object(w._process, "start") as start, \
+                    mock.patch.object(w._process, "waitForStarted", return_value=True):
+                w.start_run()
+                _, args = start.call_args[0]
+                self.assertNotIn("--delete-download-package", args)
+
+            # 勾选后：应传 --delete-download-package
+            w.delete_package_check.setChecked(True)
+            with mock.patch.object(w._process, "start") as start, \
+                    mock.patch.object(w._process, "waitForStarted", return_value=True):
+                w.start_run()
+                _, args = start.call_args[0]
+                self.assertIn("--delete-download-package", args)
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from engine.fps_stat_xlsx import (
     build_fps_rows,
-    round_half_up,
+    truncate_int,
     write_fps_stat_workbook,
 )
 from engine.logs import extract_fps_metrics_by_phase
@@ -37,11 +37,11 @@ class FpsStatPhaseExtractionTests(unittest.TestCase):
         self.assertEqual(block["preview_samples"], 1)
         self.assertEqual(block["scan_samples"], 7)
 
-    def test_round_half_up(self) -> None:
-        self.assertEqual(round_half_up(40.62), 41)
-        self.assertEqual(round_half_up(38.94), 39)
-        self.assertEqual(round_half_up(39.96), 40)
-        self.assertEqual(round_half_up(39.5), 40)
+    def test_truncate_int(self) -> None:
+        self.assertEqual(truncate_int(40.62), 40)
+        self.assertEqual(truncate_int(38.94), 38)
+        self.assertEqual(truncate_int(39.96), 39)
+        self.assertEqual(truncate_int(39.5), 39)
 
 
 class FpsStatModePlanTests(unittest.TestCase):
@@ -58,11 +58,29 @@ class FpsStatModePlanTests(unittest.TestCase):
         plan = fps_stat_mode_plan("P1", "USB")
         names = [name for name, _key in plan]
         self.assertEqual(
-            names[:4],
-            ["平行线", "单线", "交叉", "无标记点"],
+            names[:5],
+            ["平行线", "单线", "交叉", "无标记点-交叉线", "无标记点-平行线"],
         )
+        self.assertIn("p1.line_laser.no_marker.cross", [key for _, key in plan])
+        self.assertIn("p1.line_laser.no_marker.parallel", [key for _, key in plan])
         for size in ("大物体", "中物体", "小物体"):
             self.assertIn(size, names)
+
+    def test_pika_usb_includes_with_marker_line_laser_modes(self) -> None:
+        plan = fps_stat_mode_plan("pika", "USB")
+        names = [name for name, _key in plan]
+        self.assertEqual(
+            names[:4],
+            ["有标志点-标准", "有标志点-均衡", "有标志点-快速", "无标记点"],
+        )
+        self.assertIn("pika.line_laser.point_cloud.with_marker.standard", [key for _, key in plan])
+        self.assertIn("pika.line_laser.point_cloud.with_marker.balanced", [key for _, key in plan])
+        self.assertIn("pika.line_laser.point_cloud.with_marker.fast", [key for _, key in plan])
+        self.assertIn("pika.line_laser.point_cloud.no_marker", [key for _, key in plan])
+
+    def test_pika_wifi_excludes_with_marker_and_no_marker_line_laser(self) -> None:
+        keys = [key for _name, key in fps_stat_mode_plan("pika", "Wi-Fi")]
+        self.assertTrue(all("line_laser" not in key for key in keys))
 
     def test_fps_stat_build_task_model_uses_1000_frames_and_persists_metadata(self) -> None:
         model = build_task_model(
@@ -116,7 +134,7 @@ class FpsStatWorkbookTests(unittest.TestCase):
                 ws["G1"].value,
                 "Creality Raptor Pro WIFI（固件版本：1.4.9+wifi ：1.3.1）",
             )
-            self.assertEqual(ws["G3"].value, "平行线：41；39-41；40")
+            self.assertEqual(ws["G3"].value, "平行线：40；38-40；39")
             self.assertIsNone(ws["H1"].value)
             self.assertIsNone(ws["H3"].value)
 
@@ -137,8 +155,8 @@ class FpsStatWorkbookTests(unittest.TestCase):
             from openpyxl import load_workbook
 
             ws = load_workbook(output)["Sheet1"]
-            self.assertEqual(ws["G3"].value, "平行线：41；39-41；40")
-            self.assertEqual(ws["H3"].value, "平行线：41；39-41；40")
+            self.assertEqual(ws["G3"].value, "平行线：40；38-40；39")
+            self.assertEqual(ws["H3"].value, "平行线：40；38-40；39")
             self.assertIn("(USB) 固件版本：1.4.9", ws["H1"].value)
 
     def test_empty_mode_rows_are_skipped(self) -> None:

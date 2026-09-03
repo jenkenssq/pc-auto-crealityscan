@@ -254,6 +254,23 @@ def _fps_stat_candidates(
     return [preset for preset in presets if predicate(preset)]
 
 
+def _fps_stat_split_no_marker(candidates: Sequence[ScanPreset]) -> list[tuple[str, str]]:
+    """当无标记点存在“交叉线/平行线”两种 preset 时，拆成两行（顺序：交叉线、平行线）。
+
+    仅当所有候选都能归入交叉线或平行线时才拆分；否则保持单个“无标记点”。
+    """
+    result: list[tuple[str, str]] = []
+    for tail, label in (("cross", "交叉线"), ("parallel", "平行线")):
+        found = [p for p in candidates if p.key.rstrip(".").endswith(tail)]
+        if not found:
+            continue
+        found.sort(key=lambda p: (_fps_stat_preference_score(p), p.key))
+        result.append((f"无标记点-{label}", found[0].key))
+    if result and len(result) == len(candidates):
+        return result
+    return []
+
+
 def fps_stat_mode_plan(
     module_name: str,
     connection_type: str = "",
@@ -263,9 +280,13 @@ def fps_stat_mode_plan(
     """
     按业务规则挑选“帧率统计”任务要测试的模式，返回 [(业务短名, preset key), ...]。
 
-    顺序固定为 平行线/单线/交叉/无标记点/大物体/中物体/小物体/人脸/人体，
-    与 帧率统计模板.xlsx 的 G3/H3 行顺序一致；模组不存在的模式直接跳过（不占位）。
+    顺序固定为 平行线/单线/交叉/有标志点(标准/均衡/快速)/无标记点/
+    大物体/中物体/小物体/人脸/人体，与 帧率统计模板.xlsx 的 G3/H3 行顺序一致；
+    模组不存在的模式直接跳过（不占位）。
     - 无标记点仅存在于 USB 连接（connection_type=Wi-Fi 时被 list_module_presets 过滤掉）。
+    - 部分机型（P1/P1S 等）无标记点分“交叉线/平行线”两种，会各占一行：
+      “无标记点-交叉线”、“无标记点-平行线”。
+    - Pika 的“线激光-点云-有标志点”分 标准/均衡/快速 三种，各占一行。
     - 大/中/小物体默认取“几何”，人脸/人体取“纹理”（优先高精度）。
     """
     if module_name not in MODULE_PRESET_SOURCES:
@@ -286,10 +307,16 @@ def fps_stat_mode_plan(
     def textured(part: str) -> Any:
         return lambda p: _fps_stat_key_has(p, part, "texture") and "line_laser" not in p.key and "frame_points" not in p.key
 
+    def with_marker(tail: str) -> Any:
+        return lambda p: _fps_stat_key_has(p, "line_laser", "point_cloud", "with_marker", tail)
+
     rules: list[tuple[str, Any]] = [
         ("平行线", line("parallel")),
         ("单线", line("single")),
         ("交叉", line("cross")),
+        ("有标志点-标准", with_marker("standard")),
+        ("有标志点-均衡", with_marker("balanced")),
+        ("有标志点-快速", with_marker("fast")),
         ("无标记点", lambda p: "no_marker" in p.key),
         ("大物体", speckle("large")),
         ("中物体", speckle("medium")),
@@ -307,6 +334,10 @@ def fps_stat_mode_plan(
             exact = [p for p in candidates if p.key.rstrip(".").endswith("no_marker")]
             if exact:
                 candidates = exact
+            split = _fps_stat_split_no_marker(candidates)
+            if split:
+                plan.extend(split)
+                continue
         candidates.sort(key=lambda p: (_fps_stat_preference_score(p), p.key))
         plan.append((short_name, candidates[0].key))
     return plan

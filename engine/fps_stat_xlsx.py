@@ -26,15 +26,15 @@ COLUMN_WIDTHS = {
 }
 
 
-def round_half_up(value: Any) -> int:
-    """四舍五入到整数（Q5：四舍五入）。"""
+def truncate_int(value: Any) -> int:
+    """保留整数部分（直接去掉小数），不做四舍五入。"""
     try:
         number = float(value)
     except (TypeError, ValueError):
         return 0
     if math.isnan(number):
         return 0
-    return int(math.floor(number + 0.5))
+    return int(number)
 
 
 def _text(value: Any) -> str:
@@ -129,7 +129,7 @@ def _format_fps_line(
         return None
 
     def _cell(value: Any) -> str:
-        return "" if value is None or value == "" else str(round_half_up(value))
+        return "" if value is None or value == "" else str(truncate_int(value))
 
     return f"{mode_name}：{_cell(preview)}；{_cell(scan_min)}-{_cell(scan_max)}；{_cell(stable)}"
 

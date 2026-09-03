@@ -291,6 +291,21 @@ class CompareWindow(QtWidgets.QMainWindow):
         config_layout.addWidget(self._setting_row("输出目录", self.output_dir, self._browse_output_dir))
         config_layout.addWidget(self._separator())
 
+        # ── 发布后删除下载包（可选）：让用户选择是否在发布版完成后删除旧下载包 ──
+        delete_toggle_row = QtWidgets.QHBoxLayout()
+        delete_toggle_row.setSpacing(8)
+        self.delete_package_check = QtWidgets.QCheckBox("发布后删除下载包")
+        self.delete_package_check.setToolTip(
+            "勾选后，发布版全部后处理完成并关闭时删除本次操作对应的下载包，"
+            "使测试版运行时重新下载新版本下载包。"
+        )
+        self.delete_package_hint = QtWidgets.QLabel("测试版重新下载新包")
+        self.delete_package_hint.setObjectName("panelHint")
+        delete_toggle_row.addWidget(self.delete_package_check)
+        delete_toggle_row.addWidget(self.delete_package_hint)
+        delete_toggle_row.addStretch(1)
+        config_layout.addLayout(delete_toggle_row)
+
         # ── 开启Charles（可选）：发布版后处理完成后、测试版启动前自动启动抓包代理 ──
         charles_toggle_row = QtWidgets.QHBoxLayout()
         charles_toggle_row.setSpacing(8)
@@ -780,6 +795,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.test_version,
             self.project_set,
             self.output_dir,
+            self.delete_package_check,
             self.charles_check,
             self.operation_timeout,
             self.start_timeout,
@@ -868,6 +884,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             args.append("--human-body-hd-geometry")
         args.append("--base-wait")
         args.append(str(self.base_wait.value()))
+        if self.delete_package_check.isChecked():
+            args.append("--delete-download-package")
         if self.charles_check.isChecked():
             args.append("--charles-exe")
             args.append(self.charles_exe.text().strip())

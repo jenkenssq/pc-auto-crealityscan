@@ -49,30 +49,7 @@
         }
       ]
     },
-    {
-      "key": "raptor_x.line_laser.point_cloud.single",
-      "name": "线激光-点云-单线",
-      "aliases": ["单线", "line_laser_single"],
-      "actions": [
-        { "op": "touch", "pos": [90, 210] },
-        {
-          "op": "touch",
-          "template": {
-            "file": "tpl1772712168620.png",
-            "record_pos": [-0.469, -0.122],
-            "resolution": [1920, 1080]
-          }
-        },
-        {
-          "op": "touch",
-          "template": {
-            "file": "tpl1774410082997.png",
-            "record_pos": [-0.483, 0.019],
-            "resolution": [1920, 1080]
-          }
-        }
-      ]
-    },
+
     {
       "key": "raptor_x.line_laser.no_marker",
       "name": "线激光-无标记点",

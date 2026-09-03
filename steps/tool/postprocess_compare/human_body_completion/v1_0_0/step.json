@@ -2,7 +2,7 @@
   "id": "tool.postprocess_compare.human_body_completion",
   "name": "进行人体补全操作",
   "version": "1.0.0",
-  "description": "来自现有 Airtest 用例：进行人体补全操作（点击网格处理进入，点击AI人体补全，点击导入人体正面照片，在 Select Head Front Image 弹窗中全选 img 目录图片导入，可选开启超清几何精度，点击立即生成，点击确认，等待创建人体模型进度条消失，点击选择模型底座，固定等待 20 秒，点击预览，等待AI人体补全进度条消失，点击应用，截图留证）。",
+  "description": "来自现有 Airtest 用例：进行人体补全操作（点击网格处理进入，点击AI人体补全，点击导入人体正面照片，在 Select Head Front Image 弹窗中导入 img 目录图片（单张图片直接填完整路径导入，多张图片全选导入），可选开启超清几何精度，点击立即生成，点击确认，等待创建人体模型进度条消失，点击选择模型底座，固定等待 20 秒，点击预览，等待AI人体补全进度条消失，点击应用，截图留证）。",
   "params_schema": {
     "timeout_sec": {
       "type": "number",

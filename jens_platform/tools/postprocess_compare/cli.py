@@ -571,6 +571,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="开启Charles时指定的 Charles.exe 路径；发布版完成后、测试版启动前自动启动抓包代理",
     )
     parser.add_argument(
+        "--delete-download-package",
+        action="store_true",
+        help="发布版全部后处理完成后删除本次操作对应的下载包（触发测试版重新下载新包）",
+    )
+    parser.add_argument(
         "--test-only",
         action="store_true",
         help="只跑测试版：跳过发布版阶段与最终对比表，用于单独验证测试版（如自动下载）。",
@@ -727,7 +732,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
             )
-            if release_ok:
+            if release_ok and args.delete_download_package:
                 print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
                 _delete_download_packages(args.operation)
             if release_ok and args.charles_exe:

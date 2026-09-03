@@ -312,8 +312,23 @@ def _fps_stat_connection(case: dict, device_info: Optional[dict]) -> str:
 
 def _fps_stat_fallback_mode_name(preset_key: str) -> str:
     key = preset_key.lower()
+    if "with_marker" in key:
+        # Pika 等机型的“有标志点”线激光分 标准/均衡/快速 三种。
+        if key.rstrip(".").endswith("standard"):
+            return "有标志点-标准"
+        if key.rstrip(".").endswith("balanced"):
+            return "有标志点-均衡"
+        if key.rstrip(".").endswith("fast"):
+            return "有标志点-快速"
+        return "有标志点"
+    if "no_marker" in key:
+        # P1/P1S 等机型无标记点分“交叉线/平行线”两种。
+        if key.rstrip(".").endswith("cross"):
+            return "无标记点-交叉线"
+        if key.rstrip(".").endswith("parallel"):
+            return "无标记点-平行线"
+        return "无标记点"
     for token, name in (
-        ("no_marker", "无标记点"),
         ("face", "人脸"),
         ("body", "人体"),
         ("large", "大物体"),
