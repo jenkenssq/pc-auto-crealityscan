@@ -24,7 +24,11 @@ _SDK_TIMESTAMP_RE = re.compile(r"^\[(\d{2})/(\d{2}) (\d{2}:\d{2}:\d{2}\.\d+)\]")
 _SCAN_LOG_TIMESTAMP_RE = re.compile(r"\[(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2}:\d{2}\.\d+)\]")
 _SCAN_LOG_PREVIEW_RE = re.compile(r"obscan_scan_preview")
 _SCAN_LOG_SCAN_START_RE = re.compile(r"obscan_scan_start")
-_SCAN_LOG_SCAN_STOP_RE = re.compile(r"OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS")
+# 停止标志：优先 OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS；部分机型（如 Raptor Pro USB）
+# 只输出 `stop progress 1.000000`（进度到达 1.0 即完成），与扫描步骤的成功判定保持一致。
+_SCAN_LOG_SCAN_STOP_RE = re.compile(
+    r"OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS|stop progress 1\.0+", re.IGNORECASE
+)
 _DEVICE_INFO_JSON_ALIASES = {
     "camera_name": ("camera_name", "cameraName", "name", "camera"),
     "camera_serial_number": (
@@ -382,9 +386,20 @@ def _parse_scan_log_timestamp(line: str) -> Optional[datetime]:
         return None
 
 
-def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]], Optional[int]]:
+def _extract_scan_phase_blocks(
+    logs_root: str,
+    start_at: Optional[datetime] = None,
+    end_at: Optional[datetime] = None,
+) -> tuple[list[dict[str, object]], Optional[int]]:
     """
-    从最新 scan_log_*.txt 中解析“预览开始 → 扫描开始 → 扫描停止”的分组。
+    从 scan_log_*.txt 中解析“预览开始 → 扫描开始 → 扫描停止”的分组。
+
+    注意：扫描日志可能按大小滚动成多个 scan_log_*.txt，长任务（多次扫描）期间
+    会跨文件滚动，因此必须按文件名时间顺序读取全部日志，而不是只读“最新”一份，
+    否则只会拿到最后一个日志里的扫描，导致帧率统计缺行。
+
+    可选 start_at/end_at 用于只保留任务时间窗口内的扫描，避免把同一会话目录里
+    早于本次任务的扫描混进来。
 
     返回 (blocks, year_hint)，每个 block:
       {"preview_at": datetime|None, "scan_at": datetime|None, "stop_at": datetime|None}
@@ -395,16 +410,19 @@ def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]],
 
     scan_logs = sorted(
         (p for p in root.glob("scan_log_*.txt") if p.is_file()),
-        key=_safe_mtime,
-        reverse=True,
+        key=lambda p: p.name,
     )
     if not scan_logs:
         return [], None
 
     events: list[tuple[str, datetime]] = []
     year_hint: Optional[int] = None
-    try:
-        with scan_logs[0].open("r", encoding="utf-8", errors="ignore") as handle:
+    for fp in scan_logs:
+        try:
+            handle = fp.open("r", encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        with handle:
             for line in handle:
                 stamp = _parse_scan_log_timestamp(line)
                 if stamp is None:
@@ -417,8 +435,6 @@ def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]],
                     events.append(("scan_start", stamp))
                 elif _SCAN_LOG_SCAN_STOP_RE.search(line):
                     events.append(("stop", stamp))
-    except OSError:
-        return [], year_hint
 
     blocks: list[dict[str, object]] = []
     pending_preview: Optional[datetime] = None
@@ -426,6 +442,12 @@ def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]],
         if kind == "preview":
             pending_preview = stamp
         elif kind == "scan_start":
+            if start_at is not None and stamp < start_at:
+                pending_preview = None
+                continue
+            if end_at is not None and stamp > end_at:
+                pending_preview = None
+                continue
             blocks.append({"preview_at": pending_preview, "scan_at": stamp, "stop_at": None})
             pending_preview = None
         elif kind == "stop":
@@ -434,13 +456,20 @@ def _extract_scan_phase_blocks(logs_root: str) -> tuple[list[dict[str, object]],
     return blocks, year_hint
 
 
-def extract_fps_metrics_by_phase(logs_root: str) -> list[Dict[str, object]]:
+def extract_fps_metrics_by_phase(
+    logs_root: str,
+    start_at: Optional[datetime] = None,
+    end_at: Optional[datetime] = None,
+) -> list[Dict[str, object]]:
     """
     按“预览/扫描”阶段切分 SDK 帧率采样，返回每个模式一个阶段指标块。
 
     数据源：
-    - scan_log_*.txt：obscan_scan_preview / obscan_scan_start / SCANNING_STOP_SUCCESS 切分阶段；
+    - scan_log_*.txt：obscan_scan_preview / obscan_scan_start / 停止标志
+      （OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS 或 stop progress 1.000000）切分阶段；
     - ScannerStreamSDK.log：`frameset output rate=<值>fps` 帧率采样点。
+
+    可选 start_at/end_at 只统计任务时间窗口内的扫描阶段。
 
     每个 block:
       preview_at / scan_at / stop_at（ISO 或空串）
@@ -453,7 +482,7 @@ def extract_fps_metrics_by_phase(logs_root: str) -> list[Dict[str, object]]:
     if root is None or not root.exists():
         return []
 
-    blocks, year_hint = _extract_scan_phase_blocks(logs_root)
+    blocks, year_hint = _extract_scan_phase_blocks(logs_root, start_at=start_at, end_at=end_at)
     if not blocks:
         return []
 

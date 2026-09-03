@@ -357,7 +357,13 @@ def _fps_stat_module_and_modes(case: dict, connection_type: str) -> tuple[str, s
     return source.module_name, source.display_name, mode_names
 
 
-def _write_fps_stat_workbook(case: dict, run_dir: Path, device_info: Optional[dict]) -> str:
+def _write_fps_stat_workbook(
+    case: dict,
+    run_dir: Path,
+    device_info: Optional[dict],
+    started_at: str = "",
+    finished_at: str = "",
+) -> str:
     """帧率统计任务运行后，按模板把各模式预览/扫描/稳定帧率写入 帧率统计.xlsx。"""
     app = case.get("app") if isinstance(case.get("app"), dict) else {}
     logs_root = str(app.get("log_dir") or "").strip()
@@ -369,7 +375,18 @@ def _write_fps_stat_workbook(case: dict, run_dir: Path, device_info: Optional[di
     _module_key, module_display, mode_names = _fps_stat_module_and_modes(case, connection)
     if not mode_names:
         return ""
-    blocks = extract_fps_metrics_by_phase(logs_root)
+
+    start_dt: Optional[datetime] = None
+    end_dt: Optional[datetime] = None
+    try:
+        start_dt = datetime.fromisoformat(started_at) if started_at else None
+    except ValueError:
+        pass
+    try:
+        end_dt = datetime.fromisoformat(finished_at) if finished_at else None
+    except ValueError:
+        pass
+    blocks = extract_fps_metrics_by_phase(logs_root, start_at=start_dt, end_at=end_dt)
     if not blocks:
         return ""
 
@@ -440,7 +457,9 @@ def run_case(case_path: Optional[str] = None) -> int:
     fps_stat_xlsx_error = ""
     if is_fps_stat:
         try:
-            fps_stat_xlsx_path = _write_fps_stat_workbook(case, run_dir, device_info) or ""
+            fps_stat_xlsx_path = (
+                _write_fps_stat_workbook(case, run_dir, device_info, started_at=started_at, finished_at=finished_at) or ""
+            )
             if fps_stat_xlsx_path:
                 print(f"[JENS] fps_stat_xlsx={fps_stat_xlsx_path}")
         except Exception as exc:

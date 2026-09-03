@@ -2,12 +2,18 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 from engine.mouse import move_mouse_smooth
 
 
-PREVIEW_SUCCESS_KEY = b"OB_SCAN_MESSAGE_ID_SCANNING_PREVIEW_SUCCESS"
+# 预览成功判定关键字：满足任一即视为预览成功。
+# - OB_SCAN_MESSAGE_ID_SCANNING_PREVIEW_SUCCESS：多数机型/版本会输出的进程消息。
+# - change to preview success：部分版本（如 Raptor Pro USB）仅输出该行，不含上方进程消息。
+PREVIEW_SUCCESS_KEYS = (
+    b"OB_SCAN_MESSAGE_ID_SCANNING_PREVIEW_SUCCESS",
+    b"change to preview success",
+)
 
 
 def _num(params: Dict[str, Any], key: str, default: float) -> float:
@@ -132,9 +138,16 @@ def _wait_scan_log(log_root: Path, timeout_sec: float, poll_interval_sec: float)
     raise RuntimeError(f"未找到 scan_log_*.txt：{log_root}")
 
 
+def _first_key_in(buf: bytes, keys: Sequence[bytes]) -> Optional[bytes]:
+    for key in keys:
+        if key in buf:
+            return key
+    return None
+
+
 def _wait_log_contains(
-    log_root: Path, fp: Path, start_pos: int, key: bytes, timeout_sec: float, poll_interval_sec: float
-) -> Tuple[Path, int]:
+    log_root: Path, fp: Path, start_pos: int, keys: Sequence[bytes], timeout_sec: float, poll_interval_sec: float
+) -> Tuple[Path, int, bytes]:
     deadline = time.time() + timeout_sec
     current_fp = fp
     pos = start_pos
@@ -145,8 +158,9 @@ def _wait_log_contains(
             buf += data
             if len(buf) > 512 * 1024:
                 buf = buf[-512 * 1024 :]
-            if key in buf:
-                return current_fp, pos
+            matched = _first_key_in(buf, keys)
+            if matched is not None:
+                return current_fp, pos, matched
 
         candidate = _try_pick_scan_log(log_root)
         if _should_switch_scan_log(current_fp, candidate, pos) and candidate is not None:
@@ -158,10 +172,11 @@ def _wait_log_contains(
             data, pos = _read_new_bytes(current_fp, pos)
             if data:
                 buf = data[-512 * 1024 :]
-                if key in buf:
-                    return current_fp, pos
+                matched = _first_key_in(buf, keys)
+                if matched is not None:
+                    return current_fp, pos, matched
         time.sleep(max(0.2, poll_interval_sec))
-    raise RuntimeError(f"等待预览成功日志超时：{key!r} in {current_fp}")
+    raise RuntimeError(f"等待预览成功日志超时：{keys!r} in {current_fp}")
 
 
 def _reset_mouse_hover(params: Dict[str, Any], move_to, sleep) -> None:
@@ -240,17 +255,17 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
         start_pos = 0
         print(f"[JENS] preview log_file={current_fp}")
 
-    current_fp, end_pos = _wait_log_contains(
+    current_fp, end_pos, matched_key = _wait_log_contains(
         log_root,
         current_fp,
         start_pos,
-        PREVIEW_SUCCESS_KEY,
+        PREVIEW_SUCCESS_KEYS,
         max(0.2, timeout_sec),
         poll_interval_sec,
     )
-    print("[JENS] preview success log matched")
+    print(f"[JENS] preview success log matched: {matched_key.decode('utf-8', errors='ignore')}")
     return {
         "log_file": str(current_fp),
-        "success_key": PREVIEW_SUCCESS_KEY.decode("utf-8", errors="ignore"),
+        "success_key": matched_key.decode("utf-8", errors="ignore"),
         "end_pos": end_pos,
     }

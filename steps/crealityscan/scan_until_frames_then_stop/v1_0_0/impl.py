@@ -14,7 +14,12 @@ from engine.slide_rail_scan_motion import SlideRailScanMotion
 
 START_KEY = b"obscan_scan_start"
 START_FALLBACK_KEY = b"blae run begin"
+# 停止成功判定关键字：命中任一即视为停止成功。
+# - OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS：多数版本会输出的进程消息。
+# - stop progress 1.000000：部分版本/机型只输出 stop progress，进度到达 1.0 即完成。
 STOP_SUCCESS_KEY = b"OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS"
+STOP_PROGRESS_COMPLETE_KEY = b"stop progress 1.000000"
+STOP_SUCCESS_KEYS = (STOP_SUCCESS_KEY, STOP_PROGRESS_COMPLETE_KEY)
 FRAME_RE = re.compile(br"frame\s+(\d+)", re.IGNORECASE)
 TIMESTAMP_RE = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6})\]")
 FRAME_TEXT_RE = re.compile(r"\bframe\s+(\d+)\b", re.IGNORECASE)
@@ -539,9 +544,26 @@ def _summarize_trend_rows(rows: List[Dict[str, float]]) -> Dict[str, float]:
     }
 
 
+def _first_key_in(buf: bytes, keys: Tuple[bytes, ...]) -> Optional[bytes]:
+    for key in keys:
+        if key and key in buf:
+            return key
+    return None
+
+
 def _wait_log_contains(
-    log_root: Path, fp: Path, start_pos: int, key: bytes, timeout_sec: float, poll_interval_sec: float
+    log_root: Path,
+    fp: Path,
+    start_pos: int,
+    key: Any,
+    timeout_sec: float,
+    poll_interval_sec: float,
 ) -> Tuple[Path, int]:
+    # 兼容传入单个 bytes 或一组 bytes（任一命中即返回）。
+    if isinstance(key, bytes):
+        keys: Tuple[bytes, ...] = (key,)
+    else:
+        keys = tuple(bytes(k) for k in key)
     deadline = time.time() + timeout_sec
     current_fp = fp
     pos = start_pos
@@ -552,15 +574,20 @@ def _wait_log_contains(
             buf = b""
             if current_fp is not None:
                 print(f"[JENS] log_file={current_fp}")
-                print(f"[JENS][scan_debug] cleared_wait_log_buffer key={key!r} log={current_fp}")
+                print(f"[JENS][scan_debug] cleared_wait_log_buffer keys={keys!r} log={current_fp}")
         if data:
             buf += data
             if len(buf) > 512 * 1024:
                 buf = buf[-512 * 1024 :]
-            if key in data or key in buf:
+            matched = _first_key_in(buf, keys)
+            if matched is not None:
+                print(
+                    f"[JENS][scan_debug] stop success log matched: "
+                    f"{matched.decode('utf-8', errors='ignore')}"
+                )
                 return current_fp, pos
         time.sleep(max(0.2, poll_interval_sec))
-    raise RuntimeError(f"等待日志关键字超时：{key!r} in {current_fp}")
+    raise RuntimeError(f"等待日志关键字超时：{keys!r} in {current_fp}")
 
 
 def _scan_started_in_bytes(data: bytes, start_keys: Tuple[bytes, ...], allow_frame_fallback: bool = True) -> bool:
@@ -1120,9 +1147,9 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
         )
     touch(stop_pos)
 
-    # 6) 等待停止成功日志
+    # 6) 等待停止成功日志（任一标志命中即视为完成）
     log_fp, pos = _wait_log_contains(
-        log_root, log_fp, pos, STOP_SUCCESS_KEY, wait_stop_success_timeout_sec, poll_interval_sec
+        log_root, log_fp, pos, STOP_SUCCESS_KEYS, wait_stop_success_timeout_sec, poll_interval_sec
     )
     print("[JENS] stop success detected")
     return {

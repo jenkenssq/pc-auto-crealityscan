@@ -16,6 +16,9 @@ TASK_KIND_FPS_STAT = "帧率统计"
 CONNECTION_USB = "USB"
 CONNECTION_WIFI = "Wi-Fi"
 
+# 帧率统计任务：预览扫描后等待时长（秒），用于稳定采集预览帧率。
+FPS_STAT_PREVIEW_WAIT_SEC = 5.0
+
 # 帧率统计任务的业务模式顺序（与 帧率统计模板.xlsx 的 G3/H3 行顺序一致）。
 FPS_STAT_MODE_ORDER: tuple[str, ...] = (
     "平行线",
@@ -359,11 +362,14 @@ def _standard_scan_steps(
     target_frames: int,
     *,
     include_preview: bool = True,
+    preview_wait_sec: float = 0.0,
     slide_rail: bool = False,
 ) -> list[CaseStep]:
     steps: list[CaseStep] = []
     if include_preview:
         steps.append(_step("crealityscan.preview_scan", "预览扫描"))
+        if preview_wait_sec > 0:
+            steps.append(_sleep(preview_wait_sec))
     steps.append(
         _step(
             "crealityscan.scan_until_frames_then_stop",
@@ -504,6 +510,9 @@ def _build_steps(
                 _standard_scan_steps(
                     target_frames,
                     include_preview=not source.pika_waits,
+                    preview_wait_sec=(
+                        FPS_STAT_PREVIEW_WAIT_SEC if task_kind == TASK_KIND_FPS_STAT else 0.0
+                    ),
                     slide_rail=slide_rail,
                 )
             )

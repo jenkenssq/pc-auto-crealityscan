@@ -2,7 +2,7 @@
   "id": "crealityscan.scan_until_frames_then_stop",
   "name": "开始扫描并在帧数达标后完成",
   "version": "1.0.0",
-  "description": "点击开始扫描 → 解析 CrealityScan scan_log 中的 frame 计数 → 当 frame 严格大于阈值后点击完成/停止，并等待停止成功日志。",
+  "description": "点击开始扫描 → 解析 CrealityScan scan_log 中的 frame 计数 → 当 frame 达到阈值后点击完成/停止，并等待停止成功日志（OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS 或 stop progress 1.000000，任一命中即完成）。",
   "params_schema": {
     "target_frames": {
       "type": "number",

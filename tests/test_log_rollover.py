@@ -14,7 +14,7 @@ from engine.logs import extract_sdk_fps_stats
 from jens_runner_entry import _attach_sdk_fps_stats
 from steps.crealityscan.scan_until_frames_then_stop.v1_0_0 import impl as scan_impl
 from steps.crealityscan.preview_scan.v1_0_0.impl import (
-    PREVIEW_SUCCESS_KEY,
+    PREVIEW_SUCCESS_KEYS,
     _wait_log_contains as _wait_preview_log_contains,
 )
 from steps.crealityscan.scan_until_frames_then_stop.v1_0_0.impl import (
@@ -578,20 +578,21 @@ class LogRolloverTests(unittest.TestCase):
 
             def create_new_log() -> None:
                 time.sleep(0.2)
-                _write_text(second_log, PREVIEW_SUCCESS_KEY.decode("utf-8", errors="ignore"))
+                _write_text(second_log, PREVIEW_SUCCESS_KEYS[0].decode("utf-8", errors="ignore"))
                 _set_mtime(second_log, time.time())
 
             worker = threading.Thread(target=create_new_log, daemon=True)
             worker.start()
             try:
-                active_log, pos = _wait_preview_log_contains(
-                    logs_root, first_log, 0, PREVIEW_SUCCESS_KEY, timeout_sec=2, poll_interval_sec=0.05
+                active_log, pos, matched = _wait_preview_log_contains(
+                    logs_root, first_log, 0, PREVIEW_SUCCESS_KEYS, timeout_sec=2, poll_interval_sec=0.05
                 )
             finally:
                 worker.join(timeout=1)
 
             self.assertEqual(active_log, second_log)
             self.assertGreater(pos, 0)
+            self.assertEqual(matched, PREVIEW_SUCCESS_KEYS[0])
 
     def test_preview_wait_log_contains_drains_old_log_before_switch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -604,21 +605,41 @@ class LogRolloverTests(unittest.TestCase):
             _set_mtime(first_log, time.time() - 1)
 
             with first_log.open("ab") as stream:
-                stream.write(PREVIEW_SUCCESS_KEY + b"\n")
+                stream.write(PREVIEW_SUCCESS_KEYS[0] + b"\n")
             _write_text(second_log, "new log started\n")
             _set_mtime(second_log, time.time())
 
-            active_log, pos = _wait_preview_log_contains(
+            active_log, pos, matched = _wait_preview_log_contains(
                 logs_root,
                 first_log,
                 start_pos,
-                PREVIEW_SUCCESS_KEY,
+                PREVIEW_SUCCESS_KEYS,
                 timeout_sec=1,
                 poll_interval_sec=0.05,
             )
 
             self.assertEqual(active_log, first_log)
             self.assertEqual(pos, first_log.stat().st_size)
+            self.assertEqual(matched, PREVIEW_SUCCESS_KEYS[0])
+
+    def test_preview_success_matches_change_to_preview_success_keyword(self) -> None:
+        """部分版本（如 Raptor Pro USB）仅输出 change to preview success，也应判定预览成功。"""
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            logs_root = Path(tmp_dir) / "Logs"
+            session_dir = logs_root / "session_001"
+            log_file = session_dir / "scan_log_0001.txt"
+            _write_text(
+                log_file,
+                "[2026-09-03 09:40:55.007014][INFO ][4176][::0] change to preview success !\n",
+            )
+
+            active_log, pos, matched = _wait_preview_log_contains(
+                logs_root, log_file, 0, PREVIEW_SUCCESS_KEYS, timeout_sec=1, poll_interval_sec=0.05
+            )
+
+            self.assertEqual(active_log, log_file)
+            self.assertGreater(pos, 0)
+            self.assertEqual(matched, b"change to preview success")
 
 
 if __name__ == "__main__":

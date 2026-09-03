@@ -194,7 +194,7 @@ raptor, raptor x, raptor pro, S1, X1
 
 P1S 和 Pika 已接入生成器。其中 Pika 任务会自动插入稳定性等待步骤；`raptor`/`raptor x`/`raptor pro` 生成的“开流”任务不含“激活/置顶窗口”；P1、P1S、Pika、raptor x、raptor pro、S1、X1 支持 USB/Wi-Fi 连接方式过滤。新任务以生成器为准，手工 `tasks/*.json` 仅作样本或现场调试使用。
 
-任务类型支持三种：`开流`、`后处理`、`帧率统计`。其中 `帧率统计`（`TASK_KIND_FPS_STAT`）在第二步勾选「帧率统计任务」即自动按业务顺序挑选模式（平行线/单线/交叉/无标记点[仅USB]/大/中/小物体[几何]/人脸/人体[纹理]），第三步自动选中「帧率统计」并固定 1000 帧；每模式执行“预览 → 扫描至 1000 帧”，运行结束后由 `engine/fps_stat_xlsx.py` 按 `帧率统计模板.xlsx` 写入 A1:H3（WIFI→G 列、USB→H 列，回填不破坏另一列）。
+任务类型支持三种：`开流`、`后处理`、`帧率统计`。其中 `帧率统计`（`TASK_KIND_FPS_STAT`）在第二步勾选「帧率统计任务」即自动按业务顺序挑选模式（平行线/单线/交叉/无标记点[仅USB]/大/中/小物体[几何]/人脸/人体[纹理]），第三步自动选中「帧率统计」并固定 1000 帧；每模式执行“预览 → 等待5s → 扫描至 1000 帧”（预览后自动插入 `common.sleep` 5s，用于稳定采集预览帧率），运行结束后由 `engine/fps_stat_xlsx.py` 按 `帧率统计模板.xlsx` 写入 A1:H3（WIFI→G 列、USB→H 列，回填不破坏另一列）。
 
 ## 6. 标准扫描流程
 
@@ -259,7 +259,7 @@ P1S 使用独立 Step `crealityscan.configure_scan_params_p1s` 和 `p1s.*` key�
 多个步骤通过读取 CrealityScan `scan_log` 增量判断真实状态。运行前应设置 `app.log_dir`；未配置时部分步骤会回退到当前 Windows 用户的默认日志目录。
 
 - `crealityscan.preview_scan`：匹配预览成功日志后返回。
-- `crealityscan.scan_until_frames_then_stop`：确认扫描开始和有效帧，等待帧数达标，点击完成后继续等待 `OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS`。
+- `crealityscan.scan_until_frames_then_stop`：确认扫描开始和有效帧，等待帧数达标，点击完成后继续等待停止成功标志（`OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS` 或 `stop progress 1.000000`，任一命中即完成）。
 - `crealityscan.pause_switch_point_cloud_scan`：严格按顺序等待：
 
 ```text
