@@ -14,8 +14,11 @@ import sys
 from zmotion_controller import ZMotionController
 
 # 服务配置
-HOST = '127.0.0.1'
-PORT = 5000
+# 默认监听所有网卡，便于 Mac/局域网其他机器通过 Windows 局域网 IP 连接。
+# 可用环境变量覆盖：MOTION_SERVICE_HOST / MOTION_SERVICE_PORT
+# 例：set MOTION_SERVICE_HOST=192.168.1.20 && python motion_service.py
+HOST = os.environ.get('MOTION_SERVICE_HOST', '0.0.0.0')
+PORT = int(os.environ.get('MOTION_SERVICE_PORT', '5000'))
 BUFFER_SIZE = 4096
 
 class MotionService:
