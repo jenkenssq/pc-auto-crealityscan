@@ -30,7 +30,7 @@ Windows desktop (PyQt5)
 - 发布版和测试版 EXE 路径必须不同。
 - 输出目录不能位于原始工程集内部。
 - 运行过程中只能存在一个受控 CrealityScan 进程。
-- 工程导入完成以日志标记 `OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS` 为准。
+- 工程导入完成以日志标记 `OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS` 或 `i proj progress 1.000000`（任一命中）为准。
 - 当前不生成 HTML 报告，不做图像质量评分，也不自动判断优胜版本。
 - 本次 GUI 重构保持业务流程、字段顺序、中文文案和 CLI 参数映射不变。
 

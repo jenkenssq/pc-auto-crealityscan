@@ -5,7 +5,13 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 
-PROJECT_IMPORT_SUCCESS_KEY = b"OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS"
+# 任一命中即判定导入工程成功。
+PROJECT_IMPORT_SUCCESS_KEYS: Tuple[bytes, ...] = (
+    b"OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS",
+    b"i proj progress 1.000000",
+)
+# 兼容旧引用的主标识。
+PROJECT_IMPORT_SUCCESS_KEY = PROJECT_IMPORT_SUCCESS_KEYS[0]
 
 
 def _path_mtime(path: Path) -> float:
@@ -42,13 +48,21 @@ def _read_new_bytes(path: Path, position: int) -> Tuple[bytes, int]:
         return data, handle.tell()
 
 
+def _find_success_key(data: bytes, buffer: bytes) -> Optional[bytes]:
+    """在本次新读字节或累计缓冲中查找任一导入成功关键字，返回命中的关键字。"""
+    for key in PROJECT_IMPORT_SUCCESS_KEYS:
+        if key in data or key in buffer:
+            return key
+    return None
+
+
 def _wait_project_import_success(
     log_root: Path,
     baseline_log: Optional[Path],
     baseline_position: int,
     timeout_sec: float,
     poll_interval_sec: float,
-) -> Tuple[Path, float]:
+) -> Tuple[Path, float, bytes]:
     deadline = time.time() + timeout_sec
     current_log = baseline_log
     position = baseline_position
@@ -81,13 +95,14 @@ def _wait_project_import_success(
                 data = b""
             if data:
                 buffer = (buffer + data)[-512 * 1024 :]
-                if PROJECT_IMPORT_SUCCESS_KEY in data or PROJECT_IMPORT_SUCCESS_KEY in buffer:
+                matched = _find_success_key(data, buffer)
+                if matched is not None:
                     elapsed = round(time.time() - started, 3)
                     print(
-                        f"[JENS][import_project] success_marker={PROJECT_IMPORT_SUCCESS_KEY.decode()} "
+                        f"[JENS][import_project] success_marker={matched.decode()} "
                         f"log_file={current_log} elapsed_sec={elapsed}"
                     )
-                    return current_log, elapsed
+                    return current_log, elapsed, matched
         time.sleep(max(0.1, poll_interval_sec))
         now = time.time()
         if now - last_beat >= 30.0:
@@ -99,8 +114,9 @@ def _wait_project_import_success(
             last_beat = now
 
     raise RuntimeError(
-        f"等待导入工程成功日志超时：{PROJECT_IMPORT_SUCCESS_KEY.decode()}，"
-        f"log_file={current_log}，timeout_sec={timeout_sec}"
+        "等待导入工程成功日志超时："
+        + " / ".join(key.decode() for key in PROJECT_IMPORT_SUCCESS_KEYS)
+        + f"，log_file={current_log}，timeout_sec={timeout_sec}"
     )
 
 
@@ -169,7 +185,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     except (ElementNotFoundError, PywinautoTimeoutError, RuntimeError) as exc:
         raise RuntimeError(f"在工程选择窗口输入路径失败：{exc}") from exc
 
-    success_log, import_elapsed_sec = _wait_project_import_success(
+    success_log, import_elapsed_sec, success_marker = _wait_project_import_success(
         log_root,
         baseline_log,
         baseline_position,
@@ -180,7 +196,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "project_file_path": str(project_file),
         "open_method": open_method,
-        "success_marker": PROJECT_IMPORT_SUCCESS_KEY.decode(),
+        "success_marker": success_marker.decode(),
         "success_log_file": str(success_log),
         "import_elapsed_sec": import_elapsed_sec,
     }

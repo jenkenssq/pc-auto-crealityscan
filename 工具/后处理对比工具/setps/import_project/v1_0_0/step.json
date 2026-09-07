@@ -25,7 +25,7 @@
     "import_success_timeout_sec": {
       "type": "number",
       "default": 600,
-      "description": "等待 OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS 的超时秒数。"
+      "description": "等待导入工程成功日志（OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS 或 i proj progress 1.000000）的超时秒数。"
     },
     "poll_interval_sec": {
       "type": "number",
