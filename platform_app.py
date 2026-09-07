@@ -72,6 +72,16 @@ def _main() -> int:
 
         return int(run_case(sys.argv[2]))
 
+    if len(sys.argv) >= 2 and sys.argv[1] == "--stress-run":
+        from engine.stress_runner import main_stress_run
+
+        return int(main_stress_run(sys.argv[2:]))
+
+    if len(sys.argv) >= 2 and sys.argv[1] == "--stress-round":
+        from engine.stress_runner import main_stress_round
+
+        return int(main_stress_round(sys.argv[2:]))
+
     try:
         # 优先使用 PyQt5（你机器上已安装），避免 PyQt5/PySide2 混装导致 Qt 插件/DLL 冲突。
         from PyQt5.QtCore import QLibraryInfo  # type: ignore

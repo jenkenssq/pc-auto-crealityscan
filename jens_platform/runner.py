@@ -10,6 +10,8 @@ from PyQt5 import QtCore  # type: ignore
 
 _RUN_DIR_RE = re.compile(r"\\[JENS\\]\\s+run_dir=(.*)")
 _REPORT_RE = re.compile(r"\\[JENS\\]\\s+report=(.*)")
+_STRESS_RUN_DIR_RE = re.compile(r"\\[JENS\\]\\s+stress_run_dir=(.*)")
+_STRESS_SUMMARY_RE = re.compile(r"\\[JENS\\]\\s+stress_summary=(.*)")
 
 
 def _decode_process_output(raw: bytes) -> str:
@@ -36,11 +38,21 @@ class AirtestRunResult(QtCore.QObject):
         self._buf = ""
         self._run_dir = ""
         self._report = ""
+        self._stress_run_dir = ""
+        self._stress_summary = ""
         self._stop_requested = False
 
-    def start(self, project_root: Path, case_json_path: Path, extra_env: Optional[Dict[str, str]] = None) -> bool:
+    def start(
+        self,
+        project_root: Path,
+        case_json_path: Path,
+        extra_env: Optional[Dict[str, str]] = None,
+        argv: Optional[list[str]] = None,
+    ) -> bool:
         """
         使用当前程序的“runner 子命令”执行任务。
+
+        argv：自定义 CLI 参数（不含程序本体）。不传时默认为 --run-case <case_json_path>。
         """
         if self._proc.state() != QtCore.QProcess.NotRunning:
             return False
@@ -48,6 +60,8 @@ class AirtestRunResult(QtCore.QObject):
         self._buf = ""
         self._run_dir = ""
         self._report = ""
+        self._stress_run_dir = ""
+        self._stress_summary = ""
         self._stop_requested = False
 
         # Airtest CLI --log 的目录必须存在
@@ -64,12 +78,33 @@ class AirtestRunResult(QtCore.QObject):
 
         if getattr(sys, "frozen", False):
             program = str(project_root / "jens_runner_helper.exe")
-            args = ["--run-case", str(case_json_path)]
+            args = list(argv) if argv is not None else ["--run-case", str(case_json_path)]
         else:
             program = sys.executable
-            args = [str(project_root / "platform_app.py"), "--run-case", str(case_json_path)]
+            args = (
+                list(argv)
+                if argv is not None
+                else [str(project_root / "platform_app.py"), "--run-case", str(case_json_path)]
+            )
         self._proc.start(program, args)
         return True
+
+    @property
+    def stress_run_dir(self) -> str:
+        return self._stress_run_dir
+
+    @property
+    def stress_summary(self) -> str:
+        return self._stress_summary
+
+    def request_stop(self) -> None:
+        """
+        优雅停止：只标记停止意图，不终止子进程。
+
+        供压测模式使用——GUI 侧写入 stop-file 后调用本方法；编排子进程
+        轮询到标志后会在当前轮安全退出、落汇总再自行结束，`finished` 仍会触发。
+        """
+        self._stop_requested = True
 
     def stop(self, grace_ms: int = 2000) -> None:
         """
@@ -110,6 +145,12 @@ class AirtestRunResult(QtCore.QObject):
             m = _REPORT_RE.search(line)
             if m:
                 self._report = m.group(1).strip()
+            m = _STRESS_RUN_DIR_RE.search(line)
+            if m:
+                self._stress_run_dir = m.group(1).strip()
+            m = _STRESS_SUMMARY_RE.search(line)
+            if m:
+                self._stress_summary = m.group(1).strip()
 
     def _on_finished(self, exit_code: int, exit_status: QtCore.QProcess.ExitStatus) -> None:
         # 兜底：输出可能被拆分成多段，结束时再从缓存里扫一遍
@@ -120,6 +161,12 @@ class AirtestRunResult(QtCore.QObject):
             m = _REPORT_RE.search(line)
             if m:
                 self._report = m.group(1).strip()
+            m = _STRESS_RUN_DIR_RE.search(line)
+            if m:
+                self._stress_run_dir = m.group(1).strip()
+            m = _STRESS_SUMMARY_RE.search(line)
+            if m:
+                self._stress_summary = m.group(1).strip()
         ok = (exit_status == QtCore.QProcess.NormalExit) and (exit_code == 0)
         if self._stop_requested:
             reason = "stopped"

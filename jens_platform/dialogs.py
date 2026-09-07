@@ -2715,3 +2715,201 @@ class TaskEditDialog(QtWidgets.QDialog):
             show_error(self, "保存失败", str(e))
             return
         self.accept()
+
+
+class StressRunDialog(QtWidgets.QDialog):
+    """压测模式设置弹窗：选择任务、CrealityScan.exe、执行次数。"""
+
+    _SETTINGS_REL = Path("Jens") / "压测模式" / "settings.json"
+
+    def __init__(self, project_root: Path, parent=None):
+        super().__init__(parent)
+        self._project_root = Path(project_root)
+        self.selected_task: Optional[Path] = None
+        self.exe_path: str = ""
+        self.rounds: int = 50
+
+        self.setWindowTitle("压测模式")
+        self.setModal(True)
+        self.setMinimumWidth(680)
+
+        root = QtWidgets.QVBoxLayout(self)
+        root.setContentsMargins(16, 16, 16, 12)
+        root.setSpacing(10)
+
+        header = QtWidgets.QVBoxLayout()
+        title = QtWidgets.QLabel("压测模式")
+        title.setObjectName("dialogTitle")
+        desc = QtWidgets.QLabel(
+            "选择要压测的任务，指定 CrealityScan.exe 与执行次数。"
+            "失败/卡死轮次会自动截图、保存日志、杀进程重开并处理上报弹窗。"
+        )
+        desc.setObjectName("mutedText")
+        desc.setWordWrap(True)
+        header.addWidget(title)
+        header.addWidget(desc)
+        root.addLayout(header)
+
+        # 任务选择
+        task_box = QtWidgets.QFrame()
+        task_box.setStyleSheet(
+            "QFrame{background:#f6f9fd;border:1px solid #d5dfec;border-radius:9px;}"
+        )
+        task_layout = QtWidgets.QVBoxLayout(task_box)
+        task_head = QtWidgets.QHBoxLayout()
+        task_label = QtWidgets.QLabel("压测任务（单选）")
+        task_label.setStyleSheet("font-weight:700;")
+        task_head.addWidget(task_label)
+        task_head.addStretch(1)
+        self.lab_task_count = QtWidgets.QLabel("")
+        self.lab_task_count.setObjectName("mutedText")
+        task_head.addWidget(self.lab_task_count)
+        task_layout.addLayout(task_head)
+
+        self.list_tasks = QtWidgets.QListWidget()
+        self.list_tasks.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        task_layout.addWidget(self.list_tasks)
+        root.addWidget(task_box)
+
+        # exe 路径
+        exe_box = QtWidgets.QHBoxLayout()
+        exe_label = QtWidgets.QLabel("CrealityScan.exe")
+        exe_label.setStyleSheet("font-weight:700;")
+        exe_box.addWidget(exe_label)
+        self.edit_exe = QtWidgets.QLineEdit()
+        self.edit_exe.setPlaceholderText("选择 CrealityScan.exe（重开软件时使用）")
+        exe_box.addWidget(self.edit_exe, 1)
+        self.btn_browse = QtWidgets.QPushButton("浏览…")
+        self.btn_browse.setObjectName("secondaryBtn")
+        self.btn_browse.clicked.connect(self._browse_exe)
+        exe_box.addWidget(self.btn_browse)
+        root.addLayout(exe_box)
+
+        # 执行次数
+        rounds_box = QtWidgets.QHBoxLayout()
+        rounds_label = QtWidgets.QLabel("执行次数")
+        rounds_label.setStyleSheet("font-weight:700;")
+        rounds_box.addWidget(rounds_label)
+        self.spin_rounds = QtWidgets.QSpinBox()
+        self.spin_rounds.setRange(1, 100000)
+        self.spin_rounds.setValue(self.rounds)
+        self.spin_rounds.setFixedWidth(120)
+        rounds_box.addWidget(self.spin_rounds)
+        rounds_box.addStretch(1)
+        root.addLayout(rounds_box)
+
+        # 固定默认参数说明
+        hint = QtWidgets.QLabel(
+            "固定默认参数：卡死判定静默 180s ｜ 软件启动等待 120s ｜ 上报弹窗处理 40s"
+        )
+        hint.setObjectName("mutedText")
+        root.addWidget(hint)
+
+        # 按钮
+        btn_row = QtWidgets.QHBoxLayout()
+        btn_row.addStretch(1)
+        self.btn_cancel = QtWidgets.QPushButton("取消")
+        self.btn_cancel.setObjectName("secondaryBtn")
+        self.btn_cancel.clicked.connect(self.reject)
+        btn_row.addWidget(self.btn_cancel)
+        self.btn_start = QtWidgets.QPushButton("开始压测")
+        self.btn_start.setObjectName("primaryBtn")
+        self.btn_start.clicked.connect(self._start)
+        btn_row.addWidget(self.btn_start)
+        root.addLayout(btn_row)
+
+        self._load_tasks()
+        self._load_settings()
+        self._refresh_state()
+        self.list_tasks.itemSelectionChanged.connect(self._refresh_state)
+        self.edit_exe.textChanged.connect(self._refresh_state)
+        self.spin_rounds.valueChanged.connect(lambda _v: self._refresh_state())
+
+    # ---- 数据 ----
+    def _task_dir(self) -> Path:
+        return self._project_root / "tasks"
+
+    def _load_tasks(self) -> None:
+        files = [
+            p for p in self._task_dir().glob("*.json")
+            if p.is_file() and p.name.lower() != "_queue.json"
+        ]
+        files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+        for p in files:
+            item = QtWidgets.QListWidgetItem(p.stem)
+            item.setData(QtCore.Qt.UserRole, str(p))
+            item.setToolTip(str(p))
+            self.list_tasks.addItem(item)
+        self.lab_task_count.setText(f"共 {len(files)} 个任务")
+
+    def _settings_path(self) -> Path:
+        base = Path(os.environ.get("LOCALAPPDATA", str(Path.home())))
+        return base / self._SETTINGS_REL
+
+    def _load_settings(self) -> None:
+        try:
+            raw = json.loads(self._settings_path().read_text(encoding="utf-8"))
+        except Exception:
+            raw = {}
+        exe = str(raw.get("exe_path") or "").strip()
+        if exe:
+            self.edit_exe.setText(exe)
+        try:
+            rounds = int(raw.get("rounds") or 0)
+            if 1 <= rounds <= 100000:
+                self.spin_rounds.setValue(rounds)
+        except Exception:
+            pass
+
+    def _save_settings(self) -> None:
+        try:
+            path = self._settings_path()
+            path.parent.mkdir(parents=True, exist_ok=True)
+            payload = {"exe_path": self.edit_exe.text().strip(), "rounds": self.spin_rounds.value()}
+            path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+
+    # ---- 交互 ----
+    def _browse_exe(self) -> None:
+        current = self.edit_exe.text().strip()
+        start = str(Path(current).parent) if current else str(Path("C:/Program Files"))
+        fp, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "选择 CrealityScan.exe", start, "可执行文件 (*.exe)"
+        )
+        if fp:
+            self.edit_exe.setText(fp)
+
+    def _refresh_state(self) -> None:
+        has_task = bool(self.list_tasks.currentItem())
+        exe = self.edit_exe.text().strip()
+        exe_ok = bool(exe) and Path(exe).is_file() and Path(exe).name.lower() in {"crealityscan.exe", "crealityscan", "creality scan.exe"}
+        self.btn_start.setEnabled(has_task and exe_ok)
+        tip = []
+        if not has_task:
+            tip.append("请选择一个任务")
+        if not exe_ok:
+            tip.append("请选择有效的 CrealityScan.exe 路径")
+        self.btn_start.setToolTip("；".join(tip))
+
+    def _start(self) -> None:
+        item = self.list_tasks.currentItem()
+        if item is None:
+            return
+        task_path = Path(str(item.data(QtCore.Qt.UserRole)))
+        exe = self.edit_exe.text().strip()
+        rounds = self.spin_rounds.value()
+        if not task_path.is_file():
+            show_error(self, "无法开始压测", f"任务文件不存在：{task_path}")
+            return
+        if not exe or not Path(exe).is_file():
+            show_error(self, "无法开始压测", "请选择有效的 CrealityScan.exe 路径。")
+            return
+        if rounds < 1:
+            show_error(self, "无法开始压测", "执行次数必须大于等于 1。")
+            return
+        self.selected_task = task_path
+        self.exe_path = exe
+        self.rounds = rounds
+        self._save_settings()
+        self.accept()

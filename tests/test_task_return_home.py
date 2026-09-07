@@ -22,6 +22,11 @@ class TaskReturnHomeTests(unittest.TestCase):
         self.assertTrue(task_paths)
 
         for task_path in task_paths:
+            # 排除“压测”展开版基准任务（如 50 轮手工展开 JSON）：它是 A1-b
+            # 手工展开版（每轮显式内嵌 return_home），仅作压测验收数据，
+            # 不属常规任务，不适用“任务不内嵌 return_home”约定。
+            if "压测" in task_path.name:
+                continue
             with self.subTest(task=task_path.name):
                 payload = json.loads(task_path.read_text(encoding="utf-8"))
                 steps = payload.get("steps")

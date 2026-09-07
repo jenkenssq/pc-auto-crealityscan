@@ -425,16 +425,20 @@ def _write_fps_stat_workbook(
     )
 
 
-def run_case(case_path: Optional[str] = None) -> int:
+def run_case(case_path: Optional[str] = None, run_dir: Optional[str] = None) -> int:
     app_root = get_app_root()
     resource_root = get_resource_root()
     resolved_case_path = str(case_path or (resource_root / "cases" / "example_case.json"))
     case = load_json(resolved_case_path)
 
     case_name = str(case.get("name") or case.get("case_id") or "case")
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    run_dir = app_root / "artifacts" / f"{_safe_dir_name(case_name)}_{ts}"
-    run_dir.mkdir(parents=True, exist_ok=True)
+    if run_dir:
+        run_dir_path = Path(run_dir)
+    else:
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        run_dir_path = app_root / "artifacts" / f"{_safe_dir_name(case_name)}_{ts}"
+    run_dir_path.mkdir(parents=True, exist_ok=True)
+    run_dir = str(run_dir_path)
 
     _install_airtest_image_naming_patch()
     auto_setup(str(resource_root / "jens_runner.air" / "main.py"), logdir=str(run_dir / "airtest"))

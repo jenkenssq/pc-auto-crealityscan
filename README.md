@@ -24,6 +24,7 @@ Step 步骤库 -> Case/Task JSON 编排 -> Runner 串行执行 -> Artifacts 归�
 - 对预览、扫描停止和点云模式切换执行日志驱动的完成判定。
 - 采集扫描帧数、SDK/UI FPS、CPU、内存等指标，生成 JSON 结果和 HTML 报告。
 - 支持任务失败和队列完成邮件通知。
+- 支持压测模式：同一任务循环 N 轮，失败/卡死自动杀进程重开、处理日志上报弹窗（点取消），生成压测汇总报告并邮件通知。
 - 支持将部分 Airtest `.air` 脚本转换为 Step。
 - 源码态支持滑轨服务、独立控制台、位置 preset 和扫描联动。
 
@@ -344,13 +345,52 @@ JENS_SMTP_TIMEOUT_SEC=8
 
 平台支持任务失败和队列完成通知。`.env` 已加入 `.gitignore`，通常包含凭证，不应提交；打包前必须确认构建机上的 `.env` 适合分发。
 
-## 12. 导入 Airtest .air
+## 12. 压测模式
+
+用于对 CrealityScan 执行“同一任务反复 N 轮”的稳定性压测。每轮独立归档，
+失败/卡死自动**强杀进程 → 重开软件 → 处理“软件意外退出”上报弹窗（点取消）→ 进入下一轮**。
+
+### 12.1 入口
+
+- 界面：顶栏 **压测模式** 按钮 → 选择任务（`tasks/` 单选）+ `CrealityScan.exe` + 执行次数。
+- 命令行：
+
+  ```powershell
+  python platform_app.py --stress-run ^
+    --case "tasks/Raptor Pro无标志点50次后处理压测.json" ^
+    --exe "C:/Program Files/Creality/CrealityScan.exe" ^
+    --rounds 50
+  ```
+
+### 12.2 行为约定
+
+- 选中任务完整跑一遍 = 1 轮；轮末由执行器自动 `return_home`，任务 JSON 不内嵌。
+- 普通失败或卡死：本轮记失败（截图+日志+报告）→ 强杀进程树 → 重开 → 下一轮。
+- 卡死判定：CrealityScan 日志无新行 + 轮次进程无心跳，静默超过 `--freeze-timeout`
+  （默认 180s）才判卡死。
+- “软件意外退出”上报弹窗点 **取消**：pywinauto 按钮“取消/Cancel”优先，
+  Airtest 模板 `jens_platform/stress/templates/cancel_btn.png` 兜底，找不到则截图留证。
+- 中途可停止：当前轮完整跑完后不再启动下一轮（停止不打断当前轮），并照常生成
+  汇总报告（标记“已停止”）。
+
+### 12.3 产物
+
+```text
+artifacts/<任务名>_压测_<时间戳>/
+├─ 压测汇总.json
+├─ 压测汇总.html
+├─ round01/ ... roundNN/      # 每轮独立 result.json + report.html + 截图/日志
+```
+
+汇总字段与统计口径、通知、默认参数见 `docs/平台压测模式方案/压测模式使用说明.md`。
+
+## 13. 导入 Airtest .air
 
 “导入.air”会解析旧脚本，生成 Step 目录、`step.json`、`impl.py` 和模板资源。当前主要支持 `touch`、`wait`、`swipe`、`sleep`、`Template`。
 
 导入后仍需检查坐标、模板阈值、超时、异常信息和日志就绪条件。转换成功不等于 Step 已通过稳定性验收。
 
-## 13. 目录结构
+## 14. 目录结构
 
 ```text
 .
@@ -359,8 +399,9 @@ JENS_SMTP_TIMEOUT_SEC=8
 ├─ jens_runner_entry.py       # Runner 主逻辑
 ├─ jens_runner_helper.py      # 安装态 Runner
 ├─ jens_runtime.py            # 源码态/安装态路径
-├─ engine/                    # 执行、日志、窗口、报告、IO
-├─ jens_platform/             # Qt UI、任务、通知、Step 导入
+├─ engine/                    # 执行、日志、窗口、报告、IO、压测编排
+├─ jens_platform/             # Qt UI、任务、通知、Step 导入、压测弹窗
+├─ jens_platform/stress/      # 压测模板（取消按钮 cancel_btn.png）
 ├─ jens_runner.air/           # Airtest CLI 入口
 ├─ steps/                     # 版本化 Step 库
 ├─ cases/                     # Case；含 user/ 和 _generated/
@@ -383,7 +424,7 @@ JENS_SMTP_TIMEOUT_SEC=8
 
 `steps/crealityscan/set_scan_params_speckle_medium_geometry` 已清空 `id/version`，属于废弃 Step，不会被发现。
 
-## 14. 打包
+## 15. 打包
 
 安装 PyInstaller 后构建 one-folder 目录版：
 
@@ -404,7 +445,7 @@ Spec 生成 `jens_pc_app.exe` 和 `jens_runner_helper.exe`，并收集 `steps/`�
 
 分发时必须保留整个 `jens_pc_app/` 目录，不能只复制 EXE。`用例仓库/`、`web--gaizao/` 和 `滑轨/` 当前不在 Spec 中。
 
-## 15. 测试与校验
+## 16. 测试与校验
 
 ```powershell
 python -m unittest discover -s tests -v
@@ -426,13 +467,13 @@ python -c "from pathlib import Path; from jens_platform.step_registry import sca
 4. 最后一个参数块后没有多余“新建扫描”。
 5. 在目标分辨率和真实 CrealityScan 版本上完成冒烟测试。
 
-## 16. Web 改造状态
+## 17. Web 改造状态
 
 `web--gaizao/` 是“中心 Web 平台 + 用户浏览器 + 用户本地精简 Agent”的设计文档集，当前没有实现代码，也未替代 Qt 平台。入口见 [web--gaizao/README.md](web--gaizao/README.md)。
 
 账号权限、共享任务库、本地 Agent、任务下发、进度日志、执行记录和紧急停止均属于规划能力，不能按当前 README 的命令直接使用。
 
-## 17. 维护入口
+## 18. 维护入口
 
 - 新增动作：新建 `steps/<domain>/<name>/v1_0_0/` 插件。
 - 新增扫描参数：维护对应 `presets.json` 和模板。
@@ -444,7 +485,7 @@ python -c "from pathlib import Path; from jens_platform.step_registry import sca
 
 相关背景资料见 [docs/项目技术框架说明.md](docs/项目技术框架说明.md)、[docs/项目执行流程图.svg](docs/项目执行流程图.svg)。其中历史文档的步骤数量与依赖清单可能未同步，当前盘点以本 README 和代码为准。
 
-## 18. 当前限制
+## 19. 当前限制
 
 - UI 自动化强依赖分辨率、缩放、窗口布局、模板和 CrealityScan 版本。
 - 日志格式或目录变化会导致日志驱动 Step 超时。

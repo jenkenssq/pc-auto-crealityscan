@@ -89,6 +89,8 @@ extra_datas = [
     (str(project_root / "tasks"), "tasks"),
     (str(project_root / "docs"), "docs"),
     (str(project_root / "jens_runner.air"), "jens_runner.air"),
+    # 压测模式：日志上报弹窗“取消”按钮模板（cancel_btn.png）
+    (str(project_root / "jens_platform" / "stress"), "jens_platform/stress"),
 ]
 
 if (project_root / "config").exists():

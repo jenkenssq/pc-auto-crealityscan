@@ -441,6 +441,47 @@ class NotificationDispatcher(QtCore.QObject):
             attachments.append((report, report.name))
         self._send_async(subject, body, attachments, f"工具通知[{tool_name}]")
 
+    def send_stress_summary_email(self, summary: TaskRunSummary) -> None:
+        """压测整体结束后的汇总邮件（通过/存在失败）。"""
+        label_prefix = self._settings.label.strip()
+        if label_prefix:
+            subject = f"{label_prefix}-压测汇总"
+        else:
+            subject = f"压测汇总通知 - {summary.task_json_name}"
+        body = self._build_stress_summary_body(summary)
+        attachments: list[tuple[Path, str]] = []
+        if summary.report_path:
+            report_path = Path(summary.report_path)
+            if report_path.is_file():
+                attachments.append((report_path, _attachment_name(summary.task_json_name, report_path)))
+        self._send_async(subject, body, attachments, f"压测汇总[{summary.task_json_name}]")
+
+    def _build_stress_summary_body(self, summary: TaskRunSummary) -> str:
+        counts = {}
+        status_text = _status_text(summary.status)
+        pass_rate = ""
+        try:
+            if summary.run_dir:
+                raw = json.loads((Path(summary.run_dir) / "压测汇总.json").read_text(encoding="utf-8"))
+                counts = (raw.get("counts") if isinstance(raw, dict) else {}) or {}
+                pass_rate = f"{raw.get('pass_rate') or ''}%"
+        except Exception:
+            pass
+        lines = [
+            "压测汇总",
+            "",
+            f"任务: {summary.task_json_name}",
+            f"状态: {status_text}",
+            f"总轮次: {counts.get('total_rounds', '-')}",
+            f"通过: {counts.get('passed', '-')}",
+            f"失败: {counts.get('failed', '-')}",
+            f"卡死: {counts.get('frozen', '-')}",
+            f"通过率: {pass_rate or '-'}",
+            f"报告路径: {summary.report_path or '-'}",
+            f"产物目录: {summary.run_dir or '-'}",
+        ]
+        return "\n".join(lines)
+
     def _send_async(
         self,
         subject: str,

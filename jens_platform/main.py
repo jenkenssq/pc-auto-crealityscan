@@ -5,6 +5,7 @@ import os
 import socket
 import subprocess
 import sys
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Callable, Optional
@@ -27,6 +28,7 @@ from jens_platform.dialogs import (
     EmailSettingsDialog,
     PointDistanceDialog,
     PresetPickerDialog,
+    StressRunDialog,
     TargetFramesDialog,
     SleepSecondsDialog,
     RunFinishedDialog,
@@ -252,6 +254,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self._runner.output.connect(self._append_output)
         self._runner.finished.connect(self._on_run_finished)
         self._stop_pending = False
+        self._stress_mode = False
+        self._stress_task: Optional[Path] = None
+        self._stress_exe = ""
+        self._stress_rounds = 0
+        self._stress_stop_file: Optional[Path] = None
         self._notification_dispatcher = NotificationDispatcher(project_root, self)
         self._notification_dispatcher.status.connect(self._on_notification_status)
 
@@ -686,6 +693,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_run_top.setObjectName("primaryBtn")
         self.btn_run_top.clicked.connect(self._run_case)
         top.addWidget(self.btn_run_top)
+        self.btn_stress_top = QtWidgets.QPushButton("压测模式")
+        self.btn_stress_top.setObjectName("secondaryBtn")
+        self.btn_stress_top.setToolTip("压测模式：选择任务 + CrealityScan.exe + 执行次数，失败/卡死自动杀进程重开")
+        self.btn_stress_top.clicked.connect(self._run_stress_case)
+        top.addWidget(self.btn_stress_top)
         root.addWidget(top_bar)
 
         self.act_run = QtWidgets.QAction("运行", self)
@@ -1021,6 +1033,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.act_stop.setEnabled(running and not stopping)
         self.btn_run_top.setEnabled(not running)
         self.btn_stop_top.setEnabled(running and not stopping)
+        self.btn_stress_top.setEnabled(not running)
         for control in (
             self.btn_create_task,
             self.btn_open_task_lib,
@@ -2117,6 +2130,65 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusBar().showMessage("运行中…")
         return True
 
+    def _run_stress_case(self) -> None:
+        """压测模式：选择任务 + exe + 次数，启动压测编排子进程。"""
+        if hasattr(self, "act_run") and not self.act_run.isEnabled():
+            show_error(self, "无法运行压测", "当前正在运行中，请先停止或等待结束。")
+            return
+        dlg = StressRunDialog(self.project_root, parent=self)
+        if dlg.exec_() != QtWidgets.QDialog.Accepted:
+            return
+        task_path = dlg.selected_task
+        exe_path = dlg.exe_path
+        rounds = dlg.rounds
+        if task_path is None or not task_path.is_file():
+            show_error(self, "无法运行压测", "任务文件不存在。")
+            return
+
+        self._stop_pending = False
+        self._stress_mode = True
+        self._stress_task = task_path
+        self._stress_exe = exe_path
+        self._stress_rounds = rounds
+
+        self.text_output.clear()
+        if hasattr(self, "table_results"):
+            self._clear_results_table()
+        if hasattr(self, "tabs"):
+            self.tabs.setCurrentWidget(self.text_output)
+
+        self._refresh_device_connection()
+        extra_env = {
+            "JENS_DEVICE_CAMERA_NAME": self._device_info.get("camera_name", ""),
+            "JENS_DEVICE_CAMERA_SN": self._device_info.get("camera_serial_number", ""),
+            "JENS_DEVICE_CONNECTION_TYPE": self._device_info.get("camera_connection_type", ""),
+            "JENS_DEVICE_FIRMWARE_VERSION": self._device_info.get("camera_firmware_version", ""),
+        }
+        stop_file = self._stress_stop_file_path()
+        argv = [
+            str(self.project_root / "platform_app.py"),
+            "--stress-run",
+            "--case",
+            str(task_path),
+            "--exe",
+            exe_path,
+            "--rounds",
+            str(rounds),
+            "--stop-file",
+            str(stop_file),
+        ]
+        started = self._runner.start(self.project_root, task_path, extra_env=extra_env, argv=argv)
+        if not started:
+            self._stress_mode = False
+            self._set_run_ui_state("idle", "运行器忙，请稍后重新运行。")
+            self.statusBar().showMessage("运行器忙，稍后重试")
+            return
+        self._append_output(
+            f"\n[UI] start stress task={task_path} exe={exe_path} rounds={rounds}\n"
+        )
+        self._set_run_ui_state("running", f"压测模式：共 {rounds} 轮，失败/卡死自动杀进程重开。")
+        self.statusBar().showMessage(f"压测运行中（{rounds} 轮）…")
+
     def _run_case(self) -> None:
         # 运行逻辑：按“任务栏”的顺序串行执行（任务栏顺序即队列顺序）
         paths = self._task_paths_in_list_order() if hasattr(self, "list_tasks") else []
@@ -2137,6 +2209,21 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self._stop_pending = True
 
+        if self._stress_mode:
+            # 压测：优雅停止。写入 stop-file，编排子进程轮询到后
+            # 当前轮安全退出 -> 落汇总 -> 自行结束（不在此强杀）。
+            if self._stress_stop_file is not None:
+                try:
+                    self._stress_stop_file.parent.mkdir(parents=True, exist_ok=True)
+                    self._stress_stop_file.write_text("stop", encoding="utf-8")
+                except OSError as exc:
+                    print(f"[UI][WARN] 写入压测停止标志失败：{exc}")
+            self._runner.request_stop()
+            self._set_run_ui_state("stopping", "已请求压测停止，等待当前轮安全退出。")
+            self.statusBar().showMessage("压测停止中（等待当前轮结束）…")
+            self._append_output("\n[UI] stress stop requested（等待当前轮安全退出）\n")
+            return
+
         # 停止时清空队列，避免停止后继续跑下一个任务
         self._task_queue = []
         self._task_queue_total = 0
@@ -2156,6 +2243,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.text_output.moveCursor(QtGui.QTextCursor.End)
 
     def _on_run_finished(self, ok: bool, run_dir: str, report: str, reason: str) -> None:
+        if self._stress_mode:
+            self._on_stress_run_finished(ok, reason)
+            return
         # runner 输出解析失败时（常见：编码导致中文路径丢失），兜底取 artifacts 下最新目录
         # 但“停止”场景下可能拿到上一次运行的产物，避免误导则不做兜底推断。
         if reason != "stopped" and (not run_dir or not report):
@@ -2224,6 +2314,85 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # 按你的要求：完成后弹窗告诉用户产物目录/报告路径
         RunFinishedDialog(ok=ok, run_dir=self._last_run_dir, report=self._last_report, parent=self, reason=reason).exec_()
+
+    def _on_stress_run_finished(self, ok: bool, reason: str) -> None:
+        """压测编排子进程结束后：汇总展示 + 结果通知。"""
+        stress_run_dir = getattr(self._runner, "stress_run_dir", "") or ""
+        stress_summary = getattr(self._runner, "stress_summary", "") or ""
+        if reason != "stopped" and not stress_run_dir:
+            # 输出解析失败兜底：取 artifacts 下最新“_压测_”目录
+            stress_run_dir = self._infer_latest_stress_artifact()
+
+        self._last_run_dir = stress_run_dir or ""
+        self._last_report = stress_summary or ""
+        self._append_output(f"\n[UI] stress finished ok={ok} reason={reason}\n")
+        if stress_run_dir:
+            self._append_output(f"[UI] stress_run_dir={stress_run_dir}\n")
+        if stress_summary:
+            self._append_output(f"[UI] stress_summary={stress_summary}\n")
+
+        if hasattr(self, "act_open_report"):
+            self.act_open_report.setEnabled(bool(stress_summary))
+            self.btn_open_report_top.setEnabled(bool(stress_summary))
+        if hasattr(self, "act_open_run_dir"):
+            self.act_open_run_dir.setEnabled(bool(stress_run_dir))
+            self.btn_open_run_dir_top.setEnabled(bool(stress_run_dir))
+
+        task_name = self._stress_task.stem if self._stress_task else ""
+        task_label = task_name or "压测任务"
+        summary = TaskRunSummary(
+            task_json_name=task_label,
+            status="passed" if ok and reason != "stopped" else ("failed" if reason != "stopped" else "stopped"),
+            report_path=stress_summary,
+            run_dir=stress_run_dir,
+        )
+        if reason != "stopped":
+            self._notification_dispatcher.send_stress_summary_email(summary)
+
+        if reason == "stopped":
+            self._set_run_ui_state("stopped", "压测已停止，已完成轮次的产物仍可查看。")
+            self.statusBar().showMessage("压测已停止")
+        else:
+            self._set_run_ui_state(
+                "passed" if ok else "failed",
+                "压测完成，可查看压测汇总报告。" if ok else "压测存在失败轮次，请查看压测汇总报告。",
+            )
+            self.statusBar().showMessage("压测完成" if ok else "压测完成（存在失败）")
+
+        self._stress_mode = False
+        self._stress_task = None
+        self._stress_exe = ""
+        self._stress_rounds = 0
+        if self._stress_stop_file is not None:
+            try:
+                self._stress_stop_file.unlink(missing_ok=True)
+            except OSError:
+                pass
+            self._stress_stop_file = None
+
+        RunFinishedDialog(
+            ok=ok,
+            run_dir=stress_run_dir,
+            report=stress_summary,
+            parent=self,
+            reason=reason,
+        ).exec_()
+
+    def _stress_stop_file_path(self) -> Path:
+        """生成本次压测唯一的跨进程停止标志文件路径（%LOCALAPPDATA%\\Jens\\压测模式\\）。"""
+        base = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "Jens" / "压测模式"
+        base.mkdir(parents=True, exist_ok=True)
+        return base / f"stop_{uuid.uuid4().hex}.flag"
+
+    def _infer_latest_stress_artifact(self) -> str:
+        base = self.project_root / "artifacts"
+        if not base.exists():
+            return ""
+        dirs = [p for p in base.iterdir() if p.is_dir() and "压测" in p.name and p.name != "_airtest_cli_log"]
+        if not dirs:
+            return ""
+        latest = max(dirs, key=lambda p: p.stat().st_mtime)
+        return str(latest)
 
     def _infer_latest_artifact(self) -> tuple[str, str]:
         """
