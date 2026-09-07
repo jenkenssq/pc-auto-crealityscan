@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "xlsx": {
+      "source": "anthropics/skills",
+      "sourceType": "hub",
+      "sourceUrl": "https://skillshub.app.baizhi.cloud/openapi/v1/skills/anthropics/skills",
+      "computedHash": "b437c3bb46b1aa01a2b34350293bfcdcd05dad3a478846a547848ec5cbd2ad7c"
+    }
+  }
+}
