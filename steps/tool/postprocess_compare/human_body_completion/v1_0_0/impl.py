@@ -167,6 +167,29 @@ def _latest_download_progress(app_log: Optional[Path]) -> Optional[str]:
     return f"{matches[-1]}%"
 
 
+def _run_direct_human_body_completion(
+    base: Path, params: Dict[str, Any], Template, exists, touch, sleep
+) -> None:
+    """不生成trip，直接生成人体补全模型（高级参数 skip_trip_model=True）。
+
+    点击AI人体补全后直接进入“选择人体模型”，选择模型底座，然后预览并应用，
+    跳过导入图片 / 立即生成 / 创建人体模型（trip）进度。
+    """
+    click_delay_sec = max(0.0, float(params.get("click_delay_sec", 0.5) or 0.5))
+    touch(Template(
+        str(base / "tpl1788787112505.png"),
+        record_pos=(-0.365, -0.169),
+        resolution=(1920, 1080),
+    ))  # 选择人体模型
+    touch((90, 325))  # 选择模型
+    touch((140, 720))  # 选择模型底座
+    touch(Template(str(base / "tpl1787755269508.png")))  # 预览
+    preview_progress = Template(str(base / "tpl1787755313908.png"))
+    _wait_progress_disappear(preview_progress, "AI人体补全", params, exists, sleep)
+    touch(Template(str(base / "tpl1787755544549.png")))  # 应用
+    sleep(click_delay_sec)
+
+
 def _handle_download_package(base: Path, params: Dict[str, Any], Template, exists, touch, sleep) -> None:
     """处理测试版缺少人体补全下载包时的下载弹窗，并等待下载完成。
 
@@ -234,37 +257,42 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     if str(ctx.get("version_label") or "") == "测试版" and not _download_package_ready():
         _handle_download_package(base, params, Template, exists, touch, sleep)
 
-    touch(Template(str(base / "tpl1787753248187.png"), record_pos=(-0.409, -0.096), resolution=(1920, 1080)))
+    if bool(params.get("skip_trip_model", False)):
+        # 高级参数“不生成trip，直接生成人体补全模型”：跳过 trip 生成，直接选择模型底座并预览/应用
+        print("[人体补全] 高级参数：不生成trip，直接生成人体补全模型")
+        _run_direct_human_body_completion(base, params, Template, exists, touch, sleep)
+    else:
+        touch(Template(str(base / "tpl1787753248187.png"), record_pos=(-0.409, -0.096), resolution=(1920, 1080)))
 
-    process_id = int(ctx.get("process_id") or 0)
-    if process_id <= 0:
-        raise RuntimeError("人体补全 Step 缺少 CrealityScan 进程 ID")
-    project_dir = Path(str(ctx.get("run_dir") or ".")).parent
-    img_dir_name = str(params.get("img_dir_name", "img") or "img")
-    img_dir = project_dir / img_dir_name
-    if not img_dir.is_dir():
-        raise RuntimeError(f"未找到人体补全导入图片目录：{img_dir}")
-    _select_head_front_images(process_id, img_dir, params, sleep)
+        process_id = int(ctx.get("process_id") or 0)
+        if process_id <= 0:
+            raise RuntimeError("人体补全 Step 缺少 CrealityScan 进程 ID")
+        project_dir = Path(str(ctx.get("run_dir") or ".")).parent
+        img_dir_name = str(params.get("img_dir_name", "img") or "img")
+        img_dir = project_dir / img_dir_name
+        if not img_dir.is_dir():
+            raise RuntimeError(f"未找到人体补全导入图片目录：{img_dir}")
+        _select_head_front_images(process_id, img_dir, params, sleep)
 
-    if bool(params.get("enable_hd_geometry", False)):
-        touch((320, 465))
+        if bool(params.get("enable_hd_geometry", False)):
+            touch((320, 465))
+            sleep(click_delay_sec)
+        touch(Template(str(base / "tpl1787754024750.png")))
+        touch(Template(str(base / "tpl1787754262949.png")))
+
+        progress = Template(str(base / "tpl1787754339537.png"))
+        _wait_progress_disappear(progress, "创建人体模型", params, exists, sleep)
+
+        touch((140, 720))  # 选择模型底座
+        base_wait_sec = max(0.0, float(params.get("base_wait_sec", 20) or 20))
+        sleep(base_wait_sec)
+
+        touch(Template(str(base / "tpl1787755269508.png")))  # 预览
+        preview_progress = Template(str(base / "tpl1787755313908.png"))
+        _wait_progress_disappear(preview_progress, "AI人体补全", params, exists, sleep)
+
+        touch(Template(str(base / "tpl1787755544549.png")))  # 应用
         sleep(click_delay_sec)
-    touch(Template(str(base / "tpl1787754024750.png")))
-    touch(Template(str(base / "tpl1787754262949.png")))
-
-    progress = Template(str(base / "tpl1787754339537.png"))
-    _wait_progress_disappear(progress, "创建人体模型", params, exists, sleep)
-
-    touch((140, 720))  # 选择模型底座
-    base_wait_sec = max(0.0, float(params.get("base_wait_sec", 20) or 20))
-    sleep(base_wait_sec)
-
-    touch(Template(str(base / "tpl1787755269508.png")))  # 预览
-    preview_progress = Template(str(base / "tpl1787755313908.png"))
-    _wait_progress_disappear(preview_progress, "AI人体补全", params, exists, sleep)
-
-    touch(Template(str(base / "tpl1787755544549.png")))  # 应用
-    sleep(click_delay_sec)
 
     run_dir = Path(str(ctx.get("run_dir") or "."))
     shot = run_dir / "screenshots" / f"step{int(ctx.get('step_index') or 0):03d}_human_body_completion.png"

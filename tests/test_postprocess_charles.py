@@ -52,6 +52,30 @@ class PostprocessCharlesCliTests(unittest.TestCase):
             self.assertEqual(params["gaussian_quality"], "标准")
             self.assertNotIn("gaussian_quality", ctx)
 
+    def test_run_postprocess_step_passes_skip_trip_model_to_params(self) -> None:
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as temp_dir, \
+                mock.patch.object(cli.importlib, "import_module") as import_module:
+            step_module = mock.Mock()
+            step_module.run.return_value = {"operation_elapsed_sec": 1.0, "snapshot": "x.png"}
+            import_module.return_value = step_module
+            cli._run_postprocess_step(
+                "人体补全",
+                Path(temp_dir),
+                900.0,
+                "human_body_completion",
+                0,
+                enable_hd_geometry=True,
+                base_wait_sec=5.0,
+                skip_trip_model=True,
+            )
+            ctx, params = step_module.run.call_args.args
+            self.assertTrue(params["skip_trip_model"])
+            self.assertTrue(params["enable_hd_geometry"])
+            self.assertEqual(params["base_wait_sec"], 5.0)
+            self.assertNotIn("skip_trip_model", ctx)
+
     def test_launch_charles_starts_detached_and_logs_pid(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             exe = Path(temp_dir) / "Charles.exe"
@@ -325,6 +349,41 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
                 _, args = start.call_args[0]
                 self.assertIn("--delete-download-package", args)
 
+    def test_start_run_passes_skip_trip_model_flag_when_checked(self) -> None:
+        w = self.window
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = Path(temp_dir)
+            release_exe = base / "release.exe"
+            test_exe = base / "test.exe"
+            for p in (release_exe, test_exe):
+                p.write_bytes(b"x")
+            project_set = base / "proj"
+            project_set.mkdir()
+            output_dir = base / "out"
+            output_dir.mkdir()
+
+            w.release_exe.setText(str(release_exe))
+            w.release_version.setText("1.0-r")
+            w.test_exe.setText(str(test_exe))
+            w.test_version.setText("1.0-t")
+            w.project_set.setText(str(project_set))
+            w.output_dir.setText(str(output_dir))
+            w.operation_buttons["human_body_completion"].click()
+
+            # 默认不勾选：不应传 --skip-trip-model
+            with mock.patch.object(w._process, "start") as start, \
+                    mock.patch.object(w._process, "waitForStarted", return_value=True):
+                w.start_run()
+                _, args = start.call_args[0]
+                self.assertNotIn("--skip-trip-model", args)
+
+            # 勾选“不生成trip，直接生成人体补全模型”：应传 --skip-trip-model
+            w.human_body_skip_trip.setChecked(True)
+            with mock.patch.object(w._process, "start") as start, \
+                    mock.patch.object(w._process, "waitForStarted", return_value=True):
+                w.start_run()
+                _, args = start.call_args[0]
+                self.assertIn("--skip-trip-model", args)
 
     def test_advanced_button_replaces_inline_panel(self) -> None:
         w = self.window
@@ -388,10 +447,36 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
         )
         # 未选择对比类型时高斯专属组隐藏
         self.assertTrue(w.gaussian_group.isHidden())
+        # 高级参数弹窗未打开时，切换对比类型不得把专属选项组弹成独立顶层小窗
         w.operation_buttons["gaussian"].click()
-        self.assertFalse(w.gaussian_group.isHidden())
+        self.assertTrue(w.gaussian_group.isHidden())
         self.assertTrue(w.specific_none.isHidden())
         self.assertIn("质量高质量", w.advanced_summary.text())
+        # 弹窗打开后，按所选对比类型在弹窗内展示对应专属选项组
+        dlg = w._build_advanced_dialog()
+        w._advanced_dialog = dlg
+        w._sync_advanced_visibility()
+        dlg.show()
+        dlg.layout().activate()
+        QtWidgets.QApplication.processEvents()
+        self.assertIs(w.gaussian_group.parent(), dlg)
+        self.assertFalse(w.gaussian_group.isHidden())
+        self.assertTrue(w.specific_none.isHidden())
+
+    def test_exclusive_option_groups_never_pop_as_top_level_windows(self) -> None:
+        """回归：首次进入/切换对比类型时，无父级的专属选项组不得弹成顶层小窗。"""
+        w = self.window
+        for name in ("specific_none", "gaussian_group", "ai_group", "human_group"):
+            widget = getattr(w, name)
+            self.assertIsNone(widget.parent(), f"{name} 初始应无父级（仅存在于弹窗内）")
+            self.assertTrue(widget.isHidden(), f"{name} 初始应隐藏")
+        for key in ("texture", "gaussian", "ai_retexture", "human_body_completion"):
+            w.operation_buttons[key].click()
+            for name in ("specific_none", "gaussian_group", "ai_group", "human_group"):
+                widget = getattr(w, name)
+                self.assertIsNone(widget.parent())
+                self.assertFalse(widget.isVisible(), f"弹窗未打开时 {name} 不得可见（避免顶层小窗）")
+                self.assertTrue(widget.isHidden(), f"弹窗未打开时 {name} 应保持隐藏")
 
     def test_gaussian_quality_summary_updates_with_combo(self) -> None:
         w = self.window
@@ -484,7 +569,8 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
                 "ai_retexture_gaussian": False,
                 "ai_retexture_texture_first": True,
                 "texture_timeout": 66.0,
-                "human_body_hd_geometry": False,
+                "human_body_hd_geometry": True,
+                "human_body_skip_trip": True,
                 "base_wait": 33.0,
             }
             (tmp / "settings.json").write_text(
@@ -500,6 +586,8 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
             self.assertEqual(w2.start_timeout.value(), 45.0)
             self.assertEqual(w2.close_timeout.value(), 12.0)
             self.assertEqual(w2.texture_timeout.value(), 66.0)
+            self.assertTrue(w2.human_body_hd_geometry.isChecked())
+            self.assertTrue(w2.human_body_skip_trip.isChecked())
             self.assertEqual(w2.base_wait.value(), 33.0)
             w2.deleteLater()
 
@@ -511,6 +599,7 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
             w.release_exe.setText(r"D:\scan\release\CrealityScan.exe")
             w.test_version.setText("1.99")
             w.human_body_hd_geometry.setChecked(True)
+            w.human_body_skip_trip.setChecked(True)
             w.base_wait.setValue(77.0)
             w.operation_timeout.setValue(321.0)
             with self._patch_settings(tmp):
@@ -520,6 +609,7 @@ class PostprocessCharlesGuiTests(unittest.TestCase):
             self.assertEqual(w2.release_exe.text(), r"D:\scan\release\CrealityScan.exe")
             self.assertEqual(w2.test_version.text(), "1.99")
             self.assertTrue(w2.human_body_hd_geometry.isChecked())
+            self.assertTrue(w2.human_body_skip_trip.isChecked())
             self.assertEqual(w2.base_wait.value(), 77.0)
             self.assertEqual(w2.operation_timeout.value(), 321.0)
             w2.deleteLater()

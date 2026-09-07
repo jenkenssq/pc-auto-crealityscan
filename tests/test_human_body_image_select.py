@@ -127,5 +127,124 @@ class SelectHeadFrontImageSingleTest(unittest.TestCase):
                 )
 
 
+class DirectHumanBodyCompletionModeTest(unittest.TestCase):
+    """人体补全“不生成trip，直接生成人体补全模型”高级参数模式。
+
+    覆盖：点击AI人体补全后直接进入“选择人体模型”，选择模型底座，
+    预览并等待AI人体补全进度条消失后应用，跳过导入图片/立即生成/创建人体模型。
+    """
+
+    def setUp(self):
+        self.base = Path("templates")
+
+    def _run(self, params=None, wait_side_effect=None):
+        from airtest.core.api import Template  # noqa: F401
+
+        touch = mock.Mock()
+        sleep = mock.Mock()
+        # _wait_progress_disappear 先等到进度条出现（True），再等到消失（False）
+        exists = mock.Mock(
+            side_effect=wait_side_effect if wait_side_effect is not None else [True, False]
+        )
+        hb_impl._run_direct_human_body_completion(
+            self.base, params or {}, Template, exists, touch, sleep
+        )
+        return touch, sleep, exists
+
+    def test_sequence_clicks_model_dialog_then_preview_then_apply(self):
+        touch, sleep, exists = self._run()
+        # 顺序：选择人体模型模板 -> (90,325) -> (140,720)选择模型底座 -> 预览 -> 应用
+        args = [call.args[0] for call in touch.call_args_list]
+        self.assertEqual(len(args), 5)
+        # 模板点击（选择人体模型/预览/应用）传入的是 Template 对象而非坐标元组
+        self.assertNotIsInstance(args[0], tuple)
+        self.assertEqual(args[1], (90, 325))
+        self.assertEqual(args[2], (140, 720))
+        self.assertNotIsInstance(args[3], tuple)
+        self.assertNotIsInstance(args[4], tuple)
+
+    def test_waits_ai_body_complete_progress_then_sleeps(self):
+        touch, sleep, exists = self._run()
+        # 等待“AI人体补全”进度条（exists 模板）
+        self.assertGreaterEqual(exists.call_count, 1)
+        # 结束时按 click_delay_sec 稳定等待
+        sleep.assert_called_once_with(0.5)
+
+    def test_run_skip_trip_branch_skips_image_import(self):
+        # run() 中 skip_trip_model=True 时应走直连分支，不调用图片选择逻辑
+        import sys
+        import types
+
+        fake_touch = mock.Mock()
+        fake_sleep = mock.Mock()
+        fake_exists = mock.Mock(side_effect=[False, False])
+        fake_Template = mock.Mock(return_value=mock.Mock())
+        fake_snapshot = mock.Mock()
+
+        airtest_api = types.ModuleType("airtest.core.api")
+        airtest_api.Template = fake_Template
+        airtest_api.exists = fake_exists
+        airtest_api.snapshot = fake_snapshot
+        airtest_api.touch = fake_touch
+        airtest_api.sleep = fake_sleep
+        with mock.patch.dict(sys.modules, {"airtest.core.api": airtest_api}):
+            with mock.patch.object(
+                hb_impl, "_run_direct_human_body_completion"
+            ) as direct_mock, mock.patch.object(
+                hb_impl, "_select_head_front_images"
+            ) as select_mock:
+                hb_impl.run(
+                    {
+                        "run_dir": "x",
+                        "step_index": 2,
+                    },
+                    {"skip_trip_model": True},
+                )
+        direct_mock.assert_called_once()
+        select_mock.assert_not_called()
+
+    def test_run_full_branch_still_uses_image_import(self):
+        import sys
+        import types
+        from tempfile import TemporaryDirectory
+
+        fake_touch = mock.Mock()
+        fake_sleep = mock.Mock()
+        fake_exists = mock.Mock(side_effect=[False, False])
+        fake_Template = mock.Mock(return_value=mock.Mock())
+        fake_snapshot = mock.Mock()
+
+        airtest_api = types.ModuleType("airtest.core.api")
+        airtest_api.Template = fake_Template
+        airtest_api.exists = fake_exists
+        airtest_api.snapshot = fake_snapshot
+        airtest_api.touch = fake_touch
+        airtest_api.sleep = fake_sleep
+        with TemporaryDirectory() as tmp, mock.patch.dict(
+            sys.modules, {"airtest.core.api": airtest_api}
+        ):
+            run_dir = Path(tmp) / "round"
+            run_dir.mkdir()
+            (Path(tmp) / "img").mkdir()
+            with mock.patch.object(
+                hb_impl, "_run_direct_human_body_completion"
+            ) as direct_mock, mock.patch.object(
+                hb_impl, "_select_head_front_images"
+            ) as select_mock, mock.patch.object(
+                hb_impl, "_wait_progress_disappear"
+            ):
+                # 默认（skip_trip_model 缺省）走原有两步流程，需要图片选择
+                hb_impl.run(
+                    {
+                        "run_dir": str(run_dir),
+                        "step_index": 2,
+                        "process_id": 1,
+                    },
+                    {},
+                )
+        direct_mock.assert_not_called()
+        select_mock.assert_called_once()
+
+
 if __name__ == "__main__":
     unittest.main()

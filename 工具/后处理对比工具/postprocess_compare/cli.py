@@ -315,6 +315,7 @@ def _run_postprocess_step(
     texture_timeout_sec: float = 90.0,
     enable_hd_geometry: bool = False,
     base_wait_sec: float = 20.0,
+    skip_trip_model: bool = False,
     version_label: Optional[str] = None,
 ) -> None:
     config = _POSTPROCESS_CONFIG.get(operation)
@@ -334,6 +335,7 @@ def _run_postprocess_step(
     if operation == "human_body_completion":
         params["enable_hd_geometry"] = enable_hd_geometry
         params["base_wait_sec"] = base_wait_sec
+        params["skip_trip_model"] = skip_trip_model
     try:
         result = step_module.run(
             {
@@ -389,6 +391,7 @@ def _run_one(
     texture_timeout_sec: float = 90.0,
     enable_hd_geometry: bool = False,
     base_wait_sec: float = 20.0,
+    skip_trip_model: bool = False,
 ) -> bool:
     app = ManagedCrealityScan(exe_path)
     try:
@@ -432,6 +435,7 @@ def _run_one(
                 texture_timeout_sec,
                 enable_hd_geometry,
                 base_wait_sec,
+                skip_trip_model,
                 version_label=label,
             )
             print(f"[COMPARE]{_ts()} {step_label}{postprocess_name}完成，耗时={time.time() - t0:.1f}s。")
@@ -530,6 +534,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=20.0,
         help="人体补全选择模型底座后的固定等待秒数",
+    )
+    parser.add_argument(
+        "--skip-trip-model",
+        action="store_true",
+        help="不生成trip，直接生成人体补全模型：点击AI人体补全后直接选择模型底座并预览/应用，跳过导入图片/立即生成/创建人体模型",
     )
     parser.add_argument(
         "--no-texture-first",
@@ -678,6 +687,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 texture_timeout_sec=max(1.0, args.texture_timeout),
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
+                skip_trip_model=args.skip_trip_model,
             )
         else:
             release_ok = _run_one(
@@ -694,6 +704,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 texture_timeout_sec=max(1.0, args.texture_timeout),
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
+                skip_trip_model=args.skip_trip_model,
             )
             if release_ok:
                 print("\n[COMPARE] 发布版已完成后处理，删除下载包以触发测试版重新下载新包。")
@@ -712,6 +723,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 texture_timeout_sec=max(1.0, args.texture_timeout),
                 enable_hd_geometry=args.human_body_hd_geometry,
                 base_wait_sec=max(0.0, args.base_wait),
+                skip_trip_model=args.skip_trip_model,
             )
     except KeyboardInterrupt:
         return 3

@@ -423,6 +423,9 @@ class CompareWindow(QtWidgets.QMainWindow):
         human_title = QtWidgets.QLabel("人体补全专属选项")
         human_title.setObjectName("advZoneTitle")
         human_layout.addWidget(human_title)
+        self.human_body_skip_trip = QtWidgets.QCheckBox("不生成trip，直接生成人体补全模型")
+        self.human_body_skip_trip.setChecked(False)
+        human_layout.addWidget(self.human_body_skip_trip)
         human_layout.addWidget(self.human_body_hd_geometry)
         human_base_row = QtWidgets.QHBoxLayout()
         human_base_row.setSpacing(9)
@@ -432,8 +435,9 @@ class CompareWindow(QtWidgets.QMainWindow):
         human_base_row.addStretch(1)
         human_layout.addLayout(human_base_row)
 
-        # 初始无对比类型被选中：仅显示“无专属参数”提示
-        self.specific_none.setVisible(True)
+        # 初始无对比类型被选中：专属选项组此刻尚未放入高级参数弹窗（无父级），
+        # 一律保持隐藏，否则 setVisible(True) 会把它们弹成独立顶层小窗。
+        self.specific_none.setVisible(False)
         self.ai_group.setVisible(False)
         self.human_group.setVisible(False)
         self.gaussian_group.setVisible(False)
@@ -663,6 +667,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.ai_retexture_texture_first.setChecked(bool(data.get("ai_retexture_texture_first", True)))
         self.texture_timeout.setValue(float(data.get("texture_timeout") or self.texture_timeout.value()))
         self.human_body_hd_geometry.setChecked(bool(data.get("human_body_hd_geometry")))
+        self.human_body_skip_trip.setChecked(bool(data.get("human_body_skip_trip")))
         self.base_wait.setValue(float(data.get("base_wait") or self.base_wait.value()))
         self._update_advanced_summary()
         for edit in (self.release_exe, self.test_exe, self.project_set, self.output_dir, self.charles_exe):
@@ -689,6 +694,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             "ai_retexture_texture_first": self.ai_retexture_texture_first.isChecked(),
             "texture_timeout": self.texture_timeout.value(),
             "human_body_hd_geometry": self.human_body_hd_geometry.isChecked(),
+            "human_body_skip_trip": self.human_body_skip_trip.isChecked(),
             "base_wait": self.base_wait.value(),
         }
         _save_settings(data)
@@ -762,10 +768,23 @@ class CompareWindow(QtWidgets.QMainWindow):
         return dlg
 
     def _sync_advanced_visibility(self) -> None:
-        """按当前所选对比类型切换专属选项区可见性。"""
+        """按当前所选对比类型切换专属选项区可见性（仅作用于高级参数弹窗内）。
+
+        专属选项组在加入高级参数弹窗之前是无父级控件；此时绝不能把它们
+        setVisible(True)，否则 Qt 会将其当作独立顶层窗口弹出（首次进入页面
+        或切换对比类型时就会冒出一个“AI重贴图专属选项”小窗）。只有弹窗已
+        构建（控件已挂到弹窗上）才按所选类型切换显示。
+        """
         is_gaussian = self._selected_operation == "gaussian"
         is_ai = self._selected_operation == "ai_retexture"
         is_human = self._selected_operation == "human_body_completion"
+        if self.ai_group.parent() is None:
+            # 弹窗尚未构建：专属选项组无父级，一律保持隐藏，避免顶层小窗弹出。
+            self.specific_none.setVisible(False)
+            self.gaussian_group.setVisible(False)
+            self.ai_group.setVisible(False)
+            self.human_group.setVisible(False)
+            return
         self.specific_none.setVisible(not is_gaussian and not is_ai and not is_human)
         self.gaussian_group.setVisible(is_gaussian)
         self.ai_group.setVisible(is_ai)
@@ -794,6 +813,8 @@ class CompareWindow(QtWidgets.QMainWindow):
         elif self._selected_operation == "human_body_completion":
             extra.append("超清" + ("开" if self.human_body_hd_geometry.isChecked() else "关"))
             extra.append(f"底座{fmt(self.base_wait.value())}秒")
+            if self.human_body_skip_trip.isChecked():
+                extra.append("不生成trip直接补全")
         else:
             extra.append("无专属参数")
         summary += " · " + " · ".join(extra)
@@ -969,6 +990,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.ai_retexture_texture_first,
             self.texture_timeout,
             self.human_body_hd_geometry,
+            self.human_body_skip_trip,
             self.base_wait,
         )
         for widget in controls:
@@ -1049,6 +1071,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             args.append("--ai-retexture-gaussian")
         if self.human_body_hd_geometry.isChecked():
             args.append("--human-body-hd-geometry")
+        if self.human_body_skip_trip.isChecked():
+            args.append("--skip-trip-model")
         args.append("--base-wait")
         args.append(str(self.base_wait.value()))
         if self.delete_package_check.isChecked():

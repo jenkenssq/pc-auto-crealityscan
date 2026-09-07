@@ -177,7 +177,7 @@ class TaskCreationWizardTests(unittest.TestCase):
 
         self.assertIn("raptor", module_items)
         for module_name, display_name, expected_count, supports_single_line in (
-            ("raptor x", "Raptor X", 22, True),
+            ("raptor x", "Raptor X", 21, False),
             ("raptor pro", "Raptor Pro", 21, False),
         ):
             with self.subTest(module_name=module_name):

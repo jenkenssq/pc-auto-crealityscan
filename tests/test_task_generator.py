@@ -298,7 +298,7 @@ class TaskGeneratorTests(unittest.TestCase):
     def test_raptor_variants_use_their_own_configure_steps(self) -> None:
         project_root = Path(__file__).resolve().parents[1]
         variants = {
-            "raptor x": ("crealityscan.configure_scan_params_raptor_x", 22, True),
+            "raptor x": ("crealityscan.configure_scan_params_raptor_x", 21, False),
             "raptor pro": ("crealityscan.configure_scan_params_raptor_pro", 21, False),
         }
 

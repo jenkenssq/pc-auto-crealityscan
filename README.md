@@ -441,6 +441,8 @@ python build.py --no-tools   # 不附带侧边栏工具
 
 后处理对比工具的任务配置支持“开启Charles”：勾选后选择 `Charles.exe`，在发布版全部后处理完成并关闭、启动测试版之前自动拉起 Charles 抓包代理（CLI 参数 `--charles-exe`）；Charles 启动失败时本次对比判定失败、不再启动测试版。
 
+人体补全对比类型可在“高级参数”中勾选“不生成trip，直接生成人体补全模型”（CLI 参数 `--skip-trip-model`）：跳过导入图片/生成 trip，点击AI人体补全后直接选择模型底座并预览/应用；任务步骤参数也可通过 `{"skip_trip_model": true}` 开启。
+
 Spec 生成 `jens_pc_app.exe` 和 `jens_runner_helper.exe`，并收集 `steps/`、`cases/`、`tasks/`、`docs/`、`config/`、`jens_runner.air/`、`README.md`、`.env` 及运行依赖。
 
 分发时必须保留整个 `jens_pc_app/` 目录，不能只复制 EXE。`用例仓库/`、`web--gaizao/` 和 `滑轨/` 当前不在 Spec 中。

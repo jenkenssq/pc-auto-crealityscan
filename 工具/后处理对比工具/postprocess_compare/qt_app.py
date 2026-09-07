@@ -414,7 +414,10 @@ class CompareWindow(QtWidgets.QMainWindow):
         human_layout.addWidget(human_title)
         self.human_body_hd_geometry = QtWidgets.QCheckBox("开启超清几何精度")
         self.human_body_hd_geometry.setChecked(False)
+        self.human_body_skip_trip = QtWidgets.QCheckBox("不生成trip，直接生成人体补全模型")
+        self.human_body_skip_trip.setChecked(False)
         human_layout.addWidget(self.human_body_hd_geometry)
+        human_layout.addWidget(self.human_body_skip_trip)
         human_base_row = QtWidgets.QHBoxLayout()
         human_base_row.setSpacing(9)
         self.base_wait_label = QtWidgets.QLabel("底座等待")
@@ -637,6 +640,7 @@ class CompareWindow(QtWidgets.QMainWindow):
         self.ai_retexture_texture_first.setChecked(bool(data.get("ai_retexture_texture_first", True)))
         self.texture_timeout.setValue(float(data.get("texture_timeout") or self.texture_timeout.value()))
         self.human_body_hd_geometry.setChecked(bool(data.get("human_body_hd_geometry")))
+        self.human_body_skip_trip.setChecked(bool(data.get("human_body_skip_trip")))
         self.base_wait.setValue(float(data.get("base_wait") or self.base_wait.value()))
         for edit in (self.release_exe, self.test_exe, self.project_set, self.output_dir):
             self._update_path_state(edit, edit.text())
@@ -658,6 +662,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             "ai_retexture_texture_first": self.ai_retexture_texture_first.isChecked(),
             "texture_timeout": self.texture_timeout.value(),
             "human_body_hd_geometry": self.human_body_hd_geometry.isChecked(),
+            "human_body_skip_trip": self.human_body_skip_trip.isChecked(),
             "base_wait": self.base_wait.value(),
         }
         _save_settings(data)
@@ -821,6 +826,7 @@ class CompareWindow(QtWidgets.QMainWindow):
             self.ai_retexture_texture_first,
             self.texture_timeout,
             self.human_body_hd_geometry,
+            self.human_body_skip_trip,
             self.base_wait,
         )
         for widget in controls:
@@ -896,6 +902,8 @@ class CompareWindow(QtWidgets.QMainWindow):
             args.append("--ai-retexture-gaussian")
         if self.human_body_hd_geometry.isChecked():
             args.append("--human-body-hd-geometry")
+        if self.human_body_skip_trip.isChecked():
+            args.append("--skip-trip-model")
         args.append("--base-wait")
         args.append(str(self.base_wait.value()))
         env = QtCore.QProcessEnvironment.systemEnvironment()
