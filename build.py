@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Jens 平台打包脚本：自动递增版本并构建 exe。
+"""Jens 平台打包脚本：构建 exe（版本由调用方显式指定）。
 
 用法：
-    python build.py            # 自动探测 dist 已有最高版本并 +1
-    python build.py 0.4        # 手动指定版本
-    python build.py --notes "修复..."   # 附带本版本更新说明
+    python build.py 1.10       # 显式指定版本（不再自动进位）
+    python build.py 1.9 --notes "修复..."   # 附带本版本更新说明
+
+约定：版本号不自动递增。次版本按 1.9 -> 1.10 -> 1.11 递增（可超过 9），
+是否进位大版本由用户决定，调用时必须显式给出版本号。
 
 产物：dist/jens_pc_app_vX.Y/，版本同时写入 exe 文件版本资源；
 并在产物目录生成 更新说明.txt（内容取自根目录 更新说明.md 的
@@ -42,22 +44,6 @@ SLIDE_RAIL_EXCLUDE_DIRS = {
 
 # 根目录更新说明文件：打包时提取本版本段落生成产物内的 更新说明.txt。
 NOTES_DEFAULT_FILE = "更新说明.md"
-
-
-def next_version() -> tuple[int, int]:
-    """探测 dist 下已有 jens_pc_app_vX.Y 目录的最高版本，次版本 +1。"""
-    best = (0, 0)
-    for d in (ROOT / "dist").glob("jens_pc_app_v*"):
-        m = VERSION_RE.match(d.name)
-        if m:
-            major, minor = int(m.group(1)), int(m.group(2))
-            if (major, minor) > best:
-                best = (major, minor)
-    major, minor = best
-    minor += 1
-    if minor > 9:
-        major, minor = major + 1, 0
-    return major, minor
 
 
 def _copy_tool_ignore(dirname: str, names: list[str]) -> set[str]:
@@ -172,11 +158,11 @@ def _write_update_notes(dst: Path, ver: str, notes_file: Path | None, inline_not
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description="Jens 平台打包脚本（自动递增版本）")
+    ap = argparse.ArgumentParser(description="Jens 平台打包脚本（版本必须显式指定，不自动递增）")
     ap.add_argument(
         "version",
         nargs="?",
-        help="手动指定版本，如 0.4；缺省时自动探测 dist 最高版本并 +1",
+        help="显式指定版本，如 1.10（必填；次版本可超过 9，进位大版本由用户决定）",
     )
     ap.add_argument(
         "--no-tools",
@@ -196,11 +182,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.version:
         parts = args.version.split(".")
         if len(parts) != 2 or not all(p.isdigit() for p in parts):
-            print(f"[BUILD] 版本格式错误: {args.version!r}，应为 X.Y（如 0.4）")
+            print(f"[BUILD] 版本格式错误: {args.version!r}，应为 X.Y（如 1.10）")
             return 2
         major, minor = int(parts[0]), int(parts[1])
     else:
-        major, minor = next_version()
+        existing = sorted(
+            (m.group(1), m.group(2))
+            for d in (ROOT / "dist").glob("jens_pc_app_v*")
+            if (m := VERSION_RE.match(d.name))
+        )
+        shown = "、".join(f"v{maj}.{min}" for maj, min in existing) or "（无）"
+        print(
+            "[BUILD] 版本必须显式指定（不再自动进位）：python build.py X.Y，例如 1.10"
+        )
+        print(f"[BUILD] dist 下现有版本：{shown}")
+        return 2
     ver = f"{major}.{minor}"
 
     env = os.environ.copy()
