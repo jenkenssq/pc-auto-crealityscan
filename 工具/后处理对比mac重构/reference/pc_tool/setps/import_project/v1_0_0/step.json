@@ -1,0 +1,36 @@
+{
+  "id": "crealityscan.import_project",
+  "name": "导入工程",
+  "version": "1.0.0",
+  "description": "打开工程选择窗口，输入 project.obp 完整路径并点击打开。",
+  "params_schema": {
+    "project_file_path": {
+      "type": "string",
+      "description": "需要导入的 CrealityScan project.obp 文件完整路径。"
+    },
+    "click_delay_sec": {
+      "type": "number",
+      "default": 1.0,
+      "description": "首次点击前、两次点击之间及文件窗口打开前的等待秒数。"
+    },
+    "dialog_timeout_sec": {
+      "type": "number",
+      "default": 15,
+      "description": "等待 Windows 工程选择窗口的超时秒数。"
+    },
+    "log_dir": {
+      "type": "string",
+      "description": "CrealityScan 日志根目录，默认使用用户本地 CrealityScan Logs 目录。"
+    },
+    "import_success_timeout_sec": {
+      "type": "number",
+      "default": 600,
+      "description": "等待导入工程成功日志（OB_SCAN_MESSAGE_ID_PROJECT_IMPORT_SUCCESS 或 i proj progress 1.000000）的超时秒数。"
+    },
+    "poll_interval_sec": {
+      "type": "number",
+      "default": 0.2,
+      "description": "日志轮询间隔秒数。"
+    }
+  }
+}
