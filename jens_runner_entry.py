@@ -438,7 +438,7 @@ def run_case(case_path: Optional[str] = None, run_dir: Optional[str] = None) -> 
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         run_dir_path = app_root / "artifacts" / f"{_safe_dir_name(case_name)}_{ts}"
     run_dir_path.mkdir(parents=True, exist_ok=True)
-    run_dir = str(run_dir_path)
+    run_dir = run_dir_path
 
     _install_airtest_image_naming_patch()
     auto_setup(str(resource_root / "jens_runner.air" / "main.py"), logdir=str(run_dir / "airtest"))
