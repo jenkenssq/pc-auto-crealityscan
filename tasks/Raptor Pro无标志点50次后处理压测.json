@@ -48,9 +48,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -124,9 +124,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -200,9 +200,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -276,9 +276,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -352,9 +352,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -428,9 +428,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -504,9 +504,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -580,9 +580,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -656,9 +656,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -732,9 +732,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -808,9 +808,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -884,9 +884,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -960,9 +960,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1036,9 +1036,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1112,9 +1112,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1188,9 +1188,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1264,9 +1264,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1340,9 +1340,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1416,9 +1416,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1492,9 +1492,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1568,9 +1568,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1644,9 +1644,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1720,9 +1720,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1796,9 +1796,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1872,9 +1872,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -1948,9 +1948,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2024,9 +2024,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2100,9 +2100,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2176,9 +2176,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2252,9 +2252,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2328,9 +2328,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2404,9 +2404,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2480,9 +2480,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2556,9 +2556,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2632,9 +2632,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2708,9 +2708,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2784,9 +2784,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2860,9 +2860,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -2936,9 +2936,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3012,9 +3012,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3088,9 +3088,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3164,9 +3164,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3240,9 +3240,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3316,9 +3316,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3392,9 +3392,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3468,9 +3468,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3544,9 +3544,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3620,9 +3620,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3696,9 +3696,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
@@ -3772,9 +3772,9 @@
     {
       "id": "crealityscan.scan_until_frames_then_stop",
       "version": "1.0.0",
-      "name": "扫描至200帧后完成",
+      "name": "扫描至2000帧后完成",
       "params": {
-        "target_frames": 200
+        "target_frames": 2000
       },
       "on_fail": {
         "action": "abort"
