@@ -1,0 +1,6 @@
+airtest
+psutil
+pywinauto
+PyQt5
+openpyxl
+Pillow

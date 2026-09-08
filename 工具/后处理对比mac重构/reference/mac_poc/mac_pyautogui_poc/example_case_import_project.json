@@ -1,0 +1,27 @@
+{
+  "name": "mac_pyautogui_import_project_poc",
+  "app": {
+    "expected_resolution": [1920, 1080],
+    "manual_foreground_hint": "Run this import-project POC only after CrealityScan is already visible in the foreground on the primary monitor.",
+    "pause_before_start_sec": 3
+  },
+  "steps": [
+    {
+      "id": "crealityscan.import_project",
+      "version": "pyautogui-poc",
+      "name": "Import Project",
+      "params": {
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "crealityscan.view_logs",
+      "version": "pyautogui-poc",
+      "name": "View Logs",
+      "params": {
+        "confidence": 0.9
+      }
+    }
+  ]
+}
+

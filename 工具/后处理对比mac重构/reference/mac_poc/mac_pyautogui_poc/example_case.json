@@ -1,0 +1,48 @@
+{
+  "name": "mac_pyautogui_core_steps_poc",
+  "app": {
+    "expected_resolution": [1920, 1080],
+    "manual_foreground_hint": "Run this POC only after CrealityScan is already visible in the foreground on the primary monitor.",
+    "pause_before_start_sec": 3
+  },
+  "steps": [
+    {
+      "id": "crealityscan.create_project",
+      "version": "pyautogui-poc",
+      "name": "Create Project",
+      "params": {
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "pyautogui-poc",
+      "name": "Create Scan",
+      "params": {
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite",
+      "version": "pyautogui-poc",
+      "name": "Configure Scan Params",
+      "params": {
+        "preset": "中物体-几何",
+        "delay_sec": 0.15,
+        "reset_mouse_after_touch": true,
+        "mouse_safe_x": 10,
+        "mouse_safe_y": 10,
+        "mouse_safe_move_duration_sec": 0.35,
+        "mouse_safe_sleep_sec": 0.3
+      }
+    },
+    {
+      "id": "crealityscan.view_logs",
+      "version": "pyautogui-poc",
+      "name": "View Logs",
+      "params": {
+        "confidence": 0.9
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+import json
+
+# 定义单次循环的步骤
+single_loop = [
+    {"id": "crealityscan.create_project", "version": "1.0.0", "name": "新建项目", "params": {}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.configure_scan_params_raptor_pro", "version": "1.0.0", "name": "扫描参数：线激光-无标记点", "params": {"preset": "线激光-无标记点"}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.scan_until_frames_then_stop", "version": "1.0.0", "name": "扫描至200帧后完成", "params": {"target_frames": 200}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.fusion_operation", "version": "1.0.0", "name": "进行融合操作", "params": {}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.package_operation", "version": "1.0.0", "name": "进行封装操作", "params": {}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.texture_operation", "version": "1.0.0", "name": "进行贴图操作", "params": {}, "on_fail": {"action": "abort"}},
+    {"id": "crealityscan.return_home", "version": "1.0.0", "name": "返回首页", "params": {}, "on_fail": {"action": "abort"}}
+]
+
+# 生成完整steps
+all_steps = []
+for i in range(50):
+    all_steps.extend(single_loop)
+
+# 构建完整JSON
+result = {
+    "case_id": "Raptor Pro无标志点50次后处理压测",
+    "name": "Raptor Pro无标志点50次后处理压测",
+    "app": {
+        "window_title_contains": "CrealityScan",
+        "device_uri": "Windows:///",
+        "log_dir": "C:\\Users\\liangtai\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+    },
+    "keywords": ["Traceback", "Exception", "ERROR", "失败", "崩溃"],
+    "task_kind": "开流",
+    "connection_type": "USB",
+    "steps": all_steps
+}
+
+# 输出JSON
+print(json.dumps(result, ensure_ascii=False, indent=2))

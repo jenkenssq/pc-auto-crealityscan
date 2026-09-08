@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高级参数 · 重设计交互稿</title>
+<style>
+  :root{
+    --shell:#f3f6f8; --card:#ffffff; --surface-soft:#f4f7f9;
+    --border:#d5dfe6; --border-cool:#bdcad4; --separator:#e8edf1;
+    --text:#25313c; --field:#263640; --muted:#5d6d79; --label:#4f606e;
+    --cobalt:#0a66c2; --cobalt-hover:#095aa9; --cobalt-pressed:#074d91;
+    --success:#26815d; --success-soft:#d6eadf;
+    --running:#ad7416; --running-soft:#f4e4bf;
+    --error:#bd3d3d; --error-soft:#f1dada;
+    --disabled-text:#9aa7b1; --disabled-bg:#eef2f4; --disabled-border:#dce3e8;
+    --font:"Microsoft YaHei UI","Microsoft YaHei","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--font); color:var(--text); background:var(--shell);
+    font-size:12px; -webkit-font-smoothing:antialiased;
+    padding:32px; display:flex; flex-direction:column; align-items:center; gap:20px;
+  }
+  /* -------- top annotation -------- */
+  .banner{
+    width:720px; background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:14px 18px; display:flex; align-items:center; gap:12px;
+  }
+  .banner .tag{
+    flex:none; background:var(--cobalt); color:#fff; border-radius:6px;
+    font-size:11px; font-weight:700; padding:3px 9px;
+  }
+  .banner .txt{color:var(--muted); font-size:12px; line-height:1.5;}
+  .banner .txt b{color:var(--text); font-weight:700;}
+  /* -------- page context (sidebar stripped) -------- */
+  .page{width:720px; display:flex; flex-direction:column; gap:16px;}
+  .page-head{display:flex; align-items:baseline; gap:14px;}
+  .page-title{font-size:20px; font-weight:700; color:#18232e;}
+  .page-sub{font-size:12px; color:var(--muted);}
+  /* -------- operation selector -------- */
+  .field-label{font-size:12px; color:var(--label); font-weight:600; margin-bottom:8px;}
+  .segment{display:flex; gap:8px; flex-wrap:wrap;}
+  .segment button{
+    min-width:108px; color:#435664; background:var(--card); border:1px solid var(--border-cool);
+    border-radius:8px; padding:8px 18px; font:400 12px var(--font); cursor:pointer;
+    font-family:var(--font); transition:background .12s, border-color .12s;
+  }
+  .segment button:hover{border-color:#82add2;}
+  .segment button[aria-checked="true"]{
+    color:#fff; background:var(--cobalt); border-color:var(--cobalt); font-weight:700;
+  }
+  .segment button:focus-visible{outline:2px solid var(--cobalt); outline-offset:2px;}
+  /* -------- config card -------- */
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:20px 22px 18px;
+  }
+  .card-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px;}
+  .card-title{font-size:15px; font-weight:700; color:#1e2b36;}
+  .card-hint{font-size:11px; color:var(--muted);}
+  /* path rows (muted context) */
+  .path-row{display:grid; grid-template-columns:94px minmax(0,1fr) 56px; gap:9px; align-items:center; padding:6px 0;}
+  .path-row .pl{font-size:12px; color:var(--label);}
+  .path-row input{
+    color:#b9c2cb; background:var(--disabled-bg); border:1px solid var(--disabled-border);
+    border-radius:8px; padding:8px 10px; min-height:20px; font:400 12px var(--font); font-family:var(--font);
+  }
+  .path-row .browse{
+    color:#b9c2cb; background:var(--card); border:1px solid var(--disabled-border); border-radius:8px;
+    padding:7px 11px; font:400 12px var(--font); font-family:var(--font);
+  }
+  .hr{height:1px; background:var(--separator); border:0; margin:12px 0;}
+  /* -------- advanced toggle header -------- */
+  .advanced-toggle{
+    display:flex; align-items:center; gap:7px; background:transparent; border:0; cursor:pointer;
+    color:#3e607b; font:600 12px var(--font); font-family:var(--font); padding:6px 0;
+  }
+  .advanced-toggle:hover{color:var(--cobalt);}
+  .advanced-toggle .chev{display:inline-block; transition:transform .18s ease; font-size:10px; color:#7b8c99;}
+  .advanced-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .advanced-toggle .state-badge{
+    margin-left:2px; font-weight:400; font-size:11px; color:var(--muted);
+  }
+  /* -------- advanced panel -------- */
+  .advanced-panel{background:var(--surface-soft); border:1px solid #e4eaf0; border-radius:8px; padding:14px 16px; margin-top:8px;}
+  .zone{margin-bottom:6px;}
+  .zone:last-child{margin-bottom:0;}
+  .zone-title{
+    font-size:11px; font-weight:700; color:var(--label); margin:8px 0 8px; display:flex; align-items:center; gap:6px;
+  }
+  .zone-title .dot{width:5px; height:5px; border-radius:50%; background:var(--border-cool);}
+  .zone-title[data-tint="cobalt"] .dot{background:var(--cobalt);}
+  .zone-title .ctx{font-weight:400; color:var(--muted);}
+  .zone-hint{
+    font-size:11px; color:var(--muted); background:#edf1f5; border:1px dashed #cdd8e1;
+    border-radius:7px; padding:7px 11px;
+  }
+  /* aligned field grid: label | control | unit */
+  .field-row{
+    display:grid; grid-template-columns:96px minmax(0,1fr) 26px; gap:9px; align-items:center;
+    padding:4px 0; min-height:32px;
+  }
+  .field-row .fl{font-size:12px; color:var(--label); white-space:nowrap;}
+  .field-row .fl .op-name{color:var(--cobalt); font-weight:700;}
+  .field-row input[type="number"], .field-row .num{
+    color:var(--field); background:var(--card); border:1px solid var(--border-cool); border-radius:8px;
+    padding:6px 9px; min-height:20px; font:400 12px var(--font); font-family:var(--font); width:120px;
+  }
+  .field-row .num{display:inline-block; width:120px;}
+  .field-row .num b{font-weight:600;}
+  .field-row .unit{font-size:12px; color:var(--muted);}
+  .field-row .fl .sub{color:var(--muted); font-weight:400; font-size:11px; margin-left:2px;}
+  /* checkbox rows */
+  .check-row{
+    display:grid; grid-template-columns:96px minmax(0,1fr) 26px; gap:9px; align-items:center;
+    padding:4px 0; min-height:32px;
+  }
+  .check-row .ckbox{display:flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; color:var(--field);}
+  .check-row .ckbox input{width:14px; height:14px; accent-color:var(--cobalt); cursor:pointer;}
+  .check-row .ckbox.disabled{color:var(--disabled-text);}
+  .check-row .pair-label{font-size:12px; color:var(--label); white-space:nowrap;}
+  .check-row input[type="number"], .check-row .num{
+    color:var(--field); background:var(--card); border:1px solid var(--border-cool); border-radius:8px;
+    padding:6px 9px; min-height:20px; font:400 12px var(--font); font-family:var(--font); width:120px;
+  }
+  .check-row .num{display:inline-block; width:120px;}
+  .check-row .num b{font-weight:600;}
+  .check-row .unit{font-size:12px; color:var(--muted);}
+  /* retexture / human rows can be full width (no fixed label col) */
+  .option-row{display:flex; align-items:center; gap:10px; padding:4px 0; min-height:32px; flex-wrap:wrap;}
+  .option-row .ckbox{display:flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; color:var(--field);}
+  .option-row .ckbox input{width:14px; height:14px; accent-color:var(--cobalt); cursor:pointer;}
+  .option-row .pair{display:flex; align-items:center; gap:8px;}
+  .option-row .pair label{font-size:12px; color:var(--label); white-space:nowrap;}
+  .option-row .pair input[type="number"]{
+    color:var(--field); background:var(--card); border:1px solid var(--border-cool); border-radius:8px;
+    padding:6px 9px; min-height:20px; font:400 12px var(--font); font-family:var(--font); width:110px;
+  }
+  .option-row .pair .unit{font-size:12px; color:var(--muted);}
+  .option-row .sep-dot{width:1px; height:18px; background:var(--separator);}
+  /* zone: no extra options (texture / gaussian) */
+  .zone-empty{display:flex; align-items:center; gap:9px; color:var(--muted); font-size:12px; padding:6px 0;}
+  .zone-empty .mark{color:var(--success); font-weight:700;}
+  /* legend of change notes */
+  .notes{
+    width:720px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 20px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .notes h3{font-size:13px; font-weight:700; color:#1e2b36; margin-bottom:2px;}
+  .notes li{list-style:none; font-size:12px; color:#334654; line-height:1.6; padding-left:18px; position:relative;}
+  .notes li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--success); font-weight:700;}
+  .notes .x::before{content:"✕"; color:var(--error);}
+  .notes .x{color:var(--disabled-text);}
+  .foot{font-size:11px; color:var(--muted); width:720px; text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span class="tag">重设计稿 · v1</span>
+  <span class="txt">仅重排 <b>高级参数</b> 区域的布局与分组，<b>不改任何字段、默认值与后端行为</b>。切“对比类型”可预览专属参数按需显示。</span>
+</div>
+
+<div class="page">
+  <div class="page-head">
+    <div class="page-title">后处理对比</div>
+    <div class="page-sub">配置一次，自动完成两个版本的后处理结果对比</div>
+  </div>
+
+  <div>
+    <div class="field-label">对比类型</div>
+    <div class="segment" role="radiogroup" aria-label="对比类型" id="segment">
+      <button role="radio" aria-checked="true" data-op="texture">贴图</button>
+      <button role="radio" aria-checked="false" data-op="gaussian">高斯渲染</button>
+      <button role="radio" aria-checked="false" data-op="ai_retexture">AI重贴图</button>
+      <button role="radio" aria-checked="false" data-op="human_body_completion">人体补全</button>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <span class="card-title">任务配置</span>
+      <span class="card-hint">所有路径均以本机文件为准</span>
+    </div>
+
+    <div class="path-row"><span class="pl">发布版 EXE</span><input value="C:\Apps\CrealityScan.exe" disabled><span class="browse">浏览</span></div>
+    <div class="path-row"><span class="pl">发布版标签</span><input value="1.12.3-release" disabled><span></span></div>
+    <div class="path-row"><span class="pl">测试版 EXE</span><input value="C:\Apps\CrealityScan-Test.exe" disabled><span class="browse">浏览</span></div>
+    <div class="path-row"><span class="pl">测试版标签</span><input value="1.12.4-test" disabled><span></span></div>
+    <div class="path-row"><span class="pl">原始工程集</span><input value="D:\Scans\ProjectSet" disabled><span class="browse">浏览</span></div>
+    <div class="path-row"><span class="pl">输出目录</span><input value="D:\Compare\Out" disabled><span class="browse">浏览</span></div>
+
+    <hr class="hr">
+
+    <!-- toggle header -->
+    <button class="advanced-toggle" id="toggle" aria-expanded="true">
+      <span class="chev">▾</span>高级参数
+      <span class="state-badge" id="toggle-badge">展开 · 含 3 项超时与 2 组专属选项</span>
+    </button>
+
+    <!-- advanced panel -->
+    <div class="advanced-panel" id="panel">
+      <!-- zone 1: common timeouts -->
+      <div class="zone">
+        <div class="zone-title"><span class="dot"></span>通用超时 <span class="ctx">（适用于所选对比类型）</span></div>
+        <div class="field-row">
+          <span class="fl"><span class="op-name" id="op-timeout-name">贴图超时</span></span>
+          <span class="num"><b id="op-timeout-value">90.0</b></span>
+          <span class="unit">秒</span>
+        </div>
+        <div class="field-row">
+          <span class="fl">启动超时</span>
+          <span class="num"><b>120.0</b></span>
+          <span class="unit">秒</span>
+        </div>
+        <div class="field-row">
+          <span class="fl">关闭超时</span>
+          <span class="num"><b>20.0</b></span>
+          <span class="unit">秒</span>
+        </div>
+      </div>
+
+      <!-- zone 2: operation-specific -->
+      <div id="zone-specific"></div>
+    </div>
+  </section>
+</div>
+
+<div class="notes">
+  <h3>本次重设计做了什么</h3>
+  <ul>
+    <li><b>按语义分组</b>：拆成「通用超时」与「当前对比类型专属选项」两组，结束三个超时 + 三个开关挤在一行的混乱。</li>
+    <li><b>专属参数按需显示</b>：只有选中 AI重贴图 / 人体补全 时才显示对应专属组，贴图与高斯渲染显示一行安静提示，去掉禁用态的视觉噪音。</li>
+    <li><b>标签精简</b>：去掉复选框前缀的重复类型名（「AI重贴图开启高斯渲染」→「开启高斯渲染」），类型身份交给组标题。</li>
+    <li><b>列对齐</b>：标签/数值/单位三列对齐，与上方表单的 94px 标签节奏一致，扫读更快。</li>
+    <li><b>主超时标签自适应</b>：随对比类型切换显示「贴图超时 / 高斯渲染超时 / AI重贴图超时 / 人体补全超时」，语义不再含糊。</li>
+  </ul>
+  <ul>
+    <li class="x">未改任何参数名、默认值（90/120/20/90/20）与启用逻辑——与现版本行为完全一致。</li>
+  </ul>
+</div>
+
+<div class="foot">交互稿仅作演示 · 视觉遵循「校准工作台」设计系统（冷灰表面 · 钴蓝操作 · 8px 圆角 · 无阴影）</div>
+
+<script>
+  const OP = {
+    texture:  {name:"贴图超时",      value:"90.0",  specific:"none"},
+    gaussian: {name:"高斯渲染超时",  value:"900.0", specific:"none"},
+    ai_retexture: {name:"AI重贴图超时", value:"600.0", specific:"ai"},
+    human_body_completion: {name:"人体补全超时", value:"600.0", specific:"human"},
+  };
+
+  function renderSpecific(kind){
+    const el = document.getElementById("zone-specific");
+    if(kind === "ai"){
+      el.innerHTML = `
+        <div class="zone" data-zone="ai">
+          <div class="zone-title" data-tint="cobalt"><span class="dot"></span>AI重贴图专属选项</div>
+          <div class="option-row">
+            <label class="ckbox"><input type="checkbox">开启高斯渲染</label>
+            <span class="sep-dot"></span>
+            <label class="ckbox" id="tf-box"><input type="checkbox" checked>先执行贴图</label>
+            <span class="pair">
+              <label for="tex-timeout">前置贴图超时</label>
+              <input type="number" id="tex-timeout" value="90.0" step="0.1" min="1" max="3600">
+              <span class="unit">秒</span>
+            </span>
+          </div>
+        </div>`;
+    } else if(kind === "human"){
+      el.innerHTML = `
+        <div class="zone" data-zone="human">
+          <div class="zone-title" data-tint="cobalt"><span class="dot"></span>人体补全专属选项</div>
+          <div class="option-row">
+            <label class="ckbox"><input type="checkbox">开启超清几何精度</label>
+            <span class="sep-dot"></span>
+            <span class="pair">
+              <label for="base-wait">底座等待</label>
+              <input type="number" id="base-wait" value="20.0" step="0.1" min="0" max="3600">
+              <span class="unit">秒</span>
+            </span>
+          </div>
+        </div>`;
+    } else {
+      el.innerHTML = `
+        <div class="zone" data-zone="none">
+          <div class="zone-title"><span class="dot"></span>专属选项</div>
+          <div class="zone-empty"><span class="mark">—</span>贴图与高斯渲染无专属参数，直接使用上方通用超时。</div>
+        </div>`;
+    }
+  }
+
+  document.getElementById("segment").addEventListener("click", e=>{
+    const btn = e.target.closest("button");
+    if(!btn) return;
+    document.querySelectorAll("#segment button").forEach(b=>b.setAttribute("aria-checked", b===btn?"true":"false"));
+    const op = OP[btn.dataset.op];
+    document.getElementById("op-timeout-name").textContent = op.name;
+    document.getElementById("op-timeout-value").textContent = op.value;
+    renderSpecific(op.specific);
+  });
+
+  const toggle = document.getElementById("toggle");
+  const panel = document.getElementById("panel");
+  const badge = document.getElementById("toggle-badge");
+  toggle.addEventListener("click", ()=>{
+    const open = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", open ? "false" : "true");
+    panel.style.display = open ? "none" : "block";
+    badge.textContent = open ? "已收起 · 展开查看" : "展开 · 含 3 项超时与 2 组专属选项";
+  });
+
+  // Optional: open directly at a given operation via #ai_retexture / #human_body_completion / #texture / #gaussian
+  const initial = (location.hash || "#texture").replace("#", "");
+  if (OP[initial]) {
+    const btn = document.querySelector(`#segment button[data-op="${initial}"]`);
+    if (btn) btn.click();
+  } else {
+    renderSpecific("none");
+  }
+</script>
+</body>
+</html>

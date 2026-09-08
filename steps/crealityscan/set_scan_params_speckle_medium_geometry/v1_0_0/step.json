@@ -1,0 +1,7 @@
+{
+  "id": "",
+  "name": "（已废弃）配置扫描参数：散斑-中物体-几何",
+  "version": "",
+  "description": "已废弃：请使用 crealityscan.configure_scan_params_otter_lite（preset 方案）。该 step.json 已清空 id/version 以从平台列表隐藏。",
+  "params_schema": {}
+}

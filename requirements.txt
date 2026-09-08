@@ -1,0 +1,9 @@
+# 先只放执行引擎最小依赖；UI（PyQt/PySide）后续再加
+airtest
+pyserial
+mss
+rapidocr-onnxruntime
+openpyxl
+# 收编的后处理对比工具依赖（进程管理/窗口自动化）
+psutil
+pywinauto

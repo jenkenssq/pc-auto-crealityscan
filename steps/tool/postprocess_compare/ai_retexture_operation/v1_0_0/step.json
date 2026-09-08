@@ -1,0 +1,63 @@
+{
+  "id": "tool.postprocess_compare.ai_retexture_operation",
+  "name": "进行AI重贴图操作",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：进行ai重贴图操作（默认先执行一次贴图操作，再点击开始并在文件选择弹窗中全选 img 目录图片导入，最后固定等待完成并截图）。",
+  "params_schema": {
+    "run_texture_first": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否先执行一次贴图操作再执行 AI 重贴图。"
+    },
+    "texture_timeout_sec": {
+      "type": "number",
+      "default": 90,
+      "description": "前置贴图操作的进度等待超时（秒），与贴图 Step 默认一致。"
+    },
+    "enable_gaussian": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否开启高斯渲染：true 先点击坐标(314,197)开启渲染，再点击 tpl1786453689881 模板（预览按钮）；false 仅点击预览模板。"
+    },
+    "img_dir_name": {
+      "type": "string",
+      "default": "img",
+      "description": "工程目录下存放待导入图片的子目录名。"
+    },
+    "dialog_wait_sec": {
+      "type": "number",
+      "default": 5,
+      "description": "点击第2个模板（选择AI重贴图）后、点击第3个模板（开始）前的固定等待时长（秒）。"
+    },
+    "dialog_timeout_sec": {
+      "type": "number",
+      "default": 15,
+      "description": "等待图片选择弹窗及控件的超时（秒）。"
+    },
+    "click_delay_sec": {
+      "type": "number",
+      "default": 0.5,
+      "description": "弹窗内填路径、全选、确认之间的稳定等待（秒）。"
+    },
+    "finish_wait_sec": {
+      "type": "number",
+      "default": 5,
+      "description": "点击开始后等待AI重贴图完成的固定时长（秒）。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "截图前鼠标安全位置的横坐标。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "截图前鼠标安全位置的纵坐标。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.3,
+      "description": "移动后等待界面恢复非 hover 状态的时间。"
+    }
+  }
+}

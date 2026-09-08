@@ -1,0 +1,1154 @@
+{
+  "case_id": "Otter Lite Basic开流",
+  "name": "Otter Lite Basic开流",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\liangtai\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+  },
+  "keywords": [
+    "Traceback",
+    "Exception",
+    "ERROR",
+    "失败",
+    "崩溃"
+  ],
+  "steps": [
+    {
+      "id": "common.activate_window",
+      "version": "1.0.0",
+      "name": "激活/置顶窗口",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_project",
+      "version": "1.0.0",
+      "name": "新建项目",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：小物体-几何",
+      "params": {
+        "preset": "otter_lite_basic.small_geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：小物体-纹理",
+      "params": {
+        "preset": "otter_lite_basic.small_texture"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：小物体-标志点",
+      "params": {
+        "preset": "otter_lite_basic.small_marker"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：中物体-几何",
+      "params": {
+        "preset": "otter_lite_basic.medium_geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：中物体-纹理",
+      "params": {
+        "preset": "otter_lite_basic.medium_texture"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：中物体-标志点",
+      "params": {
+        "preset": "otter_lite_basic.medium_marker"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：大物体-几何-快速",
+      "params": {
+        "preset": "otter_lite_basic.large_geometry_fast"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：大物体-几何-高精度",
+      "params": {
+        "preset": "otter_lite_basic.large_geometry_high_precision"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：大物体-纹理-快速",
+      "params": {
+        "preset": "otter_lite_basic.large_texture_fast"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：大物体-纹理-高精度",
+      "params": {
+        "preset": "otter_lite_basic.large_texture_high_precision"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：大物体-标志点",
+      "params": {
+        "preset": "otter_lite_basic.large_marker"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人脸-几何",
+      "params": {
+        "preset": "otter_lite_basic.face_geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人脸-纹理",
+      "params": {
+        "preset": "otter_lite_basic.face_texture"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人体-几何-高精度",
+      "params": {
+        "preset": "otter_lite_basic.body_geometry_high_precision"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人体-几何-快速",
+      "params": {
+        "preset": "otter_lite_basic.body_geometry_fast"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人体-纹理-快速",
+      "params": {
+        "preset": "otter_lite_basic.body_texture_fast"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：人体-纹理-高精度",
+      "params": {
+        "preset": "otter_lite_basic.body_texture_high_precision"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：框架点-小物体",
+      "params": {
+        "preset": "otter_lite_basic.frame_points_small"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_reach_target_frame_points",
+      "version": "1.0.0",
+      "name": "开始扫描等待5秒并暂停（框架点）",
+      "params": {
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.pause_switch_point_cloud_scan",
+      "version": "1.0.0",
+      "name": "切点云",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：框架点-中物体",
+      "params": {
+        "preset": "otter_lite_basic.frame_points_medium"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_reach_target_frame_points",
+      "version": "1.0.0",
+      "name": "开始扫描等待5秒并暂停（框架点）",
+      "params": {
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.pause_switch_point_cloud_scan",
+      "version": "1.0.0",
+      "name": "切点云",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_otter_lite_basic",
+      "version": "1.0.0",
+      "name": "扫描参数：框架点-大物体",
+      "params": {
+        "preset": "otter_lite_basic.frame_points_large"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_reach_target_frame_points",
+      "version": "1.0.0",
+      "name": "开始扫描等待5秒并暂停（框架点）",
+      "params": {
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.pause_switch_point_cloud_scan",
+      "version": "1.0.0",
+      "name": "切点云",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至100帧后完成",
+      "params": {
+        "target_frames": 100,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    }
+  ]
+}

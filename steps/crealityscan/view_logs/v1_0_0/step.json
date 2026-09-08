@@ -1,0 +1,8 @@
+{
+  "id": "crealityscan.view_logs",
+  "name": "查看日志文件",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：打开日志查看入口，并截图作为验收。",
+  "params_schema": {}
+}
+

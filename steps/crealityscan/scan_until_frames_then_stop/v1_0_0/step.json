@@ -1,0 +1,209 @@
+{
+  "id": "crealityscan.scan_until_frames_then_stop",
+  "name": "开始扫描并在帧数达标后完成",
+  "version": "1.0.0",
+  "description": "点击开始扫描 → 解析 CrealityScan scan_log 中的 frame 计数 → 当 frame 达到阈值后点击完成/停止，并等待停止成功日志（OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS 或 stop progress 1.000000，任一命中即完成）。",
+  "params_schema": {
+    "target_frames": {
+      "type": "number",
+      "default": 200,
+      "description": "当扫描日志中的 frame 计数大于等于该值时，认为采集达标。"
+    },
+    "target_frames_gt": {
+      "type": "number",
+      "default": 200,
+      "description": "兼容旧参数：当 frame 严格大于该值时达标（等价于 target_frames = target_frames_gt + 1）。"
+    },
+    "log_dir": {
+      "type": "string",
+      "default": "",
+      "description": "可选：CrealityScan 日志根目录（为空则使用用例设置里的 app.log_dir）。"
+    },
+    "wait_log_file_timeout_sec": {
+      "type": "number",
+      "default": 30,
+      "description": "等待最新 scan_log 文件出现/更新的超时（秒）。"
+    },
+    "wait_scan_start_timeout_sec": {
+      "type": "number",
+      "default": 60,
+      "description": "等待日志出现 obscan_scan_start 的超时（秒）。"
+    },
+    "wait_frames_timeout_sec": {
+      "type": "number",
+      "default": 1800,
+      "description": "等待 frame 达标的超时（秒）。"
+    },
+    "frame_stall_timeout_sec": {
+      "type": "number",
+      "default": 60,
+      "description": "扫描期间 frame 连续未增长的失败判定时间（秒）。"
+    },
+    "stalled_log_switch_interval_sec": {
+      "type": "number",
+      "default": 5,
+      "description": "frame 未增长时，主动尝试切换到更新扫描日志的间隔（秒）。"
+    },
+    "poll_interval_sec": {
+      "type": "number",
+      "default": 0.2,
+      "description": "轮询日志增量的间隔（秒）。"
+    },
+    "wait_stop_success_timeout_sec": {
+      "type": "number",
+      "default": 120,
+      "description": "点击完成后等待停止成功日志的超时（秒）。"
+    },
+    "slide_rail_scan_motion_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "开始扫描并确认日志有效后，若已启用且滑轨服务和控制器在线，则执行滑轨扫描联动；帧数达标或步骤异常时发送停止指令。新建任务由“启用滑轨”选项显式控制。"
+    },
+    "slide_rail_host": {
+      "type": "string",
+      "default": "127.0.0.1",
+      "description": "滑轨 motion_service 地址。"
+    },
+    "slide_rail_port": {
+      "type": "number",
+      "default": 5000,
+      "description": "滑轨 motion_service 端口。"
+    },
+    "slide_rail_horizontal_pulse": {
+      "type": "number",
+      "default": 10000,
+      "description": "扫描联动时滑轨左右往返范围（脉冲）。"
+    },
+    "slide_rail_lift_cycle_seconds": {
+      "type": "number",
+      "default": 4,
+      "description": "扫描联动时升降台单次上升/下降持续时间（秒）。"
+    },
+    "slide_rail_horizontal_speed": {
+      "type": "number",
+      "default": 2000,
+      "description": "扫描联动时水平移动速度（脉冲/秒）。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "点击开始前将鼠标移到该 X 坐标，用于退出按钮 hover 态（避免模板不匹配）。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "点击开始前将鼠标移到该 Y 坐标，用于退出按钮 hover 态（避免模板不匹配）。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.25,
+      "description": "鼠标移到安全位置后等待 UI 恢复的时间（秒）。"
+    },
+    "start_btn_timeout_sec": {
+      "type": "number",
+      "default": 10,
+      "description": "等待“开始扫描”按钮出现/可识别的超时（秒）。"
+    },
+    "start_btn_retry": {
+      "type": "number",
+      "default": 3,
+      "description": "开始按钮最多点击次数；每次点击后必须同时检测到开始标记和有效 frame，否则继续点击。"
+    },
+    "start_frame_wait_timeout_sec": {
+      "type": "number",
+      "default": 10,
+      "description": "每次点击开始后，等待同时出现开始标记和有效 frame 的超时（秒）。"
+    },
+    "start_btn_threshold": {
+      "type": "number",
+      "default": 0.7,
+      "description": "开始按钮模板匹配阈值（过低可能误点，建议保持默认）。"
+    },
+    "ui_fps_ocr_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否启用 OCR 持续识别界面 fps（方案C，默认开启）。"
+    },
+    "ui_fps_sample_interval_sec": {
+      "type": "number",
+      "default": 0.4,
+      "description": "OCR 采样间隔（秒）。"
+    },
+    "ui_fps_min_score": {
+      "type": "number",
+      "default": 0.2,
+      "description": "OCR 识别置信度阈值（0~1）。"
+    },
+    "ui_fps_roi": {
+      "type": "object",
+      "default": {
+        "x": 425,
+        "y": 234,
+        "w": 100,
+        "h": 25
+      },
+      "description": "OCR 区域（像素）。示例基于 1920x1080，请按你的屏幕实际微调。"
+    },
+    "ui_frame_ocr_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否启用 OCR 识别界面帧数，作为日志帧数兜底。"
+    },
+    "ui_frame_sample_interval_sec": {
+      "type": "number",
+      "default": 0.4,
+      "description": "界面帧数 OCR 采样间隔（秒）。"
+    },
+    "ui_frame_min_score": {
+      "type": "number",
+      "default": 0.2,
+      "description": "界面帧数 OCR 识别置信度阈值（0~1）。"
+    },
+    "ui_frame_roi": {
+      "type": "object",
+      "default": {
+        "x": 430,
+        "y": 153,
+        "w": 88,
+        "h": 19
+      },
+      "description": "界面帧数 OCR 区域（像素）。默认按当前 CrealityScan 帧数显示区域加宽，避免右侧数字被裁掉。"
+    },
+    "ui_frame_target_hits": {
+      "type": "number",
+      "default": 2,
+      "description": "界面帧数连续达到目标多少次后，判定可点击完成。"
+    },
+    "ui_fps_debug_save_on_miss": {
+      "type": "boolean",
+      "default": true,
+      "description": "OCR 未识别到 fps 时，是否保存 ROI 调试截图到 run_dir/airtest 目录。"
+    },
+    "ui_fps_debug_save_samples": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否按采样频率保存 OCR ROI 截图到 run_dir/airtest 目录（用于标定区域）。"
+    },
+    "ui_fps_debug_every_n_sample": {
+      "type": "number",
+      "default": 1,
+      "description": "每 N 次 OCR 采样保存一张 sample 调试图（1 表示每次都保存）。"
+    },
+    "ui_fps_debug_every_n_miss": {
+      "type": "number",
+      "default": 3,
+      "description": "连续 miss 到第 N 次时保存一张 OCR 调试截图。"
+    },
+    "ui_fps_debug_max_files": {
+      "type": "number",
+      "default": 12,
+      "description": "单次步骤最多保存多少张 OCR 调试截图。"
+    },
+    "ui_fps_debug_dir": {
+      "type": "string",
+      "default": "",
+      "description": "可选：自定义 OCR 调试截图目录（为空则保存到当前报告的 airtest 目录）。"
+    }
+  }
+}
+

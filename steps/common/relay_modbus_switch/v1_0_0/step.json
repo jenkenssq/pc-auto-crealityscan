@@ -1,0 +1,73 @@
+{
+  "id": "common.relay_modbus_switch",
+  "name": "继电器切换模组电源(MODBUS)",
+  "version": "1.0.0",
+  "description": "通过 RS232/RS485 MODBUS RTU 控制继电器通道开关电，实现模组上下电切换。",
+  "params_schema": {
+    "port": {
+      "type": "string",
+      "default": "",
+      "description": "串口号，例如 COM5。为空时优先读取环境变量 JENS_RELAY_PORT。"
+    },
+    "baudrate": {
+      "type": "number",
+      "default": 9600,
+      "description": "串口波特率，默认 9600。"
+    },
+    "device_addr": {
+      "type": "number",
+      "default": 1,
+      "description": "MODBUS 设备地址，默认 1。"
+    },
+    "channel": {
+      "type": "number",
+      "default": 1,
+      "description": "继电器通道号（1 开始）。4 路板一般为 1~4。"
+    },
+    "channels_count": {
+      "type": "number",
+      "default": 4,
+      "description": "读取状态时的总通道数。4 路板建议保持 4。"
+    },
+    "action": {
+      "type": "string",
+      "default": "cycle",
+      "description": "动作：on/off/cycle。cycle=先断电再上电。"
+    },
+    "off_duration_sec": {
+      "type": "number",
+      "default": 2.0,
+      "description": "action=cycle 时断电保持时长（秒）。"
+    },
+    "settle_after_on_sec": {
+      "type": "number",
+      "default": 3.0,
+      "description": "上电后稳定等待时长（秒）。"
+    },
+    "verify": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否每次写线圈后读回状态校验。"
+    },
+    "timeout_sec": {
+      "type": "number",
+      "default": 1.0,
+      "description": "单次指令读写超时（秒）。"
+    },
+    "retry_count": {
+      "type": "number",
+      "default": 2,
+      "description": "失败后自动重试次数。"
+    },
+    "retry_interval_sec": {
+      "type": "number",
+      "default": 0.5,
+      "description": "重试间隔（秒）。"
+    },
+    "dry_run": {
+      "type": "boolean",
+      "default": false,
+      "description": "未接入硬件时可设为 true，仅输出计划动作，不进行串口写入。"
+    }
+  }
+}

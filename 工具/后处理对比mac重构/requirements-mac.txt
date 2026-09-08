@@ -1,0 +1,9 @@
+# macOS 版「后处理对比工具」依赖
+# 安装：python -m pip install -r requirements-mac.txt
+# macOS 需给 Terminal/Python 授予「屏幕录制」与「辅助功能」权限。
+
+pyautogui            # 桌面找图/点击/截图（需 opencv 支持 confidence 匹配）
+opencv-python        # pyautogui locateCenterOnScreen 的 confidence 匹配依赖
+Pillow               # 截图与图片处理
+psutil               # CrealityScan 进程管理（启动确认/正常退出/强制结束）
+openpyxl             # Excel 对比表生成

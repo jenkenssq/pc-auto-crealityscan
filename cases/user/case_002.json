@@ -1,0 +1,36 @@
+{
+  "case_id": "case_002",
+  "name": "新用例",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\86177\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+  },
+  "keywords": [
+    "Traceback",
+    "Exception",
+    "ERROR",
+    "失败",
+    "崩溃"
+  ],
+  "steps": [
+    {
+      "id": "common.activate_window",
+      "version": "1.0.0",
+      "name": "激活/置顶窗口",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_project",
+      "version": "1.0.0",
+      "name": "新建项目",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    }
+  ]
+}

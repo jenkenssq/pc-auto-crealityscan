@@ -1,0 +1,297 @@
+{
+  "group": "otter_basic_speckle",
+  "presets": [
+    {
+      "key": "otter_basic.small_geometry_fast",
+      "name": "小物体-几何-快速",
+      "aliases": ["小物体-几何-快速", "speckle_small_geometry_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [280, 470] },
+        { "op": "touch", "pos": [60, 575] },
+        { "op": "touch", "pos": [65, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.small_geometry_high_precision",
+      "name": "小物体-几何-高精度",
+      "aliases": ["小物体-几何-高精度", "speckle_small_geometry_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [280, 470] },
+        { "op": "touch", "pos": [60, 575] },
+        { "op": "touch", "pos": [170, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.small_texture_fast",
+      "name": "小物体-纹理-快速",
+      "aliases": ["小物体-纹理-快速", "speckle_small_texture_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [280, 470] },
+        { "op": "touch", "pos": [170, 575] },
+        { "op": "touch", "pos": [65, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.small_texture_high_precision",
+      "name": "小物体-纹理-高精度",
+      "aliases": ["小物体-纹理-高精度", "speckle_small_texture_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [280, 470] },
+        { "op": "touch", "pos": [170, 575] },
+        { "op": "touch", "pos": [170, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.small_marker",
+      "name": "小物体-标志点",
+      "aliases": ["小物体-标志点", "speckle_small_marker"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [280, 470] },
+        { "op": "touch", "pos": [280, 575] }
+      ]
+    },
+    {
+      "key": "otter_basic.medium_geometry_fast",
+      "name": "中物体-几何-快速",
+      "aliases": ["中物体-几何-快速", "speckle_medium_geometry_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [70, 570] },
+        { "op": "touch", "pos": [65, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.medium_geometry_high_precision",
+      "name": "中物体-几何-高精度",
+      "aliases": ["中物体-几何-高精度", "speckle_medium_geometry_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [70, 570] },
+        { "op": "touch", "pos": [170, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.medium_texture_fast",
+      "name": "中物体-纹理-快速",
+      "aliases": ["中物体-纹理-快速", "speckle_medium_texture_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [175, 570] },
+        { "op": "touch", "pos": [65, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.medium_texture_high_precision",
+      "name": "中物体-纹理-高精度",
+      "aliases": ["中物体-纹理-高精度", "speckle_medium_texture_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [175, 570] },
+        { "op": "touch", "pos": [170, 685] }
+      ]
+    },
+    {
+      "key": "otter_basic.medium_marker",
+      "name": "中物体-标志点",
+      "aliases": ["中物体-标志点", "speckle_medium_marker"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [280, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.large_geometry_fast",
+      "name": "大物体-几何-快速",
+      "aliases": ["大物体-几何-快速", "speckle_large_geometry_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [70, 570] },
+        { "op": "touch", "pos": [70, 680] }
+      ]
+    },
+    {
+      "key": "otter_basic.large_geometry_high_precision",
+      "name": "大物体-几何-高精度",
+      "aliases": ["大物体-几何-高精度", "speckle_large_geometry_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [70, 570] },
+        { "op": "touch", "pos": [175, 680] }
+      ]
+    },
+    {
+      "key": "otter_basic.large_texture_fast",
+      "name": "大物体-纹理-快速",
+      "aliases": ["大物体-纹理-快速", "speckle_large_texture_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [175, 570] },
+        { "op": "touch", "pos": [70, 680] }
+      ]
+    },
+    {
+      "key": "otter_basic.large_texture_high_precision",
+      "name": "大物体-纹理-高精度",
+      "aliases": ["大物体-纹理-高精度", "speckle_large_texture_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [175, 570] },
+        { "op": "touch", "pos": [175, 680] }
+      ]
+    },
+    {
+      "key": "otter_basic.large_marker",
+      "name": "大物体-标志点",
+      "aliases": ["大物体-标志点", "speckle_large_marker"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [280, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.face_geometry_fast",
+      "name": "人脸-几何-快速",
+      "aliases": ["人脸-几何-快速", "speckle_face_geometry_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [175, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [60, 575] }
+      ]
+    },
+    {
+      "key": "otter_basic.face_geometry_high_precision",
+      "name": "人脸-几何-高精度",
+      "aliases": ["人脸-几何-高精度", "speckle_face_geometry_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [175, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [170, 575] }
+      ]
+    },
+    {
+      "key": "otter_basic.face_texture_fast",
+      "name": "人脸-纹理-快速",
+      "aliases": ["人脸-纹理-快速", "speckle_face_texture_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [175, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [60, 575] }
+      ]
+    },
+    {
+      "key": "otter_basic.face_texture_high_precision",
+      "name": "人脸-纹理-高精度",
+      "aliases": ["人脸-纹理-高精度", "speckle_face_texture_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [175, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [170, 575] }
+      ]
+    },
+    {
+      "key": "otter_basic.body_geometry_high_precision",
+      "name": "人体-几何-高精度",
+      "aliases": ["人体-几何-高精度", "speckle_body_geometry_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [280, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [175, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.body_geometry_fast",
+      "name": "人体-几何-快速",
+      "aliases": ["人体-几何-快速", "speckle_body_geometry_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [280, 360] },
+        { "op": "touch", "pos": [70, 465] },
+        { "op": "touch", "pos": [70, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.body_texture_fast",
+      "name": "人体-纹理-快速",
+      "aliases": ["人体-纹理-快速", "speckle_body_texture_fast"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [280, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [70, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.body_texture_high_precision",
+      "name": "人体-纹理-高精度",
+      "aliases": ["人体-纹理-高精度", "speckle_body_texture_high_precision"],
+      "actions": [
+        { "op": "touch", "pos": [55, 225] },
+        { "op": "touch", "pos": [280, 360] },
+        { "op": "touch", "pos": [175, 465] },
+        { "op": "touch", "pos": [175, 570] }
+      ]
+    },
+    {
+      "key": "otter_basic.frame_points_small",
+      "name": "框架点-小物体",
+      "aliases": ["框架点-小物体", "frame_points_small"],
+      "actions": [
+        { "op": "touch", "pos": [65, 250] },
+        { "op": "touch", "pos": [280, 355] }
+      ]
+    },
+    {
+      "key": "otter_basic.frame_points_medium",
+      "name": "框架点-中物体",
+      "aliases": ["框架点-中物体", "frame_points_medium"],
+      "actions": [
+        { "op": "touch", "pos": [65, 250] },
+        { "op": "touch", "pos": [170, 355] }
+      ]
+    },
+    {
+      "key": "otter_basic.frame_points_large",
+      "name": "框架点-大物体",
+      "aliases": ["框架点-大物体", "frame_points_large"],
+      "actions": [
+        { "op": "touch", "pos": [65, 250] },
+        { "op": "touch", "pos": [60, 355] }
+      ]
+    }
+  ]
+}

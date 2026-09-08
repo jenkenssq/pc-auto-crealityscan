@@ -1,0 +1,46 @@
+{
+  "id": "crealityscan.configure_scan_params_p1",
+  "name": "P1：扫描参数（预设）",
+  "version": "1.0.0",
+  "description": "从预设方案中选择一套 P1 扫描参数配置，并通过点击或模板完成设置。",
+  "params_schema": {
+    "preset": {
+      "type": "string",
+      "description": "预置方案 key 或中文名称，例如：\"线激光-点云-平行线\" / \"p1.line_laser.point_cloud.parallel\"。"
+    },
+    "delay_sec": {
+      "type": "number",
+      "default": 0.1,
+      "description": "动作之间的延时（秒），用于等待界面渲染。"
+    },
+    "fullscreen": {
+      "type": "boolean",
+      "default": true,
+      "description": "执行前是否最大化 CrealityScan 窗口。"
+    },
+    "window_title_contains": {
+      "type": "string",
+      "description": "窗口标题包含关键字（不填则使用用例 app.window_title_contains）。"
+    },
+    "reset_mouse_after_touch": {
+      "type": "boolean",
+      "default": true,
+      "description": "每次 touch 后将鼠标移到安全位置，避免 hover 状态影响后续点击。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "安全坐标 X。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "安全坐标 Y。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.2,
+      "description": "鼠标移动到安全位置后的等待时间（秒）。"
+    }
+  }
+}

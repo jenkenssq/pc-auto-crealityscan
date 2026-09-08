@@ -1,0 +1,22 @@
+{
+  "id": "tool.firmware_upgrade.upgrade",
+  "name": "固件升级操作",
+  "version": "1.0.0",
+  "description": "执行 CrealityScan 固件升级（沉淀自 工具/固件升级工具）。进入设置→设备管理→选择固件文件→确认升级，按设备模组/连接方式等待升级成功并验证固件版本，最后关闭设置页返回首页。",
+  "params_schema": {
+    "firmware_path": {
+      "type": "string",
+      "description": "固件文件完整路径（.zip/.bin）。"
+    },
+    "connection_mode": {
+      "type": "string",
+      "enum": ["", "usb", "wifi"],
+      "default": "",
+      "description": "连接方式：usb 禁用 WiFi 自动检测、wifi 强制 WiFi 方案、留空自动检测。"
+    },
+    "log_dir": {
+      "type": "string",
+      "description": "CrealityScan 日志根目录（可选）。缺省时使用用例 app.log_dir，再交给固件工具配置。"
+    }
+  }
+}

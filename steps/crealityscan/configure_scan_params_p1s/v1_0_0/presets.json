@@ -1,0 +1,303 @@
+{
+  "group": "p1s_scan_params",
+  "presets": [
+    {
+      "key": "p1s.line_laser.point_cloud.cross",
+      "name": "线激光-点云-交叉线",
+      "aliases": ["交叉线", "line_laser_cross"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712186259.png",
+            "record_pos": [-0.473, -0.007],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.point_cloud.parallel",
+      "name": "线激光-点云-平行线",
+      "aliases": ["平行线", "line_laser_parallel"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1774440021941.png",
+            "record_pos": [-0.479, 0.06],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.point_cloud.single",
+      "name": "线激光-点云-单线",
+      "aliases": ["单线", "line_laser_single"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1772712168620.png",
+            "record_pos": [-0.469, -0.122],
+            "resolution": [1920, 1080]
+          }
+        },
+        {
+          "op": "touch",
+          "template": {
+            "file": "tpl1774410082997.png",
+            "record_pos": [-0.483, 0.019],
+            "resolution": [1920, 1080]
+          }
+        }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.frame_points.texture_on",
+      "name": "线激光-框架点-开启贴图",
+      "aliases": ["开启贴图", "texture_on"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [70, 360] },
+        { "op": "touch", "pos": [315, 415] }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.frame_points.texture_off",
+      "name": "线激光-框架点-关闭贴图",
+      "aliases": ["关闭贴图", "texture_off"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [70, 360] }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.no_marker.cross",
+      "name": "线激光-无标记点-交叉线",
+      "aliases": ["无标记点-交叉线", "线激光-无标志点-交叉线", "line_laser_no_marker_cross"],
+      "connections": ["usb"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [255, 325] },
+        { "op": "touch", "pos": [65, 415] },
+        { "op": "touch", "pos": [55, 575] }
+      ]
+    },
+    {
+      "key": "p1s.line_laser.no_marker.parallel",
+      "name": "线激光-无标记点-平行线",
+      "aliases": ["无标记点-平行线", "线激光-无标志点-平行线", "line_laser_no_marker_parallel"],
+      "connections": ["usb"],
+      "actions": [
+        { "op": "touch", "pos": [90, 210] },
+        { "op": "touch", "pos": [255, 325] },
+        { "op": "touch", "pos": [65, 415] },
+        { "op": "touch", "pos": [55, 605] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.small.geometry.fast",
+      "name": "散斑-小物体-几何-快速",
+      "aliases": ["小物体-几何-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [70, 540] },
+        { "op": "touch", "pos": [68, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.small.geometry.high_precision",
+      "name": "散斑-小物体-几何-高精度",
+      "aliases": ["小物体-几何-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [70, 540] },
+        { "op": "touch", "pos": [180, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.small.texture.fast",
+      "name": "散斑-小物体-纹理-快速",
+      "aliases": ["小物体-纹理-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [175, 540] },
+        { "op": "touch", "pos": [68, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.small.texture.high_precision",
+      "name": "散斑-小物体-纹理-高精度",
+      "aliases": ["小物体-纹理-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [280, 435] },
+        { "op": "touch", "pos": [175, 540] },
+        { "op": "touch", "pos": [180, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.medium.geometry.fast",
+      "name": "散斑-中物体-几何-快速",
+      "aliases": ["中物体-几何-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [175, 435] },
+        { "op": "touch", "pos": [70, 540] },
+        { "op": "touch", "pos": [68, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.medium.geometry.high_precision",
+      "name": "散斑-中物体-几何-高精度",
+      "aliases": ["中物体-几何-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [175, 435] },
+        { "op": "touch", "pos": [70, 540] },
+        { "op": "touch", "pos": [180, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.medium.texture.fast",
+      "name": "散斑-中物体-纹理-快速",
+      "aliases": ["中物体-纹理-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [175, 435] },
+        { "op": "touch", "pos": [175, 540] },
+        { "op": "touch", "pos": [68, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.medium.texture.high_precision",
+      "name": "散斑-中物体-纹理-高精度",
+      "aliases": ["中物体-纹理-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [175, 435] },
+        { "op": "touch", "pos": [175, 540] },
+        { "op": "touch", "pos": [180, 645] }
+      ]
+    },
+    {
+      "key": "p1s.speckle.large.geometry.standard",
+      "name": "散斑-大物体-几何",
+      "aliases": ["大物体-几何"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [70, 435] },
+        { "op": "touch", "pos": [70, 540] }
+      ]
+    },
+   
+    {
+      "key": "p1s.speckle.large.texture.standard",
+      "name": "散斑-大物体-纹理",
+      "aliases": ["大物体-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [70, 325] },
+        { "op": "touch", "pos": [70, 435] },
+        { "op": "touch", "pos": [175, 540] }
+      ]
+    },
+    {
+      "key": "p1s.face.geometry.standard",
+      "name": "散斑-人脸-几何-快速",
+      "aliases": ["人脸-几何-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [175, 325] },
+        { "op": "touch", "pos": [70, 430] },
+        { "op": "touch", "pos": [70, 540] }
+      ]
+    },
+    {
+      "key": "p1s.face.geometry.wide_angle",
+      "name": "散斑-人脸-几何-高精度",
+      "aliases": ["人脸-几何-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [175, 325] },
+        { "op": "touch", "pos": [70, 430] },
+        { "op": "touch", "pos": [175, 540] }
+      ]
+    },
+    {
+      "key": "p1s.face.texture.standard",
+      "name": "散斑-人脸-纹理-快速",
+      "aliases": ["人脸-纹理-快速"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [175, 325] },
+        { "op": "touch", "pos": [175, 430] },
+        { "op": "touch", "pos": [70, 540] }
+      ]
+    },
+    {
+      "key": "p1s.face.texture.wide_angle",
+      "name": "散斑-人脸-纹理-高精度",
+      "aliases": ["人脸-纹理-高精度"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [175, 325] },
+        { "op": "touch", "pos": [175, 430] },
+        { "op": "touch", "pos": [175, 540] }
+      ]
+    },
+    {
+      "key": "p1s.body.geometry",
+      "name": "散斑-人体-几何",
+      "aliases": ["人体-几何"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [280, 325] },
+        { "op": "touch", "pos": [70, 430] }
+      ]
+    },
+    {
+      "key": "p1s.body.texture",
+      "name": "散斑-人体-纹理",
+      "aliases": ["人体-纹理"],
+      "actions": [
+        { "op": "touch", "pos": [255, 215] },
+        { "op": "touch", "pos": [280, 325] },
+        { "op": "touch", "pos": [175, 435] }
+      ]
+    }
+  ]
+}

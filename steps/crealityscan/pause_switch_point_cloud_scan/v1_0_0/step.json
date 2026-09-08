@@ -1,0 +1,38 @@
+{
+  "id": "crealityscan.pause_switch_point_cloud_scan",
+  "name": "切点云",
+  "version": "1.0.0",
+  "description": "来自现有 Airtest 用例：切换到点云视图（已移除暂停动作，仅保留切点云操作）。",
+  "params_schema": {
+    "ready_stable_sec": {
+      "type": "number",
+      "default": 1.0,
+      "description": "新流启动和扩展属性配置完成后的稳定等待时间（秒）。"
+    },
+    "mouse_safe_x": {
+      "type": "number",
+      "default": 10,
+      "description": "每次点击前将鼠标移动到该 X 坐标，避免 hover 态导致模板不匹配。"
+    },
+    "mouse_safe_y": {
+      "type": "number",
+      "default": 10,
+      "description": "每次点击前将鼠标移动到该 Y 坐标，避免 hover 态导致模板不匹配。"
+    },
+    "mouse_safe_move_duration_sec": {
+      "type": "number",
+      "default": 0.35,
+      "description": "鼠标移动到安全位置的平滑移动时长（秒）。"
+    },
+    "mouse_safe_move_steps": {
+      "type": "number",
+      "default": 12,
+      "description": "鼠标平滑移动的插值步数。"
+    },
+    "mouse_safe_sleep_sec": {
+      "type": "number",
+      "default": 0.35,
+      "description": "鼠标移到安全位置后额外等待 UI 恢复的时间（秒）。"
+    }
+  }
+}

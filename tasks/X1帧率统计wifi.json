@@ -1,0 +1,533 @@
+{
+  "case_id": "X1帧率统计wifi",
+  "name": "X1帧率统计wifi",
+  "app": {
+    "window_title_contains": "CrealityScan",
+    "device_uri": "Windows:///",
+    "log_dir": "C:\\Users\\liangtai\\AppData\\Local\\Creality\\CrealityScan\\Logs"
+  },
+  "keywords": [
+    "Traceback",
+    "Exception",
+    "ERROR",
+    "失败",
+    "崩溃"
+  ],
+  "task_kind": "帧率统计",
+  "connection_type": "Wi-Fi",
+  "steps": [
+    {
+      "id": "common.activate_window",
+      "version": "1.0.0",
+      "name": "激活/置顶窗口",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_project",
+      "version": "1.0.0",
+      "name": "新建项目",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：线激光-点云-平行线",
+      "params": {
+        "preset": "x1.line_laser.point_cloud.parallel"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：线激光-点云-单线",
+      "params": {
+        "preset": "x1.line_laser.point_cloud.single"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：线激光-点云-交叉线",
+      "params": {
+        "preset": "x1.line_laser.point_cloud.cross"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至大物体",
+      "params": {
+        "preset": "大物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-大物体-几何",
+      "params": {
+        "preset": "x1.speckle.point_cloud.large.geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至中物体",
+      "params": {
+        "preset": "中物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-中物体-几何",
+      "params": {
+        "preset": "x1.speckle.point_cloud.medium.geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至小物体",
+      "params": {
+        "preset": "小物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-小物体-几何",
+      "params": {
+        "preset": "x1.speckle.point_cloud.small.geometry"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至人脸",
+      "params": {
+        "preset": "人脸"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-人脸-纹理",
+      "params": {
+        "preset": "x1.speckle.point_cloud.face.texture"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.create_scan",
+      "version": "1.0.0",
+      "name": "新建扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "slide_rail.switch_position",
+      "version": "1.0.0",
+      "name": "移动滑轨位置至大物体",
+      "params": {
+        "preset": "大物体"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.configure_scan_params_x1",
+      "version": "1.0.0",
+      "name": "扫描参数：散斑-点云-人体-纹理",
+      "params": {
+        "preset": "x1.speckle.point_cloud.body.texture"
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.preview_scan",
+      "version": "1.0.0",
+      "name": "预览扫描",
+      "params": {},
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "common.sleep",
+      "version": "1.0.0",
+      "name": "等待5s",
+      "params": {
+        "seconds": 5.0
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    },
+    {
+      "id": "crealityscan.scan_until_frames_then_stop",
+      "version": "1.0.0",
+      "name": "扫描至1000帧后完成",
+      "params": {
+        "target_frames": 1000,
+        "slide_rail_scan_motion_enabled": true
+      },
+      "on_fail": {
+        "action": "abort"
+      }
+    }
+  ]
+}

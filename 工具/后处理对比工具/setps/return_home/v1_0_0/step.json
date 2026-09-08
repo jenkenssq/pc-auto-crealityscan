@@ -1,0 +1,7 @@
+{
+  "id": "crealityscan.return_home",
+  "name": "返回首页",
+  "version": "1.0.0",
+  "description": "点击首页按钮和确认按钮，点击确认后等待 3 秒再判定完成。",
+  "params_schema": {}
+}

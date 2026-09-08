@@ -1,0 +1,248 @@
+{
+  "group": "pika_scan_params",
+  "presets": [
+    {
+      "key": "pika.wifi.line_laser.point_cloud",
+      "name": "wifi-线激光-点云",
+      "aliases": ["wifi-线激光-点云"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
+        {"op": "touch", "pos": [210, 630]}
+      ]
+    },
+    {
+      "key": "pika.wifi.frame_points.texture_on",
+      "name": "wifi-框架点-开启贴图",
+      "aliases": ["wifi-框架点-开启贴图"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [70, 360]},
+        {"op": "touch", "pos": [310, 415]},
+        {"op": "touch", "pos": [210, 530]}
+      ]
+    },
+    {
+      "key": "pika.wifi.frame_points.texture_off",
+      "name": "wifi-框架点-不贴图",
+      "aliases": ["wifi-框架点-不贴图"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [70, 360]},
+        {"op": "touch", "pos": [210, 500]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.point_cloud.with_marker.standard",
+      "name": "线激光-点云-有标志点-标准",
+      "aliases": ["线激光-点云-有标志点-标准"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
+        {"op": "touch", "pos": [70, 648]},
+        {"op": "touch", "pos": [210, 850]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.point_cloud.with_marker.balanced",
+      "name": "线激光-点云-有标志点-均衡",
+      "aliases": ["线激光-点云-有标志点-均衡"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
+        {"op": "touch", "pos": [175, 648]},
+        {"op": "touch", "pos": [210, 850]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.point_cloud.with_marker.fast",
+      "name": "线激光-点云-有标志点-快速",
+      "aliases": ["线激光-点云-有标志点-快速"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
+        {"op": "touch", "pos": [280, 648]},
+        {"op": "touch", "pos": [210, 850]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.point_cloud.no_marker",
+      "name": "线激光-点云-无标志点",
+      "aliases": ["线激光-点云-无标志点"],
+      "connections": ["usb"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [255, 323]},
+        {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
+        {"op": "touch", "pos": [210, 605]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.frame_points.texture_on",
+      "name": "线激光-框架点-开启贴图",
+      "aliases": ["线激光-框架点-开启贴图"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "pos": [70, 468]},
+        {"op": "touch", "pos": [315, 630]},
+        {"op": "touch", "pos": [210, 580]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.frame_points.texture_off.standard",
+      "name": "线激光-框架点-不贴图-标准",
+      "aliases": ["线激光-框架点-不贴图-标准"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "pos": [70, 468]},
+        {"op": "touch", "pos": [70, 565]},
+        {"op": "touch", "pos": [210, 680]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.frame_points.texture_off.balanced",
+      "name": "线激光-框架点-不贴图-均衡",
+      "aliases": ["线激光-框架点-不贴图-均衡"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "pos": [70, 468]},
+        {"op": "touch", "pos": [180, 565]},
+        {"op": "touch", "pos": [210, 680]}
+      ]
+    },
+    {
+      "key": "pika.line_laser.frame_points.texture_off.fast",
+      "name": "线激光-框架点-不贴图-快速",
+      "aliases": ["线激光-框架点-不贴图-快速"],
+      "actions": [
+        {"op": "touch", "pos": [90, 210]},
+        {"op": "touch", "pos": [95, 323]},
+        {"op": "touch", "pos": [70, 468]},
+        {"op": "touch", "pos": [280, 565]},
+        {"op": "touch", "pos": [210, 680]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.large.geometry",
+      "name": "散斑-点云-大物体-几何",
+      "aliases": ["散斑-点云-大物体-几何"],
+      "actions": [
+        {"op": "touch", "pos": [240, 210]},
+        {"op": "touch", "pos": [54, 320]},
+        {"op": "touch", "pos": [60, 435]},
+        {"op": "touch", "pos": [60, 545]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.large.texture",
+      "name": "散斑-点云-大物体-纹理",
+      "aliases": ["散斑-点云-大物体-纹理"],
+      "actions": [
+        {"op": "touch", "pos": [240, 210]},
+        {"op": "touch", "pos": [54, 320]},
+        {"op": "touch", "pos": [60, 435]},
+        {"op": "touch", "pos": [170, 545]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.medium.geometry",
+      "name": "散斑-点云-中物体-几何",
+      "aliases": ["散斑-点云-中物体-几何"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [70, 325]},
+        {"op": "touch", "pos": [175, 435]},
+        {"op": "touch", "pos": [70, 540]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.medium.texture",
+      "name": "散斑-点云-中物体-纹理",
+      "aliases": ["散斑-点云-中物体-纹理"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [70, 325]},
+        {"op": "touch", "pos": [175, 435]},
+        {"op": "touch", "pos": [175, 540]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.small.geometry",
+      "name": "散斑-点云-小物体-几何",
+      "aliases": ["散斑-点云-小物体-几何"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [70, 325]},
+        {"op": "touch", "pos": [280, 435]},
+        {"op": "touch", "pos": [70, 540]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.small.texture",
+      "name": "散斑-点云-小物体-纹理",
+      "aliases": ["散斑-点云-小物体-纹理"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [70, 325]},
+        {"op": "touch", "pos": [280, 435]},
+        {"op": "touch", "pos": [175, 540]},
+        {"op": "touch", "pos": [210, 657]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.face.geometry",
+      "name": "散斑-点云-人脸-几何",
+      "aliases": ["散斑-点云-人脸-几何"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [175, 325]},
+        {"op": "touch", "pos": [70, 430]},
+        {"op": "touch", "pos": [210, 550]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.face.texture",
+      "name": "散斑-点云-人脸-纹理",
+      "aliases": ["散斑-点云-人脸-纹理"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [175, 325]},
+        {"op": "touch", "pos": [175, 430]},
+        {"op": "touch", "pos": [210, 550]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.body.geometry",
+      "name": "散斑-点云-人体-几何",
+      "aliases": ["散斑-点云-人体-几何"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [280, 325]},
+        {"op": "touch", "pos": [70, 430]},
+        {"op": "touch", "pos": [210, 550]}
+      ]
+    },
+    {
+      "key": "pika.speckle.point_cloud.body.texture",
+      "name": "散斑-点云-人体-纹理",
+      "aliases": ["散斑-点云-人体-纹理"],
+      "actions": [
+        {"op": "touch", "pos": [255, 215]},
+        {"op": "touch", "pos": [280, 325]},
+        {"op": "touch", "pos": [175, 435]},
+        {"op": "touch", "pos": [210, 550]}
+      ]
+    }
+  ]
+}

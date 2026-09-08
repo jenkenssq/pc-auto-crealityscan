@@ -1,0 +1,40 @@
+# 测试配置
+test:
+  # 测试名称
+  name: "CrealityScan固件升级测试"
+  # 测试描述
+  description: "验证固件升级前后开流功能正常"
+
+  # 重试配置
+  retry:
+    # 是否启用重试
+    enabled: true
+    # 最大重试次数
+    max_attempts: 3
+    # 重试间隔（秒）
+    interval: 5
+
+  # 截图配置
+  screenshot:
+    # 是否保存所有步骤截图
+    save_all_steps: true
+    # 失败时是否截图
+    on_failure: true
+    # 成功时是否截图
+    on_success: true
+
+  # 日志配置
+  logging:
+    # 日志级别：DEBUG, INFO, WARNING, ERROR
+    level: "INFO"
+    # 是否输出到控制台
+    console: true
+    # 是否保存到文件
+    file: true
+
+  # 报告配置
+  report:
+    # 报告格式：html, json
+    format: "html"
+    # 是否包含截图
+    include_screenshots: true
