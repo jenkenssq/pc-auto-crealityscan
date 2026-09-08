@@ -19,9 +19,9 @@
     {
       "id": "slide_rail.switch_position",
       "version": "1.0.0",
-      "name": "移动滑轨位置至中物体",
+      "name": "移动滑轨位置至人脸",
       "params": {
-        "preset": "中物体"
+        "preset": "人脸"
       },
       "on_fail": {
         "action": "abort",

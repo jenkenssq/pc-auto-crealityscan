@@ -261,10 +261,12 @@ P1S 使用独立 Step `crealityscan.configure_scan_params_p1s` 和 `p1s.*` key�
 
 - `crealityscan.preview_scan`：匹配预览成功日志后返回。
 - `crealityscan.scan_until_frames_then_stop`：确认扫描开始和有效帧，等待帧数达标，点击完成后继续等待停止成功标志（`OB_SCAN_MESSAGE_ID_SCANNING_STOP_SUCCESS` 或 `stop progress 1.000000`，任一命中即完成）。
-- `crealityscan.pause_switch_point_cloud_scan`：严格按顺序等待：
+- `crealityscan.pause_switch_point_cloud_scan`：严格按顺序等待，每个位置命中其任一候选即推进：
 
 ```text
-OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS
+（标定框架优化成功，二选一）
+  OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS   # 旧固件
+  marker_opt progress 1.000000                               # Sermoon S1 等新固件（优化进度 100%）
 obscan_scan_reconfig_scan_mode_config
 scan_type: OB_SCAN_CLOUD_FUSED
 start stream done.
