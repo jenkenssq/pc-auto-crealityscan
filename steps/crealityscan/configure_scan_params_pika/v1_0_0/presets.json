@@ -19,7 +19,7 @@
         {"op": "touch", "pos": [90, 210]},
         {"op": "touch", "pos": [70, 360]},
         {"op": "touch", "pos": [310, 415]},
-        {"op": "touch", "pos": [210, 470]}
+        {"op": "touch", "pos": [210, 530]}
       ]
     },
     {
@@ -29,7 +29,7 @@
       "actions": [
         {"op": "touch", "pos": [90, 210]},
         {"op": "touch", "pos": [70, 360]},
-        {"op": "touch", "pos": [210, 470]}
+        {"op": "touch", "pos": [210, 500]}
       ]
     },
     {
@@ -41,7 +41,7 @@
         {"op": "touch", "pos": [95, 323]},
         {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
         {"op": "touch", "pos": [70, 648]},
-        {"op": "touch", "pos": [210, 765]}
+        {"op": "touch", "pos": [210, 850]}
       ]
     },
     {
@@ -53,7 +53,7 @@
         {"op": "touch", "pos": [95, 323]},
         {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
         {"op": "touch", "pos": [175, 648]},
-        {"op": "touch", "pos": [210, 765]}
+        {"op": "touch", "pos": [210, 850]}
       ]
     },
     {
@@ -65,7 +65,7 @@
         {"op": "touch", "pos": [95, 323]},
         {"op": "touch", "template": {"file": "tpl1772712168620.png", "record_pos": [-0.469, -0.122], "resolution": [1920, 1080]}},
         {"op": "touch", "pos": [280, 648]},
-        {"op": "touch", "pos": [210, 765]}
+        {"op": "touch", "pos": [210, 850]}
       ]
     },
     {
