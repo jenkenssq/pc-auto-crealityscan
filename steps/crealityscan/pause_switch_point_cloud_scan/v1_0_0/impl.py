@@ -7,12 +7,19 @@ from typing import Any, Dict
 from engine.mouse import move_mouse_smooth
 
 
-POINT_CLOUD_SWITCH_READY_KEYS = (
-    b"OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS",
-    b"obscan_scan_reconfig_scan_mode_config",
-    b"scan_type: OB_SCAN_CLOUD_FUSED",
-    b"start stream done.",
-    b"config property ex done.",
+# 切点云成功需依次出现的日志标志。每个位置可命中其任一候选字节串：
+# 第 0 位是“标定框架优化成功”：
+#   旧固件输出 OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS，
+#   Sermoon S1 等新固件不输出该行，而改为输出 marker_opt progress 1.000000（优化进度 100%）。
+POINT_CLOUD_SWITCH_READY_KEY_GROUPS = (
+    (
+        b"OB_SCAN_MESSAGE_ID_MARKER_FRAMEWORK_OPTIMIZATION_SUCCESS",
+        b"marker_opt progress 1.000000",
+    ),
+    (b"obscan_scan_reconfig_scan_mode_config",),
+    (b"scan_type: OB_SCAN_CLOUD_FUSED",),
+    (b"start stream done.",),
+    (b"config property ex done.",),
 )
 POINT_CLOUD_SWITCH_TIMEOUT_SEC = 120.0
 LOG_POLL_INTERVAL_SEC = 0.5
@@ -44,12 +51,24 @@ def _latest_scan_log(log_root: Path) -> Path:
     return max(files, key=lambda p: p.stat().st_mtime)
 
 
+def _first_group_match(buf: bytes, group: tuple[bytes, ...]) -> tuple[bytes, int] | None:
+    """返回 buf 中 group 里最早命中的候选字节串及其位置，未命中返回 None。"""
+    best_key = None
+    best_pos = -1
+    for key in group:
+        pos = buf.find(key)
+        if pos >= 0 and (best_pos < 0 or pos < best_pos):
+            best_key = key
+            best_pos = pos
+    return (best_key, best_pos) if best_key is not None else None
+
+
 def _wait_point_cloud_switch_success(log_file: Path, start_pos: int) -> None:
     deadline = time.monotonic() + POINT_CLOUD_SWITCH_TIMEOUT_SEC
     pos = start_pos
     buf = b""
     read_failures = 0
-    next_key_index = 0
+    next_group_index = 0
 
     while time.monotonic() < deadline:
         try:
@@ -70,22 +89,24 @@ def _wait_point_cloud_switch_success(log_file: Path, start_pos: int) -> None:
 
         if data:
             buf += data
-            while next_key_index < len(POINT_CLOUD_SWITCH_READY_KEYS):
-                key = POINT_CLOUD_SWITCH_READY_KEYS[next_key_index]
-                key_pos = buf.find(key)
-                if key_pos < 0:
+            while next_group_index < len(POINT_CLOUD_SWITCH_READY_KEY_GROUPS):
+                group = POINT_CLOUD_SWITCH_READY_KEY_GROUPS[next_group_index]
+                match = _first_group_match(buf, group)
+                if match is None:
                     break
-                print(f"[JENS] point_cloud_switch log matched: {key.decode('ascii')}")
-                buf = buf[key_pos + len(key) :]
-                next_key_index += 1
-            if next_key_index == len(POINT_CLOUD_SWITCH_READY_KEYS):
+                matched_key, match_pos = match
+                print(f"[JENS] point_cloud_switch log matched: {matched_key.decode('ascii')}")
+                buf = buf[match_pos + len(matched_key) :]
+                next_group_index += 1
+            if next_group_index == len(POINT_CLOUD_SWITCH_READY_KEY_GROUPS):
                 return
             buf = buf[-4096:]
         time.sleep(LOG_POLL_INTERVAL_SEC)
 
-    next_key = POINT_CLOUD_SWITCH_READY_KEYS[next_key_index]
+    next_group = POINT_CLOUD_SWITCH_READY_KEY_GROUPS[next_group_index]
+    next_keys = b" | ".join(next_group)
     raise RuntimeError(
-        f"等待切换点云成功日志超时，下一标志：{next_key!r} in {log_file}"
+        f"等待切换点云成功日志超时，下一标志：{next_keys!r} in {log_file}"
     )
 
 
