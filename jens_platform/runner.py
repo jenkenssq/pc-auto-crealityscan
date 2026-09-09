@@ -82,7 +82,7 @@ class AirtestRunResult(QtCore.QObject):
         else:
             program = sys.executable
             args = (
-                list(argv)
+                [str(project_root / "platform_app.py"), *list(argv)]
                 if argv is not None
                 else [str(project_root / "platform_app.py"), "--run-case", str(case_json_path)]
             )
