@@ -36,7 +36,7 @@
     },
     "frame_stall_timeout_sec": {
       "type": "number",
-      "default": 60,
+      "default": 300,
       "description": "扫描期间 frame 连续未增长的失败判定时间（秒）。"
     },
     "stalled_log_switch_interval_sec": {
