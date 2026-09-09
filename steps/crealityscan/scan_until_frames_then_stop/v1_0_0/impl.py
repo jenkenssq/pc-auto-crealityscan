@@ -914,7 +914,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     start_btn_timeout_sec = _num(params, "start_btn_timeout_sec", 10)
     start_btn_retry = max(1, _int(params, "start_btn_retry", 3))
     start_btn_threshold = _num(params, "start_btn_threshold", 0.7)
-    start_frame_wait_timeout_sec = max(0.5, _num(params, "start_frame_wait_timeout_sec", 10.0))
+    start_frame_wait_timeout_sec = max(0.5, _num(params, "start_frame_wait_timeout_sec", 300.0))
     start_btn_reclick_interval_sec = _num(params, "start_btn_reclick_interval_sec", 1.0)
     start_btn_reclick_wait_sec = _num(params, "start_btn_reclick_wait_sec", 2.0)
     start_tpl = Template(

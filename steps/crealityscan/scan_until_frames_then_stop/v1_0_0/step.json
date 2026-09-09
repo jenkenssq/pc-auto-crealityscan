@@ -111,7 +111,7 @@
     },
     "start_frame_wait_timeout_sec": {
       "type": "number",
-      "default": 10,
+      "default": 300,
       "description": "每次点击开始后，等待同时出现开始标记和有效 frame 的超时（秒）。"
     },
     "start_btn_threshold": {
