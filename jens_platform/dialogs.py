@@ -1179,7 +1179,7 @@ class TaskCreationWizardDialog(QtWidgets.QDialog):
             f"● 逐个执行已选模式\n   {len(names)} 个模式 · {order_label} · 扫描至 {self.spin_target_frames.value()} 帧",
         ]
         if source.pika_waits:
-            lines.append("● Pika 稳定性等待［自动］\n   关键节点自动等待 1–3 秒")
+            lines.append("● Pika 稳定性等待［自动］\n   关键节点自动等待 1–5 秒")
         if any(by_key[key].task_profile == "frame_points" for key in self._selected_order if key in by_key):
             lines.append("● 框架点流程［自动］\n   暂停并切换点云后继续扫描")
         if self.chk_slide_rail.isChecked():
