@@ -2165,8 +2165,8 @@ class MainWindow(QtWidgets.QMainWindow):
             "JENS_DEVICE_FIRMWARE_VERSION": self._device_info.get("camera_firmware_version", ""),
         }
         stop_file = self._stress_stop_file_path()
+        # argv 不含程序本体（runner.start 会按源码/打包态自动补齐入口）。
         argv = [
-            str(self.project_root / "platform_app.py"),
             "--stress-run",
             "--case",
             str(task_path),
