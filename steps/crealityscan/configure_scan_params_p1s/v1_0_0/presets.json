@@ -79,8 +79,8 @@
       "aliases": ["开启贴图", "texture_on"],
       "actions": [
         { "op": "touch", "pos": [90, 210] },
-        { "op": "touch", "pos": [70, 360] },
-        { "op": "touch", "pos": [315, 415] }
+        { "op": "touch", "pos": [70, 570] },
+        { "op": "touch", "pos": [315, 630] }
       ]
     },
     {
@@ -89,7 +89,7 @@
       "aliases": ["关闭贴图", "texture_off"],
       "actions": [
         { "op": "touch", "pos": [90, 210] },
-        { "op": "touch", "pos": [70, 360] }
+        { "op": "touch", "pos": [70, 570] }
       ]
     },
     {
