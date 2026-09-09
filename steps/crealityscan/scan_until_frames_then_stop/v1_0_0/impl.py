@@ -700,7 +700,7 @@ def _wait_frames_ge(
     start_pos: int,
     target_frames: int,
     timeout_sec: float,
-    frame_stall_timeout_sec: float = 60,
+    frame_stall_timeout_sec: float = 300,
     poll_interval_sec: float = 0.2,
     stalled_log_switch_interval_sec: float = 5,
     system_sampler_state: Optional[Dict[str, Any]] = None,
@@ -884,7 +884,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     wait_log_file_timeout_sec = _num(params, "wait_log_file_timeout_sec", 30)
     wait_scan_start_timeout_sec = _num(params, "wait_scan_start_timeout_sec", 60)
     wait_frames_timeout_sec = _num(params, "wait_frames_timeout_sec", 1800)
-    frame_stall_timeout_sec = _num(params, "frame_stall_timeout_sec", 60)
+    frame_stall_timeout_sec = _num(params, "frame_stall_timeout_sec", 300)
     poll_interval_sec = _num(params, "poll_interval_sec", 0.2)
     stalled_log_switch_interval_sec = _num(params, "stalled_log_switch_interval_sec", 5)
     wait_stop_success_timeout_sec = _num(params, "wait_stop_success_timeout_sec", 120)
@@ -914,7 +914,7 @@ def run(ctx: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     start_btn_timeout_sec = _num(params, "start_btn_timeout_sec", 10)
     start_btn_retry = max(1, _int(params, "start_btn_retry", 3))
     start_btn_threshold = _num(params, "start_btn_threshold", 0.7)
-    start_frame_wait_timeout_sec = max(0.5, _num(params, "start_frame_wait_timeout_sec", 10.0))
+    start_frame_wait_timeout_sec = max(0.5, _num(params, "start_frame_wait_timeout_sec", 300.0))
     start_btn_reclick_interval_sec = _num(params, "start_btn_reclick_interval_sec", 1.0)
     start_btn_reclick_wait_sec = _num(params, "start_btn_reclick_wait_sec", 2.0)
     start_tpl = Template(

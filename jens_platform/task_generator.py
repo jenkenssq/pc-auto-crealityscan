@@ -515,19 +515,19 @@ def _build_steps(
         steps.append(_sleep(1))
     steps.append(_step("crealityscan.create_project", "新建项目"))
     if source.pika_waits:
-        steps.append(_sleep(3))
+        steps.append(_sleep(5))
 
     for index, preset in enumerate(presets):
         if index > 0:
             steps.append(_step("crealityscan.create_scan", "新建扫描"))
             if source.pika_waits:
-                steps.append(_sleep(3))
+                steps.append(_sleep(5))
         if slide_rail:
             steps.append(_slide_rail_switch_step(preset))
         params = _pika_config_params(preset) if source.pika_waits else {"preset": preset.key}
         steps.append(_step(source.configure_step_id, f"扫描参数：{preset.name}", params))
         if source.pika_waits:
-            steps.append(_sleep(3))
+            steps.append(_sleep(5))
         if preset.task_profile == "frame_points":
             steps.extend(
                 _frame_points_scan_steps(
